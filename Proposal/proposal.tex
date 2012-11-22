@@ -1,0 +1,96 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{COMP3020 - Individual Project \\ Project Proposal
+}
+\author{Student - Edward Seabrook \\ Supervisor - Tim Chown}
+\date{} 
+
+
+\begin{document}
+\maketitle
+
+\section*{A Tool to Simplify Network Administration in the Modern Home}
+
+\subsection*{Problem}
+
+As computing becomes more and more ubiquitous, home networks are becoming increasingly complex. In the future we may see households containing a very large number of devices, performing functions we can't yet even imagine. 
+
+As home networks grow in both number of hosts and bandwidth requirements, the task of administering such networks will inevitably become more complicated. 
+
+Unfortunately, most homeowners don't have degrees in computer science, so will find it hard to set up effective networks in their homes. 
+
+\subsection*{Goals}
+
+The projects main aim is to simplify the administration of complex home networks. This goal shall be realised by providing users with a system that either reduces the complexity of managing a complex, multi-subnet, home network, or providing tools for monitoring the activity of the network. 
+
+\subsection*{Scope}
+
+
+The project will involve either:
+\begin{itemize}
+\item Implementing a zeroconf OSPF routing system based on an open source routing implementation such as Quagga or XORP.
+
+\item Create a traffic monitoring system that can report on bandwidth usage, network flows and perform some form of malware detection. With the possibility of implementing a front-end to allow easy QoS configuration. 
+
+\end{itemize
+}
+
+Both of these projects will involve the use of lightweight Linux boxes to perform their tasks. The project that will be pursued will be decided upon by week four. 
+
+\end{document}
+
