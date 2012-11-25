@@ -13,14 +13,13 @@ Second examiner: Dr KP Zauner}
 \usepackage{titlesec}
 \titleformat{\chapter}% reformat chapter headings
     [hang]% like section, with number on same line
-    {\Huge\bfseries}% formatting applied to whole
+    {\Large\bfseries}% formatting applied to whole
     {\thechapter}% Chapter number
     {0.5em}% space between # and title
     {}% formatting applied just to title
 
-% Get rid of margins?
-%\usepackage{geometry} 
-%\geometry{margin=0.75in} 
+ %Get rid of margins?
+ \usepackage[top=2.4cm, bottom=2.4cm, left=3.5cm, right=2.4cm]{geometry} 
 
 \usepackage{fancyhdr} 
 \pagestyle{fancy} 
@@ -30,34 +29,168 @@ Second examiner: Dr KP Zauner}
 
 \begin{document}
 
-\input{./ProjectReportTitle.tex}
+\input{./Title.tex}
 
 
 \begin{abstract}
-No more than 200 words. 
+\em No more than 200 words. \em
 
-This  template includes a suggested structure for your progress report.
 
-The choice of section headings has been designed to map to the marking criteria given to supervisors. You can use theses headings if you want but the are not compulsory. 
 \end{abstract}
-
-
-
 
 \tableofcontents
 
+\chapter{Project Description}
 
+The original project definition was to create a tool to simplify network administration in the home.
+This definition was left open ended to ensure that the project was suitible before it was commited to.
+The project has now been more ridgedly defined as "Implementing Zero Config OSPF".
 
-\chapter{Project Goals}
-The goals of the project...
+An implementation of the OSPF (Open Shortest Path First) routing protocol shall be 
+augmented to require no configuration.
 
-\chapter{Background and Report of Literature Search}
-Reading
+The augmented implementation will be tested to ensure that it works correctly both with homogeneous instances and instances of alternative implementations. 
+
+\section{Goals}
+
+There are a number of goals that the project aims to meet.
+
+\subsection{Project Goals }
+The following goals are things that the project should do:
+
+\begin{itemize}
+
+	\item Multiple networks in the home. 
+
+	\item No additional configuration:
+
+		\begin{itemize}	
+  		\item Shouldn't need to enter any settings, plug it in, it works. 
+		\end{itemize}
+\end{itemize}
+
+\subsection{Personal Goals}
+By the end of the project I would like to have:
+
+\begin{itemize}
+	\item Understanding of the process of the creation of internet standards.
+	\item Ability to implement network protocols. 
+	\item Improved programming ability (Mainly C++).
+\end{itemize}
+
+\chapter{Background and Literature Research}
+
+The reading for this project can be split into two categories:
+Theoretical reading which covers the theory behind the protocol that 
+shall be implemented, and Practical reading that covers the actual implementations
+that shall be used during the project.
+
+\section{Theoretical Reading}
+The majority of the information for this project is contained within various RFCs (Request For Comments).
+These are memos published by the IETF (Internet Engineering Task Force) that are submitted for peer review.
+RFCs form the standards that are used across the Internet.
+
+	* RFC 2328 - OSPFv2 
+
+	* RFC 5340 - OSPFv3
+
+	* draft-dimitri-zospf-00 - Zeroconf OSPF
+
+		~ Dead draft, lays a lot of the foundations for the new drafts
+
+	* draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration 
+
+		~ Various RFCs that are referenced by this draft
+			
+			- RFC 5838 - OSPFv3-AF (Address Families)
+			
+			- RFC 6506 - OSPFv3-AUTH-TRAILER
+			
+			- RFC 3630 (4230 \& 5786) - Traffic Engineering Extensions
+			
+			- RFC 4862 - SLAAC (IPv6)
+
+	* draft-arkko-homenet-prefix-assignment-03 - Prefix Assignment in Home Network
+ 		
+		~ Draft by same author as other draft.
+ 		
+		~ These drafts are so recent that they have been updated since the start of the proj
+
+	* Cisco Guide to designing OSPF deployments  
+		
+		- Gives a nice high level view of OSPF
+
+\section{Practical Reading}		
+
+	* Alix 2d3 Installation
+	
+		~ Installed using debootstrap. 
+	
+		~ Followed a guide in German using google translate.
+	
+		~ Found it surprisingly good translation
+	
+		~ Easy because commands are English anyway.
+	
+		~ Ensured I understood all the commands I was running. 
+
+	* Xorp
+		
+		~ An implementation of various routing protocols
+	
+	* Quagga
+
+		~ Annother implementation of various routing protocols
+
+	* Bird 
+
+		~ One more lightweight implementation
+
+		~ Has been successfully used to implement zOSPF
 
 \chapter{Report on Technical Progress}
-LOL!
+What have I done so far?
+
+Got the Alix 2d3 boards running Ubuntu 
+(This is subject to change in the future.)
+
+Skimmed all RFCs mentioned in reading section 
+(A lot of it went over my head)
+
+Deeply read RFC 2328
 
 \chapter{Plan of Remaining Work}
-Remaining work plan
+
+\em
+
+\textbf{I would like to have this done before submitting this report}
+
+Deeply read remaining RFCs
+
+Get an instance of each of these protocols running on an Alix 2d3
+
+Look at the source code of the various Implementations. 
+
+Pick an Implemetnation 
+
+\em 
+
+Study the source code of the chosen implementation
+
+	* Understand chosen impl (UML diagrams etc)
+
+	* Understand the required changes
+
+Perform the required changes to the chosen impl 
+
+Test the implementation with multiple instances of the same implementation
+
+Test the implementation with other implementations of protocol 
+
+The project is open to extensions. Possible extenstions are:
+
+* Multiple Hop service discovery.
+
+* Source Based routing?
 
 \end{document}
