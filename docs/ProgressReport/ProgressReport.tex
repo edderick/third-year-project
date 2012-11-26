@@ -43,13 +43,14 @@ Second examiner: Dr KP Zauner}
 \chapter{Project Description}
 
 The original project definition was to create a tool to simplify network administration in the home.
-This definition was left open ended to ensure that the project was suitible before it was commited to.
-The project has now been more ridgedly defined as "Implementing Zero Config OSPF".
+This definition was left open ended to ensure that the project was suitable before it was committed to.
+The project has now been more rigidly defined as ``Implementing Zero Config OSPF''.
 
-An implementation of the OSPF (Open Shortest Path First) routing protocol shall be 
-augmented to require no configuration.
+An implementation of the OSPF (Open Shortest Path First) routing protocol shall be augmented to 
+require no configuration.
 
-The augmented implementation will be tested to ensure that it works correctly both with homogeneous instances and instances of alternative implementations. 
+The augmented implementation will be tested to ensure that it works correctly both with homogeneous 
+instances and instances of alternative implementations. 
 
 \section{Goals}
 
@@ -75,7 +76,7 @@ By the end of the project I would like to have:
 \begin{itemize}
 	\item Understanding of the process of the creation of internet standards.
 	\item Ability to implement network protocols. 
-	\item Improved programming ability (Mainly C++).
+	\item Improved programming ability (Mainly C/C++).
 \end{itemize}
 
 \chapter{Background and Literature Research}
@@ -90,63 +91,112 @@ The majority of the information for this project is contained within various RFC
 These are memos published by the IETF (Internet Engineering Task Force) that are submitted for peer review.
 RFCs form the standards that are used across the Internet.
 
-	* RFC 2328 - OSPFv2 
+\begin{itemize}
 
-	* RFC 5340 - OSPFv3
+	\item RFC 2328 - OSPFv2 
 
-	* draft-dimitri-zospf-00 - Zeroconf OSPF
+	This RFC defines the OSPFv2 protocol, the protocol is a current internet standard. 
+	It gives a complete description of the data structures and algorithms of OSPF for IPV4. 
+	The author of this RFC J. Moy has also written two books that continue the description. 
 
-		~ Dead draft, lays a lot of the foundations for the new drafts
+	\item RFC 5340 - OSPFv3
+	
+	This RFC defined the OSPFv3 protocol (OSPF for IPV6), the protocol is a proposed standard. 
+	Since OSPFv3 in general is fairly similar to OSPFv2, the RFC describes only the differences between the 
+	two protocols. 
 
-	* draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration 
+	Neither Quagga nor XORP actually implement this RFC - Quagga implements RFC 2740 which is technically compatible and
+	XORP claims to implement the draft of this RFC. 
 
-		~ Various RFCs that are referenced by this draft
-			
-			- RFC 5838 - OSPFv3-AF (Address Families)
-			
-			- RFC 6506 - OSPFv3-AUTH-TRAILER
-			
-			- RFC 3630 (4230 \& 5786) - Traffic Engineering Extensions
-			
-			- RFC 4862 - SLAAC (IPv6)
+	\item draft-dimitri-zospf-00 - Zeroconf OSPF
 
-	* draft-arkko-homenet-prefix-assignment-03 - Prefix Assignment in Home Network
+	This draft was published in 2002, and expired in 2003 - it never passed version 00. 
+	However, it lays out many of the main concepts for later drafts. 
+	A method was proposed for running a cut down version of OSPFv3 for routing both IPV4 and IPV6 traffic without requiring 
+	any manual configuration. 
+
+	\item draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration 
+	
+	The main draft that will be used for this project, it provides a set of modifications that can be made to 
+	the OSPFv3 protocol to run (in a slightly restricted manner e.g. single area) it in without needing any manual configuration. 
+	The draft discusses configurations that should be set in some default manner, methods of selecting Router-IDs 
+	and ways of detecting duplicate R-IDs. 
+
+	The draft references many RFCs, a good understanding of the concepts that they convey is required 
+	to implement the draft successfully:
+
+	\begin{itemize}
+			\item RFC 5838 - OSPFv3-AF (Address Families)
+			\item RFC 6506 - OSPFv3-AUTH-TRAILER
+			\item RFC 3630 (4230 \& 5786) - Traffic Engineering Extensions
+			\item RFC 4862 - SLAAC (IPv6)
+	\end{itemize}
+	
+
+	\item  draft-arkko-homenet-prefix-assignment-03 - Prefix Assignment in Home Network
  		
-		~ Draft by same author as other draft.
- 		
-		~ These drafts are so recent that they have been updated since the start of the proj
+	This draft is written by the same author as the previous draft, and as a testament to how recent this work is, 
+	a new version of this draft has been released since the beginning of this project. 
+	
+	\em Haven't really read this draft properly yet, won't summarise it until I have a better understanding \em
 
-	* Cisco Guide to designing OSPF deployments  
-		
-		- Gives a nice high level view of OSPF
+
+	\item Cisco's Guide to Configuring OSPFv3 
+	
+	Although it is aimed at network administrators, this document provides a nice high level overview of the OSPFv3 Protocol.
+
+	\item The Three Books
+
+	\em Will change this point \em 
+	
+	Yet to read cover to cover - have used briefly for reference. 
+	
+
+\end{itemize}
 
 \section{Practical Reading}		
 
-	* Alix 2d3 Installation
-	
-		~ Installed using debootstrap. 
-	
-		~ Followed a guide in German using google translate.
-	
-		~ Found it surprisingly good translation
-	
-		~ Easy because commands are English anyway.
-	
-		~ Ensured I understood all the commands I was running. 
+Much of the practical information for this project is from online tutorials and documentation of software projects.  
 
-	* Xorp
-		
-		~ An implementation of various routing protocols
+	\begin{itemize}
+
+	\item Alix 2d3 Installation Guide
+
+	This guide offered a comprehesive list of steps that need to be taken to install Ubuntu linux on an Alix 2d3 board.
+	The article is written in German but using Google translate it is quite easy to follow (since a large amount of it is just commands).
+	The process involves mounting the compact flash card on an existing Ubuntu desktop. 
+	The card is formatted and partioned and a small install of linux is copied to the card using debootstrap. 
+	Next, the file system root is set to cards mount point and various configuration files are edited and essential software packages 
+	(such as vim, ssh and sudo) are installed. A bootloader such as grub is also installed. 
+	Finally the Alix board is booted with the flash card inserted while connected to a serial port. 
+	cu can be used to gain a terminal connection to the board and ensure that there are no Magic ELF errors. 
+
+	\em Not sure whether the following strictly belongs in a reading section \em
+
+	\item Xorp
 	
-	* Quagga
+	XORP is an implementation of various routing protocols, including OSPFv3. 
+	It is Implemented in C++ following an Object Oriented style. 
+	OSPFv2 and OSPFv3 share much of the same code with conditional code seperating the parts whcih are different.
+	
+	\item Quagga
+	
+	Quagga is annother implementation of various routing protocols. 
+	It is a fork of the now defunct GNU Zebra project. 
+	Quagga also implements OSPFv3, however takes a more seperated approach to doing so, providing a completely seperate implementation of OSPFv2. 	
+	The protocols are implemented in C  using a mainly Struct based style.
+	Vyatta the open source software based virtual router notably switched from XORP to Quagga. 
 
-		~ Annother implementation of various routing protocols
+	\item Bird
+	Bird is a more lightweight implementation. 
+	It has already been used to successfully implement zOSPF.
 
-	* Bird 
+\end{itemize}
 
-		~ One more lightweight implementation
+	All three implementations appear to be well documented. 
+	All use Git as version control software.
+	All have somewhat active mailing lists (Developer and user)
 
-		~ Has been successfully used to implement zOSPF
 
 \chapter{Report on Technical Progress}
 What have I done so far?
@@ -163,34 +213,50 @@ Deeply read RFC 2328
 
 \em
 
-\textbf{I would like to have this done before submitting this report}
+\textbf{By the time that this report is submitted, the following tasks should be complete (an as such moved to the above section)}
 
-Deeply read remaining RFCs
+\begin{itemize}
 
-Get an instance of each of these protocols running on an Alix 2d3
+\item Deeply read remaining RFCs
+\item Get an instance of each of these protocols running on an Alix 2d3
+\item Look at the source code of the various Implementations. 
+\item Pick an Implemetnation 
 
-Look at the source code of the various Implementations. 
-
-Pick an Implemetnation 
+\end{itemize}
 
 \em 
 
-Study the source code of the chosen implementation
+The following is a breif plan of how the project shall progress:
 
-	* Understand chosen impl (UML diagrams etc)
+\begin{itemize}
 
-	* Understand the required changes
+\item Study the source code of the chosen implementation.
 
-Perform the required changes to the chosen impl 
+\begin{itemize}
 
-Test the implementation with multiple instances of the same implementation
+\item Understand the chosen implementation.
+UML diagrams could be drawn to summarise the archictecture of the software. 
 
-Test the implementation with other implementations of protocol 
+\item Understand the required changes.
+The UML diagrams could be copied and augmented to show how the required alterations will be realised. 
 
-The project is open to extensions. Possible extenstions are:
+\end{itemize}
 
-* Multiple Hop service discovery.
+\item Perform the required changes to the chosen implementation.
+\item Test the implementation with multiple instances of the same implementation.
+\item Test the implementation with other implementations of protocol 
+\item Test the implementation on people. \em Would require ethics approval etc. \em
 
-* Source Based routing?
+\item The project is open to extensions. Possible extenstions are:
+
+\begin{itemize}
+\item Multiple Hop service discovery.
+\item Source Based routing?
+\end{itemize}
+
+\end{itemize}
+
+\section{Gantt Chart}
+No project would be complete without a gantt chart... I'll try and find the one from christmas dinner last year...
 
 \end{document}
