@@ -42,15 +42,16 @@ Second examiner: Dr KP Zauner}
 
 \chapter{Project Description}
 
-The original project definition was to create a tool to simplify network administration in the home.
-This definition was left open ended to ensure that the project was suitable before it was committed to.
-The project has now been more rigidly defined as ``Implementing Zero Config OSPF''.
+The original project definition was to create a tool to simplify network
+administration in the home.  This definition was left open ended to ensure that
+the project was suitable before it was committed to.  The project has now been
+more rigidly defined as ``Implementing Zero Config OSPF''.
 
-An implementation of the OSPF (Open Shortest Path First) routing protocol shall be augmented to 
-require no configuration.
+An implementation of the OSPF (Open Shortest Path First) routing protocol shall
+be augmented to require no configuration.
 
-The augmented implementation will be tested to ensure that it works correctly both with homogeneous 
-instances and instances of alternative implementations. 
+The augmented implementation will be tested to ensure that it works correctly
+both with homogeneous instances and instances of alternative implementations. 
 
 \section{Goals}
 
@@ -81,15 +82,16 @@ By the end of the project I would like to have:
 
 \chapter{Background and Literature Research}
 
-The reading for this project can be split into two categories:
-Theoretical reading which covers the theory behind the protocol that 
-shall be implemented, and Practical reading that covers the actual implementations
-that shall be used during the project.
+The reading for this project can be split into two categories: Theoretical
+reading which covers the theory behind the protocol that shall be implemented,
+and Practical reading that covers the actual implementations that shall be used
+during the project.
 
 \section{Theoretical Reading}
-The majority of the information for this project is contained within various RFCs (Request For Comments).
-These are memos published by the IETF (Internet Engineering Task Force) that are submitted for peer review.
-RFCs form the standards that are used across the Internet.
+The majority of the information for this project is contained within various
+RFCs (Request For Comments).  These are memos published by the IETF (Internet
+Engineering Task Force) that are submitted for peer review.  RFCs form the
+standards that are used across the Internet.
 
 \begin{itemize}
 
@@ -174,19 +176,19 @@ documentation of software projects.
 
 	\item Alix 2d3 Installation Guide
 
-	This guide offered a comprehesive list of steps that need to be taken to
-	install Ubuntu linux on an Alix 2d3 board.  The article is written in
+	This guide offered a comprehensive list of steps that need to be taken
+	to install Ubuntu linux on an Alix 2d3 board.  The article is written in
 	German but using Google translate it is quite easy to follow (since a
 	large amount of it is just commands).  The process involves mounting the
 	compact flash card on an existing Ubuntu desktop.  The card is formatted
-	and partioned and a small install of linux is copied to the card using
+	and partitioned and a small install of Linux is copied to the card using
 	debootstrap.  Next, the file system root is set to cards mount point and
 	various configuration files are edited and essential software packages
-	(such as vim, ssh and sudo) are installed. A bootloader such as grub is
+	(such as Vim, ssh and sudo) are installed. A boot-loader such as grub is
 	also installed.  Finally the Alix board is booted with the flash card
-	inserted while connected to a serial port.  cu can be used to gain a
-	terminal connection to the board and ensure that there are no Magic ELF
-	errors. 
+	inserted while connected to a serial port.  {\bf cu} can be used to gain
+	a terminal connection to the board and ensure that there are no Magic
+	ELF errors. 
 
 	\em Not sure whether the following strictly belongs in a reading section
 	\em
@@ -196,15 +198,15 @@ documentation of software projects.
 	XORP is an implementation of various routing protocols, including
 	OSPFv3.  It is Implemented in C++ following an Object Oriented style.
 	OSPFv2 and OSPFv3 share much of the same code with conditional code
-	seperating the parts whcih are different.
+	separating the parts which are different.
 	
 	\item Quagga
 	
-	Quagga is annother implementation of various routing protocols.  It is a
+	Quagga is another implementation of various routing protocols.  It is a
 	fork of the now defunct GNU Zebra project.  Quagga also implements
-	OSPFv3, however takes a more seperated approach to doing so, providing a
+	OSPFv3, however takes a more separated approach to doing so, providing a
 	completely seperate implementation of OSPFv2. 	The protocols are
-	implemented in C  using a mainly Struct based style.  Vyatta the open
+	implemented in C using a mainly Struct based style.  Vyatta the open
 	source software based virtual router notably switched from XORP to
 	Quagga. 
 
@@ -250,13 +252,29 @@ with studying RFC 5340 (OSPFv3).
 \item Deeply read remaining RFCs
 \item Get an instance of each of these protocols running on an Alix 2d3
 \item Look at the source code of the various Implementations. 
-\item Pick an Implemetnation 
+\item Pick an Implementation. I have chosen to base my implementation on Quagga.
+The reasons are as follows: 
+
+\begin{itemize}
+\item Quagga was far simpler to set up. I had many more difficulties installing
+XORP on an ALIX 2d3.
+\item Quagga is contained in the Ubuntu repositories, indicating that it is a
+widely used package. 
+\item Vyatta switched from XORP to Quagga, this shows that Quagga is a stable
+enough platform to be trusted by third parties. 
+\item As far as I know, no one else has implemented for this platform. This means
+that my implementation will potentially be more useful to the community. 
+\item Quagga makes a clear separation between OSPFv3 and OSPFv2. They are two
+separate daemons with completely different source code. This is useful since the
+project only concerns OSPFv3.
+\end{itemize}
+
 
 \end{itemize}
 
 \em 
 
-The following is a breif plan of how the project shall progress:
+The following is a brief plan of how the project shall progress:
 
 \begin{itemize}
 
@@ -265,7 +283,7 @@ The following is a breif plan of how the project shall progress:
 \begin{itemize}
 
 \item Understand the chosen implementation.
-UML diagrams could be drawn to summarise the archictecture of the software. 
+UML diagrams could be drawn to summarise the architecture of the software. 
 
 \item Understand the required changes.
 The UML diagrams could be copied and augmented to show how the required
@@ -278,7 +296,7 @@ alterations will be realised.
 \item Test the implementation with other implementations of protocol 
 \item Test the implementation on people. \em Would require ethics approval etc. \em
 
-\item The project is open to extensions. Possible extenstions are:
+\item The project is open to extensions. Possible extensions are:
 
 \begin{itemize}
 \item Multiple Hop service discovery.
@@ -288,6 +306,7 @@ alterations will be realised.
 \end{itemize}
 
 \section{Gantt Chart}
-No project would be complete without a gantt chart... I'll try and find the one from christmas dinner last year...
+No project would be complete without a Gantt chart... I'll try and find the one
+from Christmas dinner last year...
 
 \end{document}
