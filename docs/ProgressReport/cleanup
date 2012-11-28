@@ -1,0 +1,8 @@
+#! /bin/bash
+
+rm *.aux
+rm *.log 
+rm *.dvi
+rm *.synctex.gz
+rm *.pdf
+rm *.toc
