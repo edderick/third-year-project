@@ -21,6 +21,12 @@ Second examiner: Dr KP Zauner}
  %Get rid of margins?
  \usepackage[top=2.4cm, bottom=2.4cm, left=3.5cm, right=2.4cm]{geometry} 
 
+\usepackage{todonotes}
+\setlength{\marginparwidth}{3cm}
+\reversemarginpar
+
+\usepackage{hyperref}
+
 \usepackage{fancyhdr} 
 \pagestyle{fancy} 
 \renewcommand{\headrulewidth}{0pt} 
@@ -39,54 +45,78 @@ Second examiner: Dr KP Zauner}
 \end{abstract}
 
 \tableofcontents
+\clearpage
+\listoftodos
 
 \chapter{Project Description}
 
-The original project definition was to create a tool to simplify network
-administration in the home.  I left the definition very open ended as I was
-undecided between two projects. The first project was a home gateway monitoring
-system and the second, the project that I have chosen. A more descriptive title
-for my project is now ``Implement zero configuration OSPFv3''.
+I left my initial project definition very open ended as I was undecided between
+two projects, I was unsure of the scope of a third year project, and my
+competence as a software enineer. The original project definition was to create
+a tool to simplify network administration in the home. The firsti potential
+project was a home gateway monitoring system and the second was the project that
+I have chosen. 
 
-I shall be augmenting an existing implementation of the OSPF (Open Shortest Path
-First) routing protocol to require no configuration on a simple multiple subnet
-home network. The augmented implementation will be tested to ensure that it
-works correctly both with homogeneous instances and instances of alternative
-implementations. 
+A more descriptive title for my project now is ``Implementing Zero configuration
+OSPFv3''. I shall be augmenting an existing implementation of the OSPF (Open
+Shortest Path First) routing protocol to require no configuration on a simple
+multiple subnet home network. The augmented implementation will be tested to
+ensure that it works correctly both with homogeneous instances and instances of
+alternative implementations. 
+
+\section{Background}
+As computing becomes more and more ubiquitous, home networks will have more and
+more devices atached. It is difficult for us to predict the possible used of
+network devices; some examples might include sensor networks to monitor the
+home, network attached appliances such as ovens and dishwashers and home
+surveilence systems (e.g. CCTV). 
+
+With an increasing number of devices, the traffic on the network could become
+very large quite quickly. This is a problem that could be easily reduced by
+splitting the network into multiple subnets. For example one for sensors, one
+for PCs and one for appliances. 
+
+It would also be a convenient way of enabling public access to a home
+network. A subnet could be created for guests to connect to, either over
+wireless or some form of ethernet access point. The guest network could be
+provided with some subset of the services of the main home network. Internet
+access could be provided by SMB or NFS would still be unaccessable.
+
+The IETF Home Networking (homenet) working group is doing a lot of exciting work
+into the evolution of networking in residential homes. 
 
 \section{Goals}
 
-There are a number of goals that the project aims to meet.
+There are a number of goals that the project aims to meet, for it to be deemed
+succesful.
 
 \subsection{Project Goals }
 The following goals are things that the project should do:
 
 \begin{itemize}
-
-	\item Multiple networks in the home. 
-
-	\item No additional configuration:
-
-		\begin{itemize}	
-  		\item Shouldn't need to enter any settings, plug it in, it works. 
-		\end{itemize}
+	\item Allow multiple networks in the home. 
+	\item Not require configuration: The user shouldn't need to enter any 
+	settings, they should simply plug it in, and it should  work.
+	\item Produce something of value for the community. The code I produce  
+	should adhere to style and quality guidelines to ensure it is useful.
+	\item Help to verify past implementations of the drafts.
+	\item Discover any ambiguities in the drafts.
 \end{itemize}
 
 \subsection{Personal Goals}
 By the end of the project I would like to have:
 
 \begin{itemize}
-	\item A better understanding of the process of the creation of internet standards.
+	\item A better understanding of the process of the creation of internet
+	standards.
 	\item The ability to implement network protocols. 
-	\item Improved programming ability (Mainly C or C++).
+	\item Improved programming skills (Mainly C or C++).
 \end{itemize}
 
 \chapter{Background and Literature Research}
-
-The reading that I have done for this project can be split into two categories: Theoretical
-reading which covers the theory behind the protocol that shall be implemented,
-and Practical reading that covers the actual implementations that shall be used
-during the project.
+The reading that I have done for this project can be split into two categories:
+Theoretical reading which covers the theory behind the protocols, and Practical 
+reading that covers the actual implementations to be used during the project.
 
 \section{Theoretical Reading}
 The majority of the information for this project is contained within various
@@ -94,125 +124,155 @@ RFCs (Request For Comments).  These are memos published by the IETF (Internet
 Engineering Task Force) that are submitted for peer review.  RFCs form the
 standards that are used across the Internet.
 
-	\subsection{RFC 2328 - OSPFv2} 
-	This RFC defines the OSPFv2 protocol, the protocol is a current 
-	internet standard. 
-	It gives a complete description of the data structures and algorithms
-	of OSPF for IPV4. 
-	The author of this RFC J. Moy has also written two books that 
-	continues the description. 
+\subsection{RFC 2328 - OSPFv2} 
+This RFC defines the OSPFv2 protocol, the protocol is a current internet
+standard. It gives a complete description of the data structures and algorithms
+of OSPF for IPV4. The author of this RFC J. Moy has also written two books that
+continues the description. 
 
-	\subsection{RFC 5340 - OSPFv3}
-	This RFC defined the OSPFv3 protocol (OSPF for IPV6), the protocol is a
-	proposed standard.  Since OSPFv3 in general is fairly similar to OSPFv2,
-	the RFC describes only the differences between the two protocols. 
+\subsection{RFC 5340 - OSPFv3}
+This RFC defined the OSPFv3 protocol (OSPF for IPV6), the protocol is a
+proposed standard.  Since OSPFv3 in general is fairly similar to OSPFv2,
+the RFC describes only the differences between the two protocols. 
 
-	Neither Quagga nor XORP actually implement this RFC - Quagga implements
-	RFC 2740 which is technically compatible and XORP claims to implement
-	the draft of this RFC. 
+Neither Quagga nor XORP actually implement this RFC - Quagga implements
+RFC 2740 which is technically compatible and XORP claims to implement
+the draft of this RFC. 
 
-	\subsection{draft-dimitri-zospf-00 - Zeroconf OSPF}
-	This draft was published in 2002, and expired in 2003 - it never passed
-	version 00.  However, it lays out many of the main concepts for later
-	drafts.  A method was proposed for running a cut down version of OSPFv3
-	for routing both IPV4 and IPV6 traffic without requiring any manual
-		configuration. 
+\subsection{draft-dimitri-zospf-00 - Zeroconf OSPF}
+This draft was published in 2002, and expired in 2003 - it never passed
+version 00.  However, it lays out many of the main concepts for later
+drafts.  A method was proposed for running a cut down version of OSPFv3
+for routing both IPV4 and IPV6 traffic without requiring any manual
+	configuration. 
 
-	\subsection{draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration} 
-	The main draft that will be used for this project, it provides a set of
-	modifications that can be made to the OSPFv3 protocol to run (in a
-	slightly restricted manner e.g.  single area) it in without needing any
-	manual configuration.  The draft discusses configurations that should be
-	set in some default manner, methods of selecting Router-IDs and ways of
-	detecting duplicate R-IDs. 
+\subsection{draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration} 
+The main draft that will be used for this project, it provides a set of
+modifications that can be made to the OSPFv3 protocol to run (in a
+slightly restricted manner e.g.  single area) it in without needing any
+manual configuration.  The draft discusses configurations that should be
+set in some default manner, methods of selecting Router-IDs and ways of
+detecting duplicate R-IDs. 
 
-	The draft references many RFCs, a good understanding of the concepts 
-	that they convey is required to implement the draft successfully:
+The draft references many RFCs, a good understanding of the concepts 
+that they convey is required to implement the draft successfully:
 
-	\begin{itemize}
-			\item RFC 5838 - OSPFv3-AF (Address Families)
-			\item RFC 6506 - OSPFv3-AUTH-TRAILER
-			\item RFC 3630 (4230 \& 5786) - 
-			Traffic Engineering Extensions 
-			\item RFC 4862 - SLAAC (IPv6) 
-			\end{itemize}
-	
+\begin{itemize}
+	\item RFC 5838 - OSPFv3-AF (Address Families)
+	\item RFC 6506 - OSPFv3-AUTH-TRAILER
+	\item RFC 3630 (4230 \& 5786) - Traffic Engineering Extensions 
+	\item RFC 4862 - SLAAC (IPv6) 
+\end{itemize}
 
-	\subsection{draft-arkko-homenet-prefix-assignment-03 -
-	Prefix Assignment in Home Network}
+
+\subsection{draft-arkko-homenet-prefix-assignment-03 - Prefix Assignment in Home Network}
  		
-	This draft is written by the same author as the previous draft, and as a
-	testament to how recent this work is, a new version of this draft has
-	been released since the beginning of this project. 
-	
-	\em Haven't really read this draft properly yet, won't summarise it
-	until I have a better understanding \em
+This draft is written by the same author as the previous draft, and as a
+testament to how recent this work is, a new version of this draft has
+been released since the beginning of this project. 
+
+\todo{Haven't really read this draft properly yet, won't summarise it
+until I have a better understanding}
 
 
-	\subsection{Cisco's Guide to Configuring OSPFv3}
-	
-	Although it is aimed at network administrators, this document provides a
-	nice high level overview of the OSPFv3 Protocol.
+\subsection{Cisco's Guide to Configuring OSPFv3}
 
-	\subsection{The Three Books}
+Although it is aimed at network administrators, this document provides a
+nice high level overview of the OSPFv3 Protocol.
 
-	\em Will change this point \em 
-	
-	Yet to read cover to cover - have used briefly for reference. 
+\subsection{The Three Books}
+
+\todo{Will change this point}
+
+Yet to read cover to cover - have used briefly for reference. 
 
 \section{Practical Reading}		
 Much of the practical information for this project is from online tutorials and
 documentation of software projects.  
 
-	\subsection{Alix 2d3 Installation Guide}
-	This guide offered a comprehensive list of steps that need to be taken
-	to install Ubuntu linux on an Alix 2d3 board.  The article is written in
-	German but using Google translate it is quite easy to follow (since a
-	large amount of it is just commands).  The process involves mounting the
-	compact flash card on an existing Ubuntu desktop.  The card is formatted
-	and partitioned and a small install of Linux is copied to the card using
-	debootstrap.  Next, the file system root is set to cards mount point and
-	various configuration files are edited and essential software packages
-	(such as Vim, ssh and sudo) are installed. A boot-loader such as grub is
-	also installed.  Finally the Alix board is booted with the flash card
-	inserted while connected to a serial port.  {\bf cu} can be used to gain
-	a terminal connection to the board and ensure that there are no Magic
-	ELF errors. 
+\subsection{Alix 2d3 Installation Guide}
+This guide offered a comprehensive list of steps that need to be taken
+to install Ubuntu linux on an Alix 2d3 board.  The article is written in
+German but using Google translate it is quite easy to follow (since a
+large amount of it is just commands).  
 
+The process involves mounting the compact flash card on an existing Ubuntu
+desktop.  The card is formatted and partitioned and a small install of Linux is
+copied to the card using debootstrap.  Next, the file system root is set to
+cards mount point and various configuration files are edited and essential
+software packages (such as Vim, ssh and sudo) are installed. A boot-loader such
+as grub is also installed.  Finally the Alix board is booted with the flash card
+inserted while connected to a serial port.  {\bf cu} can be used to gain a
+terminal connection to the board and ensure that there are no Magic ELF errors.
 
-	\subsection{OSPF Implementations}
+\subsection{OSPF Implementations}
+There are many different implementations of the OSPF the three most popular open
+source implementations are Xorp, Quagga and Bird. Each of the projects appear to 
+be well documented. They all use Git as version control software and they all 
+have somewhat active mailing lists (both user and developer).
 
-	\em Not sure whether the following strictly belongs in a reading section
-	\em
+\subsubsection{Xorp}
+XORP is an implementation of various routing protocols, including
+OSPFv3. It is Implemented in C++ following an Object Oriented style.
+OSPFv2 and OSPFv3 share much of the same code with conditional code
+separating the parts which are different.
 
-	All three implementations appear to be well documented.  All use Git as
-	version control software.  All have somewhat active mailing lists
-	(Developer and user)
+\subsubsection{Quagga}
 
-	\subsubsection{Xorp}
-	XORP is an implementation of various routing protocols, including
-	OSPFv3.  It is Implemented in C++ following an Object Oriented style.
-	OSPFv2 and OSPFv3 share much of the same code with conditional code
-	separating the parts which are different.
-	
-	\subsubsection{Quagga}
-	Quagga is another implementation of various routing protocols.  It is a
-	fork of the now defunct GNU Zebra project.  Quagga also implements
-	OSPFv3, however takes a more separated approach to doing so, providing a
-	completely seperate implementation of OSPFv2. 	The protocols are
-	implemented in C using a mainly Struct based style.  Vyatta the open
-	source software based virtual router notably switched from XORP to
-	Quagga. Having been subscribed to the mailing lists for a few weeks, the
-	quagga mailing list seems to be the most active.
+\todo{This seems a little opinionated, possibly make it more factual}
 
-	\subsubsection{Bird}
-	Bird is a more lightweight implementation. It also makes use of C
-	structs. It has already been used to successfully implement zOSPF.
+Quagga is another implementation of various routing protocols.  It is a
+fork of the now defunct GNU Zebra project.  Quagga also implements
+OSPFv3, however takes a more modular approach to doing so, providing a
+completely seperate implementation of OSPFv2. The protocols are
+implemented in C using a mainly Struct based style.  Vyatta the open
+source software based virtual router notably switched from XORP to
+Quagga. 
 
+\subsubsection{BIRD}
+BIRD is a more lightweight implementation. It also makes use of C
+structs. It has already been used to successfully implement zOSPF.
 
 \chapter{Design of System}
+\todo{The justification of approach should be included in this section IMO.}
+Much of the design of my project has been done by individuals and groups of
+people who have far more knowledge and experience working with networks than I
+do. 
 
-\chapter{Justification for Approach}
+\section{Chosen System}
+The routing protcol suite that I have chosen to base my project on is Quagga. I
+made this choice for many reasons. Firstly, having been subscribed to the
+mailing lists for a few weeks now, I observed that Quagga has the most active
+mailing lists. Secondly, Quagga splits up OSPFv2 and OSPFv3; since I am only
+concerned with OSPFv3 for my project, this should reduce some of the complexity
+involved with the implementation. Quagga is used by the Vyatta project which
+gives it a large amount of exposure. 
+
+I also found it easiest to install set up and use Quagga. It has a precompiled
+package in Ubuntu's apt (Advanced Packaging Tool) repositories. One of the
+reasons that I decided against using BIRD is that an implementation for a new
+platform is more helpful to the community. One potential downside to using
+Quagga is that it uses plain struct based C, and I have more experience writing
+object oriented code. 
+
+\todo{Then go on to explain how Quagga is structured}
+
+\section{Test Networks}
+To ensure that my changes work as expected, I will need to test instances of it
+running on a few typical test networks. 
+
+\missingfigure{Test Network Topology}
+
+\chapter{Tool and Techniques}
+
+Version control - Git
+Software Engineerign Methodology - Agile (Scrum)
+Project/Task management - Trello
+Scheduled Builds - Jenkins 
+Bug Tracker - JIRA 
+Report - LaTeX
+ > LaTeX packages: todonotes
+Text Editor - VIM?
 
 \chapter{Report on Technical Progress}
 
@@ -288,7 +348,7 @@ alterations will be realised.
 \item Test the implementation with multiple instances of the same implementation.
 \item Test the implementation with other implementations of protocol 
 \item Test the implementation on people. \em Would require ethics approval etc. \em
-
+\todo{Decide if I will test on people}
 \item The project is open to extensions. Possible extensions are:
 
 \begin{itemize}
@@ -302,4 +362,17 @@ alterations will be realised.
 No project would be complete without a Gantt chart... I'll try and find the one
 from Christmas dinner last year...
 
+\chapter{Risk Analysis}
+
+I could get an electric shock!
+
+Network outage. On the 1st - 2nd (etc) Dec 2012 ECS had a fairly major network
+outage due to a hardware failure. I was unable to do other coursework because I
+needed to use the software within ECS. 
+ > DCVS should help prevent this from being an issue. 
+ > Replicate code and resources in ECS, at home and in the cloud. 
+
+Fire. Don't assume any one place is safe. ECS burned down in '05.
+
 \end{document}
+
