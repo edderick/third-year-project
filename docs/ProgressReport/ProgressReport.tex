@@ -43,15 +43,16 @@ Second examiner: Dr KP Zauner}
 \chapter{Project Description}
 
 The original project definition was to create a tool to simplify network
-administration in the home.  This definition was left open ended to ensure that
-the project was suitable before it was committed to.  The project has now been
-more rigidly defined as ``Implementing Zero Config OSPF''.
+administration in the home.  I left the definition very open ended as I was
+undecided between two projects. The first project was a home gateway monitoring
+system and the second, the project that I have chosen. A more descriptive title
+for my project is now ``Implement zero configuration OSPFv3''.
 
-An implementation of the OSPF (Open Shortest Path First) routing protocol shall
-be augmented to require no configuration.
-
-The augmented implementation will be tested to ensure that it works correctly
-both with homogeneous instances and instances of alternative implementations. 
+I shall be augmenting an existing implementation of the OSPF (Open Shortest Path
+First) routing protocol to require no configuration on a simple multiple subnet
+home network. The augmented implementation will be tested to ensure that it
+works correctly both with homogeneous instances and instances of alternative
+implementations. 
 
 \section{Goals}
 
@@ -75,14 +76,14 @@ The following goals are things that the project should do:
 By the end of the project I would like to have:
 
 \begin{itemize}
-	\item Understanding of the process of the creation of internet standards.
-	\item Ability to implement network protocols. 
-	\item Improved programming ability (Mainly C/C++).
+	\item A better understanding of the process of the creation of internet standards.
+	\item The ability to implement network protocols. 
+	\item Improved programming ability (Mainly C or C++).
 \end{itemize}
 
 \chapter{Background and Literature Research}
 
-The reading for this project can be split into two categories: Theoretical
+The reading that I have done for this project can be split into two categories: Theoretical
 reading which covers the theory behind the protocol that shall be implemented,
 and Practical reading that covers the actual implementations that shall be used
 during the project.
@@ -93,10 +94,7 @@ RFCs (Request For Comments).  These are memos published by the IETF (Internet
 Engineering Task Force) that are submitted for peer review.  RFCs form the
 standards that are used across the Internet.
 
-\begin{itemize}
-
-	\item RFC 2328 - OSPFv2 
-
+	\subsection{RFC 2328 - OSPFv2} 
 	This RFC defines the OSPFv2 protocol, the protocol is a current 
 	internet standard. 
 	It gives a complete description of the data structures and algorithms
@@ -104,8 +102,7 @@ standards that are used across the Internet.
 	The author of this RFC J. Moy has also written two books that 
 	continues the description. 
 
-	\item RFC 5340 - OSPFv3
-	
+	\subsection{RFC 5340 - OSPFv3}
 	This RFC defined the OSPFv3 protocol (OSPF for IPV6), the protocol is a
 	proposed standard.  Since OSPFv3 in general is fairly similar to OSPFv2,
 	the RFC describes only the differences between the two protocols. 
@@ -114,16 +111,14 @@ standards that are used across the Internet.
 	RFC 2740 which is technically compatible and XORP claims to implement
 	the draft of this RFC. 
 
-	\item draft-dimitri-zospf-00 - Zeroconf OSPF
-
+	\subsection{draft-dimitri-zospf-00 - Zeroconf OSPF}
 	This draft was published in 2002, and expired in 2003 - it never passed
 	version 00.  However, it lays out many of the main concepts for later
 	drafts.  A method was proposed for running a cut down version of OSPFv3
 	for routing both IPV4 and IPV6 traffic without requiring any manual
 		configuration. 
 
-	\item draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration 
-	
+	\subsection{draft-ietf-ospf-ospfv3-autoconfig-00 - OSPFv3 Auto-Configuration} 
 	The main draft that will be used for this project, it provides a set of
 	modifications that can be made to the OSPFv3 protocol to run (in a
 	slightly restricted manner e.g.  single area) it in without needing any
@@ -143,8 +138,8 @@ standards that are used across the Internet.
 			\end{itemize}
 	
 
-	\item  draft-arkko-homenet-prefix-assignment-03 -
-	Prefix Assignment in Home Network
+	\subsection{draft-arkko-homenet-prefix-assignment-03 -
+	Prefix Assignment in Home Network}
  		
 	This draft is written by the same author as the previous draft, and as a
 	testament to how recent this work is, a new version of this draft has
@@ -154,28 +149,22 @@ standards that are used across the Internet.
 	until I have a better understanding \em
 
 
-	\item Cisco's Guide to Configuring OSPFv3 
+	\subsection{Cisco's Guide to Configuring OSPFv3}
 	
 	Although it is aimed at network administrators, this document provides a
 	nice high level overview of the OSPFv3 Protocol.
 
-	\item The Three Books
+	\subsection{The Three Books}
 
 	\em Will change this point \em 
 	
 	Yet to read cover to cover - have used briefly for reference. 
 
-\end{itemize}
-
 \section{Practical Reading}		
-
 Much of the practical information for this project is from online tutorials and
 documentation of software projects.  
 
-	\begin{itemize}
-
-	\item Alix 2d3 Installation Guide
-
+	\subsection{Alix 2d3 Installation Guide}
 	This guide offered a comprehensive list of steps that need to be taken
 	to install Ubuntu linux on an Alix 2d3 board.  The article is written in
 	German but using Google translate it is quite easy to follow (since a
@@ -190,36 +179,40 @@ documentation of software projects.
 	a terminal connection to the board and ensure that there are no Magic
 	ELF errors. 
 
+
+	\subsection{OSPF Implementations}
+
 	\em Not sure whether the following strictly belongs in a reading section
 	\em
 
-	\item Xorp
-	
+	All three implementations appear to be well documented.  All use Git as
+	version control software.  All have somewhat active mailing lists
+	(Developer and user)
+
+	\subsubsection{Xorp}
 	XORP is an implementation of various routing protocols, including
 	OSPFv3.  It is Implemented in C++ following an Object Oriented style.
 	OSPFv2 and OSPFv3 share much of the same code with conditional code
 	separating the parts which are different.
 	
-	\item Quagga
-	
+	\subsubsection{Quagga}
 	Quagga is another implementation of various routing protocols.  It is a
 	fork of the now defunct GNU Zebra project.  Quagga also implements
 	OSPFv3, however takes a more separated approach to doing so, providing a
 	completely seperate implementation of OSPFv2. 	The protocols are
 	implemented in C using a mainly Struct based style.  Vyatta the open
 	source software based virtual router notably switched from XORP to
-	Quagga. 
+	Quagga. Having been subscribed to the mailing lists for a few weeks, the
+	quagga mailing list seems to be the most active.
 
-	\item Bird
-	Bird is a more lightweight implementation.  It has already been used to
-	successfully implement zOSPF.
+	\subsubsection{Bird}
+	Bird is a more lightweight implementation. It also makes use of C
+	structs. It has already been used to successfully implement zOSPF.
 
-\end{itemize}
 
-	All three implementations appear to be well documented.  All use Git as
-	version control software.  All have somewhat active mailing lists
-	(Developer and user)
+\chapter{Design of System}
 
+\chapter{Justification for Approach}
 
 \chapter{Report on Technical Progress}
 
