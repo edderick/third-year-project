@@ -3,11 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\author{Edward Seabrook \\ 
-Electronics and Computer Science \\ 
-University of Southampton \\ \\
-Project supervisor: Dr T Chown \\
-Second examiner: Dr KP Zauner}
+\author{Edward Seabrook} 
 \title{Third Year Project Progress Report}
 
 \usepackage{titlesec}
@@ -111,6 +107,7 @@ By the end of the project I would like to have:
 	standards.
 	\item The ability to implement network protocols. 
 	\item Improved programming skills (Mainly C or C++).
+	\item Learned about new tools.
 \end{itemize}
 
 \chapter{Background and Literature Research}
@@ -275,18 +272,56 @@ running on a few typical test networks.
 \missingfigure{Test Network Topology}
 
 \chapter{Tool and Techniques}
+\todo{Are there really any Techniques in here?}
 
-Version control - Git
-Software Engineerign Methodology - Agile (Scrum)
-Project/Task management - Trello
-Scheduled Builds - Jenkins 
-Bug Tracker - JIRA 
-Report - LaTeX
- > LaTeX packages: todonotes
-Text Editor - VIM?
+During the project I shall be making use of many different tools and techniques
+to help me complete various tasks. One of my goals is to learn about new tools,
+so I have tried to use tools that I only have a small amount of experience
+working with. 
+
+\section{Git}
+I have chosen to use Git as my version control system. This choice was
+partially influenced by the fact that Quagga uses Git, however there are many
+other good reasons for using Git, or any other Distributed Version Control
+System (DVCS). Firstly, version control is essential to a software project as
+it enables you to keep track of changes over time and revert to old versions if
+neccessary. Distributed version control is superior to traditional centralised 
+version control system such as SVN as it allows work to be done without internet
+connectivity and speeds up commit time (hopefully encouraging more frequent
+commits). I shall be using bit bucket to back up my repository in the ``cloud''.
+
+\section{Trello}
+I shall be using trello as a task management platform. Trello is a web app based 
+on the Kanban method of project manaement. It provides card than can be placed
+into lists and moved around between lists. Lists can have titles such as
+``Thinking'', ``Doing'', ``Done''. Trello will help me to keep track of what
+needs doing during my project.
+
+\section{JIRA}
+JIRA is an issue tracking software. I shall use it to keep track of bugs and
+features that I need to work on. 
+
+\section{Jenkins}
+Jenkins is a continuous integration server, it can be configured to pull your
+code from a repository and build it to make sure it still works.  
+
+\section{\LaTeX}
+I have chosed to produce all of the documentation associated with this project
+using \LaTeX. I chose \LaTeX because it is a powerful tool that allows me to
+focus on writing my report rather than typesetting. It also tends to br more
+robust for longer documents than traditional WYSIWYG editors such as Microsoft
+Word.
+
+\subsection{Todonotes Package}
+I shall use the package todonotes to help me keep track of ideas and tasks that
+need to be done in my document.
+
+\subsection{Texcount}
+As word counts are quite important throughout the project, I shall make use of
+the texcount script to count the words in my documents.
+
 
 \chapter{Report on Technical Progress}
-
 So far, good progress has been made on the project.  The Alix 2d3 boards have
 been set up to run Ubuntu Linux and have remained stable - both devices
 currently have an uptime of 28 days.
