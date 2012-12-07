@@ -46,52 +46,64 @@
 
 \chapter{Project Description}
 I left my initial project definition very open ended as I was undecided between
-two projects - I was unsure of the scope of a third year project, and my
-competence as a software enineer. The original project definition was to create
+two projects. I was unsure of both the scope of a third year project, and my
+competence as a software engineer. The original project definition was to create
 ``a tool to simplify network administration in the home''. The first potential
 project was a home gateway monitoring system, the second was the project that
 I have chosen. 
 
 A more descriptive title for my project now is ``Implementing Zero configuration
 OSPFv3''. I shall be augmenting an existing implementation of the OSPF (Open
-Shortest Path First) routing protocol to require no configuration on a simple
-multiple subnet home network. The augmented implementation will be tested to
-ensure that it works correctly both with homogeneous instances and instances of
-alternative implementations. 
+Shortest Path First) network routing protocol such that it doesn't require any
+configuration to effectively route network traffic on a simple multiple subnet
+home network. The augmented implementation will be tested to ensure that it
+works correctly both with homogeneous instances and instances of alternative
+preexisting implementations. 
 
 \section{Background}
 As computing becomes more and more ubiquitous, home networks will have more and
-more devices atached. It is difficult for us to predict all the possible uses of
-network devices; some examples might include sensor networks to monitor the
-home, network attached appliances such as ovens and dishwashers and home
-surveilence systems (e.g. CCTV). 
+more devices attached. It is difficult for us to predict all the possible future
+uses of network devices; some examples might include sensor networks to monitor
+the home, network attached appliances such as ovens and dishwashers and home
+surveillance systems (e.g. CCTV). The IETF (Internet Engineering Task Force)
+Home Networking (homenet) working group is doing a lot of exciting work into the
+evolution of networking in residential homes. 
 
-With an increasing number of devices, the traffic on the network could become
-very large quite quickly. This is a problem that could be easily reduced by
-splitting the network into multiple subnets. For example one for sensors, one
-for PCs and one for appliances. 
+With an increasing number of devices, the traffic on the network will quickly
+become very large. This is a problem that could be easily reduced by splitting
+the network into multiple subnets. For example one for sensors, one for PCs and
+one for appliances. 
 
-It would also be a convenient way of enabling public access to a home
-network. A subnet could be created for guests to connect to, either over
-wireless or some form of ethernet access point. The guest network could be
-provided with some subset of the services of the main home network. Internet
-access could be provided by SMB or NFS would still be unaccessable.
+It would also be a convenient way of enabling public access to a home network. A
+subnet could be created for guests to connect to, either over wireless or some
+form of Ethernet access point. The guest network could be provided with some
+subset of the services of the main home network. Internet access could be
+provided but file sharing protocols such as SMB (Server Message Block) would
+still be unaccessible.
 
-The IETF Home Networking (homenet) working group is doing a lot of exciting work
-into the evolution of networking in residential homes. 
+Routing technology is common place in larger networks such as Universities or
+Businesses, where full time network administrators can be employed to set up and
+maintain the networks. Unfortunately, most home users don't have much technical
+knowledge, instead they demand a solution that can simply be plugged in and left
+alone. This is where my project comes in. 
+
+
+\todo{Where should I stick in the IPv4 vs IPv6 Spiel?}
+Another problem that this project takes into consideration is the gradual
+transition from 32bit Internet Protocol Version 4 (IPv4) to 128bit IPv6. 
 
 \section{Goals}
-
 There are a number of goals that the project aims to meet, for it to be deemed
-succesful.
+a success.
 
 \subsection{Project Goals }
 The following goals are things that the project should do:
 
 \begin{itemize}
-	\item Allow multiple networks in the home. 
-	\item Not require configuration: The user shouldn't need to enter any 
-	settings, they should simply plug it in, and it should  work.
+	\item Allow multiple networks in the home. And allow hosts on either
+	network to communicate freely. 
+	\item Require no configuration: The user shouldn't need to enter any 
+	settings, they should simply plug in the router, and it should  work.
 	\item Produce something of value for the community. The code I produce  
 	should adhere to style and quality guidelines to ensure it is useful.
 	\item Help to verify past implementations of the drafts.
@@ -106,7 +118,7 @@ By the end of the project I would like to have:
 	standards.
 	\item The ability to implement network protocols. 
 	\item Improved programming skills (Mainly C or C++).
-	\item Learned about new tools.
+	\item Learned about new tools and techniques.
 \end{itemize}
 
 \chapter{Background and Literature Research}
@@ -116,31 +128,36 @@ reading that covers the actual implementations to be used during the project.
 
 \section{Theoretical Reading}
 The majority of the information for this project is contained within various
-RFCs (Request For Comments).  These are memos published by the IETF (Internet
-Engineering Task Force) that are submitted for peer review.  RFCs form the
-standards that are used across the Internet.
+RFCs (Request For Comments) and drafts of a similar nature. RFCs are memos
+published by the IETF that are submitted for peer review. RFCs form the
+standards that are used across the Internet. Where a more recent RFC has
+obsoleted an older RFC, in this document, I shall tend to avoid mentioning the
+older document. 
 
 \subsection{RFC 2328} 
 This RFC defines the OSPFv2 protocol, the protocol is a current internet
 standard. It gives a complete description of the data structures and algorithms
-of OSPF for IPV4. The author of this RFC J. Moy has also written two books that
-continues the description. 
+of OSPF for IPV4. The appendices of the document provides the reader with a
+clear understanding of the packets that are used in OSPF for IPv4. The author of
+this RFC, J. Moy, has also written two books that continues the description. 
 
 \subsection{RFC 5340}
-This RFC defined the OSPFv3 protocol (OSPF for IPV6), the protocol is a
-proposed standard.  Since OSPFv3 in general is fairly similar to OSPFv2,
-the RFC describes only the differences between the two protocols. 
+This RFC defines the OSPFv3 protocol (OSPF for IPV6), the protocol is only a
+proposed standard, but is very widely accepted.  Since OSPFv3 in general is
+fairly similar to OSPFv2, the RFC describes only the differences between the two
+protocols. 
 
+
+\todo{This is probably a little misleading}
 Neither Quagga nor XORP actually implement this RFC - Quagga implements
 RFC 2740 which is technically compatible and XORP claims to implement
 the draft of this RFC. 
 
 \subsection{draft-dimitri-zospf-00}
-This draft was published in 2002, and expired in 2003 - it never passed
-version 00.  However, it lays out many of the main concepts for later
-drafts.  A method was proposed for running a cut down version of OSPFv3
-for routing both IPV4 and IPV6 traffic without requiring any manual
-	configuration. 
+This draft was published in 2002, and expired in 2003 - it never passed version
+00.  However, it lays out many of the main concepts for later drafts.  A method
+was proposed for running a cut down version of OSPFv3 for routing both IPv4 and
+IPv6 traffic without requiring any manual configuration. 
 
 \subsection{draft-ietf-ospf-ospfv3-autoconfig-00} 
 This draft defines OSPFv3 Auto-Configuration, it is the main draft that will be
@@ -164,33 +181,34 @@ that they convey is required to implement the draft successfully:
 \subsection{draft-arkko-homenet-prefix-assignment-03}
  		
 This draft is written by the same author as the previous draft, it defines
-Prefix Assignment in Home Networks. as a testament to how recent this work is, a
+Prefix Assignment in Home Networks. As a testament to how recent this work is, a
 new version of this draft has been released since the beginning of this project. 
 
-\todo{Haven't really read this draft properly yet, won't summarise it
-until I have a better understanding}
-
+The memo describes a method for dividing an IPv6 prefix across the subnets of a
+home network using Type Length Values (TLVs) in OSPF Link State Advertisements
+(LSAs).
 
 \subsection{Cisco's Guide to Configuring OSPFv3}
 
-Although it is aimed at network administrators, this document provides a
-nice high level overview of the OSPFv3 Protocol.
-
-
+Although it is aimed at network administrators rather than protocol
+implementors, this document provides a nice high level overview of the OSPFv3
+Protocol. I found it useful to use this document to understand the high level
+concepts without having to worry about the low level details.
 
 \subsection{OSPF: Anatomy of an Internet Routing Protocol}
- This book was written by the creator of OSPF (J. Moy). It defines the anatomy
- of OSPF in a greater level of detail than the RFC.
+ This book was written by the creator of OSPF (J. Moy). It defines the design
+ and structure of OSPF in a greater level of detail than the RFC.
 
 \subsection{OSPF: Complete Implementation}
 The companion of the first book, also written by creator of OSPF. Gives a
-complete implementation and walks you through it.
+complete implementation and walks you through how it has been put together. This
+book and it's companion were written before OSPFv3.
 
 \subsection{OSPF and IS-IS}
-Talks about chosing an IGP for large networks. Makes a feature by feature
-comparison of OSPF with IS-IS.
-
-\todo{Note how the books seem to predate OSPFv3}
+Talks about choosing an IGP (Interior Gateway Protocol) for large networks.
+Makes a feature by feature comparison of OSPF with IS-IS (A similar distance
+vector routing protocol). This book is mostly about OSPFv2 but does touch on
+OSPFv3 towards the end.
 
 \section{Practical Reading}		
 Much of the practical information for this project is from online tutorials and
@@ -199,17 +217,37 @@ documentation of software projects.
 \subsection{Alix 2d3 Installation Guide}
 This guide offered a comprehensive list of steps that need to be taken
 to install Ubuntu linux on an Alix 2d3 board.  The article is written in
-German but using Google translate it is quite easy to follow (since a
-large amount of it is just commands).  
+German but using Google translate I was able to follow it since a
+large amount of it is Unix Shell commands.  
 
-The process involves mounting the compact flash card on an existing Ubuntu
-desktop.  The card is formatted and partitioned and a small install of Linux is
-copied to the card using debootstrap.  Next, the file system root is set to
-cards mount point and various configuration files are edited and essential
-software packages (such as Vim, ssh and sudo) are installed. A boot-loader such
-as grub is also installed.  Finally the Alix board is booted with the flash card
-inserted while connected to a serial port.  {\bf cu} can be used to gain a
-terminal connection to the board and ensure that there are no Magic ELF errors.
+The process begins with installing the Compact flash card as a device on an
+existing Ubuntu desktop PC. Next the card is partitioned using \texttt{fdisk},
+the card is then formatted as ext2 (a linux filesystem type) using
+\texttt{mk2fs}. The card is then mounted in the filesystem, using \texttt{mount}
+and a small installation of Linux is copied to the card using
+\texttt{debootstrap} to provide a base system.  
+
+Several settings and devices are linked to the flash cards mount point and
+\texttt{chroot} is used to simulate booting into the new install.
+
+The required configuration files are edited (e.g. network interface settings)
+and essential software packages (such as \texttt{vim}, \texttt{ssh},
+\texttt{sudo}, and \texttt{apt}) are installed. A boot-loader such as
+\texttt{grub} is also installed and configured.  Finally the Alix board is
+booted with the flash card inserted.  
+
+Using a USB to Null Model cable connected to the Alix board's serial port, a
+terminal connection can be established using {\bf cu}. I had a few problems
+using this device (\texttt{ttyUSB0}) but I was able to fix this problem using
+\texttt{chown}. 
+
+\todo{reference?}
+
+This terminal connection can be used to aide the boot process and ensure that
+there are no Magic ELF errors.
+
+Once the Alix boards are up and running it is possible to
+disconnect the serial cable and access them only over \texttt{ssh}. 
 
 \subsection{OSPF Implementations}
 There are many different implementations of the OSPF the three most popular open
@@ -417,10 +455,11 @@ power supplied are double insulated (i.e. no single failure can result in a
 shock), a quick visual inspection by a trained member of staff reassured me that
 they would be safe to use. 
 
-Network outage. On the 1st - 2nd (etc) Dec 2012 ECS had a fairly major network
+Network outage. On the 1st - 2nd December 2012 ECS had a fairly major network
 outage due to a hardware failure. I was unable to do other coursework because I
-needed to use the software within ECS. DCVS should help prevent this from being
-an issue. Replicate code and resources in ECS, at home and in the cloud. 
+needed to use the software within ECS. Making use of a Distributed Version
+Control System (DCVS) should help prevent this from being an issue. Replicate
+code and resources in ECS, at home and in the cloud. 
 
 \todo{When was the fire?}
 There is a very real possibility of fire or some other unforeseeable damage to my
@@ -440,6 +479,20 @@ able to complete in in the period of time available for a third year project.
 Because of this I have chosen to structure my project in a modular way, with
 different stages that I can attempt if I have time. This approach works quite
 well as my project is fairly research based. 
+
+
+\pagebreak
+
+\begin{thebibliography}{9}
+
+	\bibitem{heartImg}
+	Flickr Image of Heart \\
+	gustty,\\
+	\url{http://www.flickr.com/photos/gustty/126606794/}
+
+
+\end{thebibliography}
+
 
 \end{document}
 
