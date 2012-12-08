@@ -1,0 +1,695 @@
+/* Tabellenstyles */
+/*----------------*/
+tr.titel {
+    font-weight: bold;
+    background: #E2C890;
+    color: #000000;
+    text-align: center;
+}
+
+tr.kopf {
+    font-weight: bold;
+    background: #F9EAAF;
+    color: #000000;
+}
+
+tr.normal {
+    background: #F9EAAF;
+    color: #000000;
+}
+
+tr.trennzeile {
+    background: #DDDDDD;
+    color: #000000;
+}
+
+tr.highlight {
+    background: #EEEEEE;
+    color: #000000;
+}
+
+tr.verlauf {
+    font-weight: bold;
+    color: #000000;
+    background-image: url(http://static.cdn.ubuntu-de.org/img/wiki/heading.png);
+    text-align: center;
+}
+
+tr.kde-titel {
+    font-weight: bold;
+    background: #0057AE;
+    color: white;
+    text-align: center;
+}
+
+tr.kde-kopf {
+    font-weight: bold;
+    background: #418DD4;
+    color: white;
+}
+
+tr.kde-normal {
+    background: #418DD4;
+    color: white;
+}
+
+tr.kde-highlight {
+    background: #C0DAFF;
+    color: #000000;
+}
+
+tr.xfce-titel {
+    font-weight: bold;
+    background: #B3DEFD;
+    color:#000000;
+    text-align: center;
+}
+
+tr.xfce-kopf {
+    font-weight: bold;
+    background: #EFEFEF;
+    color: #000000;
+}
+
+tr.xfce-normal {
+    background: #EFEFEF;
+    color: #000000;
+}
+
+tr.xfce-highlight {
+    background: #EFEFEF;
+    color: #000000;
+}
+
+tr.lxde-titel {
+    font-weight: bold;
+    background: #212121;
+    color: white;
+    text-align: center;
+}
+
+tr.lxde-kopf {
+    font-weight: bold;
+    background: #0b60a3;
+    color: white;
+}
+
+tr.lxde-normal {
+    background: #0b60a3;
+    color: white;
+}
+
+tr.lxde-highlight {
+    background: #474747;
+    color: white;
+}
+
+tr.edu-titel {
+    font-weight: bold;
+    background: #9c0000;
+    color: white;
+    text-align: center;
+}
+
+tr.edu-kopf {
+    font-weight: bold;
+    background: #d39528;
+    color: white;
+}
+
+tr.edu-normal {
+    background: #e1dac6f;
+    color: white;
+}
+
+tr.edu-highlight {
+    background: #f4f2e7;
+    color: #000000;
+}
+
+tr.studio-titel {
+    font-weight: bold;
+    background: #171717;
+    color:#009bf9;
+    text-align: center;
+}
+
+tr.studio-kopf {
+    font-weight: bold;
+    background: #525252;
+    color:#009bf9;
+}
+
+tr.studio-normal {
+    font-weight: bold;
+    background: #525252;
+    color:#009bf9;
+}
+
+tr.studio-highlight {
+    background: #171717;
+    color:#FFFFFF;
+}
+
+/* Klasse für einen Befehl in Zelle */
+/*----------------------------------*/
+td.befehl{
+    background: #464646;
+    color: #FFFFFF;
+    font-family: monospace;
+}
+
+td.gruen{
+    background: #CCFF99;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+}
+
+td.grau{
+    background: #eeeeee;
+    color: #000000;
+    text-align: center;
+}
+
+td.gelb{
+    background: #FFFF99;
+    color: #000000;
+    text-align: center;
+}
+
+td.rot{
+    background: #FFCC99;
+    color: #000000;
+    text-align: center;
+}
+
+/* Klasse für die Award Box */
+/*--------------------------*/
+div.award {
+  border: 1px solid #ffcc00;
+}
+
+div.award h3 {
+  background-color: #ffcc00;
+}
+
+/* Bilder für InterWiki */
+/*----------------------*/
+a.interwiki-archwiki {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/10/33/archwiki.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-askubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/49/16/askubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-bitbucket {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/41/45/bitbucket.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-brainstorm {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/23/40/brainstorm.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-bug {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/13/18/bug.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-canonical {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/18/16/canonical.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-canonicalblog {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/15/26/canonicalblog.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-canonicalvoices {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/13/39/canonicalvoices.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-debian {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/04/09/debian.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-debianbug {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/34/29/debianbug.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-debian_de {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/22/40/debian_de.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-desura {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/29/15/desura.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-diaspora {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/35/39/diaspora.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-dropbox {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/39/20/dropbox.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ean {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/09/18/ean.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-edubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/50/17/edubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-fb {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/33/18/fb.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-freecode {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/48/11/freecode.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-freenode {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/23/39/freenode.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-freshmeat {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/55/09/freshmeat.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-gameolith {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/50/15/gameolith.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-gog {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/49/47/gog.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-googlevideo {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/00/34/googlevideo.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-gplus {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/09/37/gplus.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-getdeb {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/15/18/getdeb.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-github {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/15/05/github.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-googlecode {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/36/18/googlecode.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-gnomelook {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/51/16/gnomelook.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-holarse {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/44/18/holarse.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-humble {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/37/18/humble.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-iawm {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/28/40/iawm.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-identica {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/22/18/identica.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-isbn {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/52/18/isbn.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-kubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/49/17/kubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-kubuntu-de {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/36/16/kubuntu-de.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-kubuntu_doc {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/49/17/kubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-lastfm {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/00/18/lastfm.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-launchpad {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/11/18/launchpad.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-liflg {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/23/22/liflg.jpg);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-linuxgaming {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/15/18/linuxgaming.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-lpcode {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/59/26/lpcode.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-lpuser {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/22/18/lpuser.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-lubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/19/28/lubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-man {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/12/38/man.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ml {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/49/45/ml.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-moddb {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/32/28/moddb.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-moby {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/04/47/moby.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-mythbuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/37/18/mythbuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-osm {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/48/09/osm.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-omgubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/52/19/omgubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-packages {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/16/16/packages.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-playdeb {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/55/09/playdeb.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-sourceforge {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/39/18/sourceforge.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-sourceforge2 {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/02/28/sourceforge2.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-steam {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/07/37/steam.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-team {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/04/18/team.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+  color:#597A00;
+}
+
+a.interwiki-ticket {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/31/16/ticket.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-twitter {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/56/44/twitter.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/56/18/ubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ubuntuapps {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/53/26/ubuntuapps.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-uf_forum {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/09/38/uf_forum.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-uf_member {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/48/38/uf_member.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-uf_thread {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/17/38/uf_thread.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ubuntu_doc {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/52/40/ubuntu_doc.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ubuntu_fr {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/31/40/ubuntu_fr.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ubuntustudio {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/13/40/ubuntustudio.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-ubuntuone {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/30/16/ubuntuone.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-user {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/22/18/user.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-vimeo {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/16/29/vimeo.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-wikibooks {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/18/09/wikibooks.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-wikimedia {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/30/09/wikimedia.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-wikipedia {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/29/41/wikipedia.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-wikipedia_en {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/45/41/wikipedia_en.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-wordpress {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/25/40/wordpress.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-xfcedocs {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/24/28/xfcedocs.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-xubuntu {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/46/28/xubuntu.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+a.interwiki-youtube {
+  background-image: url(http://media.cdn.ubuntu-de.org/wiki/attachments/18/09/youtube.png);
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+
+/* Silvestern und Weihnachten */
+/*----------------------------*/
+/* Bitte nach möglichkeit die Teile hier nur einkommentieren, wenn notwendig da wir 
+   ansonsten mit Css-Sprites arbeiten um die Seite performanter zu gestalten! */
+/*
+.header h1 a{
+    background-image: url(http://static.cdn.ubuntu-de.org/img/logo-advent4.png);
+    background-image: url(http://static.cdn.ubuntu-de.org/img/logo-advent3.png);
+    background-image: url(http://static.cdn.ubuntu-de.org/img/logo-advent2.png);
+    background-image: url(http://static.cdn.ubuntu-de.org/img/logo-advent1.png);
+    background-image: url(http://static.cdn.ubuntu-de.org/img/logo.png);
+}
+*/
+
+/*
+div.wrap3 {
+    background-image: url(http://static.cdn.ubuntu-de.org/img/head-silvester.jpg);
+    background-image: url(http://static.cdn.ubuntu-de.org/img/head-xmas.jpg);
+    background-image: url(http://static.cdn.ubuntu-de.org/img/head.jpg);
+}
+*/
+
+/*
+div.wrap3 {
+    background-image: url(http://static.cdn.ubuntu-de.org/img/head-silvester.jpg) !important;
+}
+*/
+
+/*
+a.user {
+    background-image: url(http://static.cdn.ubuntu-de.org/img/interwiki/user-xmas.png) !important;
+}
+*/
