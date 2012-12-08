@@ -29,6 +29,9 @@
 \lhead{}\chead{}\rhead{}
 \lfoot{}\cfoot{\thepage}\rfoot{}
 
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
 \begin{document}
 
 \input{./Title.tex}
@@ -147,12 +150,6 @@ proposed standard, but is very widely accepted.  Since OSPFv3 in general is
 fairly similar to OSPFv2, the RFC describes only the differences between the two
 protocols. 
 
-
-\todo{This is probably a little misleading}
-Neither Quagga nor XORP actually implement this RFC - Quagga implements
-RFC 2740 which is technically compatible and XORP claims to implement
-the draft of this RFC. 
-
 \subsection{draft-dimitri-zospf-00}
 This draft was published in 2002, and expired in 2003 - it never passed version
 00.  However, it lays out many of the main concepts for later drafts.  A method
@@ -239,43 +236,42 @@ booted with the flash card inserted.
 Using a USB to Null Model cable connected to the Alix board's serial port, a
 terminal connection can be established using {\bf cu}. I had a few problems
 using this device (\texttt{ttyUSB0}) but I was able to fix this problem using
-\texttt{chown}. 
-
-\todo{reference?}
-
-This terminal connection can be used to aide the boot process and ensure that
-there are no Magic ELF errors.
-
-Once the Alix boards are up and running it is possible to
-disconnect the serial cable and access them only over \texttt{ssh}. 
+\texttt{chown}. This terminal connection can be used to aide the boot process and ensure that
+there are no Magic ELF errors. Once the Alix boards are up and running it is possible to
+disconnect the serial cable and access them over \texttt{ssh} alone. 
 
 \subsection{OSPF Implementations}
-There are many different implementations of the OSPF the three most popular open
-source implementations are Xorp, Quagga and Bird. Each of the projects appear to 
-be well documented. They all use Git as version control software and they all 
+There are many different implementations of the OSPF protocol, the three most popular open
+source implementations are XORP, Quagga and BIRD. Each of the projects appear to 
+be well documented, hey all use Git as version control software and they all 
 have somewhat active mailing lists (both user and developer).
 
-\subsubsection{Xorp}
+\subsubsection{XORP}
 XORP is an implementation of various routing protocols, including
 OSPFv3. It is Implemented in C++ following an Object Oriented style.
 OSPFv2 and OSPFv3 share much of the same code with conditional code
 separating the parts which are different.
 
+XORP implements OSPFv2 to comply with RFC2328 and OSPFv3 to the specification
+defined in draft-ietf-ospf-ospfv3-update-23 (A draft version of RFC 5340).
+
 \subsubsection{Quagga}
-
-\todo{This seems a little opinionated, possibly make it more factual}
-
 Quagga is another implementation of various routing protocols.  It is a
 fork of the now defunct GNU Zebra project.  Quagga also implements
-OSPFv3, however takes a more modular approach to doing so, providing a
+OSPFv3, taking a modular approach, providing a
 completely seperate implementation of OSPFv2. The protocols are
 implemented in C using a mainly Struct based style.  Vyatta the open
 source software based virtual router notably switched from XORP to
 Quagga. 
 
+Quagga supports OSPFv2 as RFC 2328 and OSPFv3 to RFC2740. There are a few
+differences between RFC2740 and RFC5240, these differences are listed in the
+latter.
+
 \subsubsection{BIRD}
 BIRD is a more lightweight implementation. It also makes use of C
-structs. It has already been used to successfully implement zOSPF.
+structs. It has already been used to successfully implement zero config OSPF. 
+BIRD complies to RFC2328 and RFC5240 in it's implementations of OSPF. 
 
 \chapter{Design of System}
 \todo{The justification of approach should be included in this section IMO.}
@@ -284,31 +280,149 @@ people who have far more knowledge and experience working with networks than I
 do. 
 
 \section{Chosen System}
-The routing protcol suite that I have chosen to base my project on is Quagga. I
+The routing protocol suite that I have chosen to base my project on is Quagga. I
 made this choice for many reasons. Firstly, having been subscribed to the
-mailing lists for a few weeks now, I observed that Quagga has the most active
-mailing lists. Secondly, Quagga splits up OSPFv2 and OSPFv3 - they do not share
+mailing lists for a few weeks now, I observed that Quagga seems to be the most
+active project. Secondly, Quagga splits up OSPFv2 and OSPFv3 - they do not share
 any of the same source code; since I am only concerned with OSPFv3 for my
 project, this should reduce some of the complexity involved with the
-implementation. Quagga is used by the Vyatta project which gives it a large
-amount of exposure. 
+implementation. Quagga is also used by the Vyatta project (switching from XORP)
+which gives it a large amount of exposure. 
 
 I also found it easiest to install set up and use Quagga. It has a precompiled
-package in Ubuntu's apt (Advanced Packaging Tool) repositories. One of the
-reasons that I decided against using BIRD is that an implementation for a new
-platform is more helpful to the community. One potential downside to using
+package in Ubuntu's \texttt{apt} (Advanced Packaging Tool) repositories. One of
+the reasons that I decided against using BIRD is that an implementation for a
+new platform is more helpful to the community. One potential downside to using
 Quagga is that it uses plain struct based C, and I have more experience writing
 object oriented code. 
 
 \todo{Then go on to explain how Quagga is structured}
 
+\missingfigure{``Class'' diagram of Quagga}
+
+As previously mentioned, Quagga is written in C and makes a lot of use of
+structs.
+
 \section{Test Networks}
 To ensure that my changes work as expected, I will need to test instances of it
 running on a few typical test networks. 
 
-\missingfigure{Test Network Topology}
+\missingfigure{Typical (future) home network topology(s)}
 
-\chapter{Tool and Techniques}
+\chapter{Report on Technical Progress}
+So far, I have made good progress on the project, and I am well on my way to
+successfully completing the project by the final deadlines.
+
+
+\section{Alix 2d3}
+The Alix 2d3 boards have been set up to run Ubuntu Linux, a description of the
+approach can be found above. In the future it may be necessary to create a more
+customised build for these devices, if for example I find the performance to be
+poor. So far they seem to have remained stable, both devices have an uptime of
+over 28 days.
+
+Quagga has been compiled and installed on one of the routers, and XORP on the
+other. I installed BIRD to my desktop PC.  I found compilation of the projects on the machines themselves to be
+very slow, so in the future I shall use a more powerful machine, for example a
+desktop PC.
+
+\section{Reading}
+All of the material mentioned above has been read lightly. As many of the
+documents reference the other documents, I found it difficult to fully
+understand them, anything I am not confident about will be revisited once I have
+a more solid foundation.
+
+I have studied RFC 2328 (OSPFv2) and RFC 5340 (OSPFv3) in great depth making
+detailed notes of their contents. I have also begun studying the appropriate
+drafts.
+
+As well as reading these documents, I have also looked at the source code of the
+various implementation. After choosing to use Quagga, I began studying it's
+source code in more depth to get an understanding of what changes need to be
+made. 
+
+\section{Network Topologies}
+I have also begun to think about some network topologies that could be
+used as test environments. These topologies need to test both typical home
+networks, and stranger configurations that could result from inexperienced
+people setting up the networks. 
+ 
+As well as this I have begun attempting to assemble the networks that I have
+suggested as test environments to ensure that I have sufficient hardware. 
+
+\section{Progress Report}
+Finally, I have written this document which has helped me formalise how my
+project is coming along. Tasks such as creating a Gantt chart have helped me to
+understand what I need to do when to stay on track.
+
+\chapter{Plan of Remaining Work}
+My project will continue throughout the Christmas holidays although I have
+decided to plan as though I shan't be working over Christmas (or easter) to
+ensure that I do have enough time to complete my project. The following tasks
+need to be completed before I finish my project.
+
+\section{Study Quagga}
+I will need to study in depth the source code of Quagga so that I have a
+good idea of what needs altering to implement the required changes. I will
+produce Class diagrams and other UML (Unified Modelling Language) diagrams to 
+summarise the architecture of the software. The process of producing these
+diagrams should help ensure that I understand the code. I plan to start with the
+diagrams above, and augment these to reflect the specified changes. 
+
+\section{Implementation}
+Next will come the main work of the project. I will need to perform the required
+changes to augment the Protocol to conform with the drafts. I believe that this
+section will take a large proportion of the time of the project, so I aim to
+start this as early as possible. I shall begin by implementing as little as
+is required to make it work, and then extending this in several iterations until
+I have a complete product.
+
+\section{Testing}
+All projects require testing to ensure that they work as expected.
+
+\subsection{Homogeneous Testing}
+To verify that I have produced something that works, I shall test my
+implementation homogeneously. I shall test it on the test network with all of
+the routers running my implementation of zOSPF. 
+
+\subsection{Heterogeneous Testing}
+Networking protocols should not be implementation specific. As such, it should
+be possible for my implementation to work harmoniously with one of the other
+existing implementations. If they do not work together, this would indicate that
+there is a problem with my implementation, the old implementation or there is an
+ambiguity in the specification.
+
+\subsection{User Testing}
+As my project is intended to be used by home users, it might be useful to also
+test on some actual users. The target audience would be technically able people
+who have no experience of configuring multi-subnet networks. 
+
+This would of course require ethics approval, so may not be possible.
+\todo{Decide if I will test on people}
+
+\section{Extensions}
+
+The project is open to extensions.  There are a huge number of possible
+extensions if I do finish early.
+
+\subsection{Multiple Hop Service Discovery}
+As my project would create the possibility to have multiple subnet, a possible
+extension is to investigate, and potentially implement, the feasibility of
+multiple hop service discovery. Essentially service discovery packets could be
+forwarded by the routers of passed around inside the LSAs to enable a device on
+one subnet to see a service advertised on another.
+
+\subsection{Source Based routing}
+It would also be possible to investigate source based routing. In a typical home
+there is only one connection to the internet (Usually DSL) however, in the
+future it may become more common for users to require two separate connections.
+This could cause problems with traffic that needs to respond being sent to the
+wrong gateway. Source based routing is a way of preventing this by inspecting
+the source of the packet as well as it's destination.
+
+\chapter{Project Management}
+
+\section{Tool and Techniques}
 \todo{Are there really any Techniques in here?}
 
 During the project I shall be making use of many different tools and techniques
@@ -316,7 +430,7 @@ to help me complete various tasks. One of my goals is to learn about new tools,
 so I have tried to use tools that I only have a small amount of experience
 working with. 
 
-\section{Git}
+\subsection{Git}
 I have chosen to use Git as my version control system. This choice was
 partially influenced by the fact that Quagga uses Git, however there are many
 other good reasons for using Git, or any other Distributed Version Control
@@ -327,119 +441,39 @@ version control system such as SVN as it allows work to be done without internet
 connectivity and speeds up commit time (hopefully encouraging more frequent
 commits). I shall be using bit bucket to back up my repository in the ``cloud''.
 
-\section{Trello}
+\subsection{Trello}
 I shall be using trello as a task management platform. Trello is a web app based 
 on the Kanban method of project manaement. It provides card than can be placed
 into lists and moved around between lists. Lists can have titles such as
 ``Thinking'', ``Doing'', ``Done''. Trello will help me to keep track of what
 needs doing during my project.
 
-\section{JIRA}
+\subsection{JIRA}
 JIRA is an issue tracking software. I shall use it to keep track of bugs and
 features that I need to work on. 
 
-\section{Jenkins}
+\subsection{Jenkins}
 Jenkins is a continuous integration server, it can be configured to pull your
 code from a repository and build it to make sure it still works.  
 
-\section{\LaTeX}
-I have chosed to produce all of the documentation associated with this project
+\subsection{\LaTeX}
+I have chosen to produce all of the documentation associated with this project
 using \LaTeX. I chose \LaTeX because it is a powerful tool that allows me to
-focus on writing my report rather than typesetting. It also tends to br more
+focus on writing my report rather than typesetting. It also tends to be more
 robust for longer documents than traditional WYSIWYG editors such as Microsoft
 Word.
 
-\subsection{Todonotes Package}
-I shall use the package todonotes to help me keep track of ideas and tasks that
-need to be done in my document.
+\subsubsection{Todonotes Package}
+I have been using the package todonotes to help me keep track of ideas and tasks 
+that need to be done in my documents. This gives me a nice way of keeping my
+ideas separate from my finished work.
 
-\subsection{Texcount}
+\subsubsection{Texcount}
 As word counts are quite important throughout the project, I shall make use of
-the texcount script to count the words in my documents.
+the texcount script to count the words in my documents. Texcount actually parses
+the \LaTeX document so that markup and headings are not counted in the word
+counts that it generated. 
 
-
-\chapter{Report on Technical Progress}
-So far, good progress has been made on the project.  The Alix 2d3 boards have
-been set up to run Ubuntu Linux and have remained stable - both devices
-currently have an uptime of 28 days.
-
-Quagga has been installed on one of the routers, and XORP on the other.
-Compilation of the projects on the machines themselves is very slow, so in the
-future shall be done on a more powerful machine, for example a desktop PC.
-
-All of the reading mentioned above has been read lightly, many of the documents
-reference the other documents so require a more thorough understanding of the
-concepts conveyed in the other documents.
-
-RFC 2328 (OSPFv2) has been studied in great detail, progress has also been made
-with studying RFC 5340 (OSPFv3). 
-
-\chapter{Plan of Remaining Work}
-
-\em
-
-\textbf{
-	By the time that this report is submitted, the following tasks should be
-	complete (an as such moved to the above section) 
-}
-
-\begin{itemize}
-
-\item Deeply read remaining RFCs
-\item Get an instance of each of these protocols running on an Alix 2d3
-\item Look at the source code of the various Implementations. 
-\item Pick an Implementation. I have chosen to base my implementation on Quagga.
-The reasons are as follows: 
-
-\begin{itemize}
-\item Quagga was far simpler to set up. I had many more difficulties installing
-XORP on an ALIX 2d3.
-\item Quagga is contained in the Ubuntu repositories, indicating that it is a
-widely used package. 
-\item Vyatta switched from XORP to Quagga, this shows that Quagga is a stable
-enough platform to be trusted by third parties. 
-\item As far as I know, no one else has implemented for this platform. This means
-that my implementation will potentially be more useful to the community. 
-\item Quagga makes a clear separation between OSPFv3 and OSPFv2. They are two
-separate daemons with completely different source code. This is useful since the
-project only concerns OSPFv3.
-\end{itemize}
-
-
-\end{itemize}
-
-\em 
-
-The following is a brief plan of how the project shall progress:
-
-\begin{itemize}
-
-\item Study the source code of the chosen implementation.
-
-\begin{itemize}
-
-\item Understand the chosen implementation.
-UML diagrams could be drawn to summarise the architecture of the software. 
-
-\item Understand the required changes.
-The UML diagrams could be copied and augmented to show how the required
-alterations will be realised. 
-
-\end{itemize}
-
-\item Perform the required changes to the chosen implementation.
-\item Test the implementation with multiple instances of the same implementation.
-\item Test the implementation with other implementations of protocol 
-\item Test the implementation on people. \em Would require ethics approval etc. \em
-\todo{Decide if I will test on people}
-\item The project is open to extensions. Possible extensions are:
-
-\begin{itemize}
-\item Multiple Hop service discovery.
-\item Source Based routing?
-\end{itemize}
-
-\end{itemize}
 
 \section{Gantt Chart}
 No project would be complete without a Gantt chart... I'll try and find the one
@@ -447,7 +481,7 @@ from Christmas dinner last year...
 
 \missingfigure{Gantt Chart}
 
-\chapter{Risk Analysis}
+\section{Risk Analysis}
 
 When using the power supplied, there is a risk that I could get an electric
 shock. I took the power supplies to be PAT tested on Zepler level 2. As the
