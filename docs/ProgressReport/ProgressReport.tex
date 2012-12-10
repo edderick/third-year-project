@@ -96,11 +96,8 @@ maintain the networks. Unfortunately, most home users don't have much technical
 knowledge, instead they demand a solution that can simply be plugged in and left
 alone. This is where my project comes in. 
 
-
-
-\todo{Where should I stick in the IPv4 vs IPv6 Spiel?}
 Another problem that this project takes into consideration is the gradual
-transition from 32bit Internet Protocol Version 4 (IPv4) to 128bit IPv6. As we
+transition from 32bit IPv4 to 128bit IPv6. As we
 run out of IPv4 addresses, ISPs will be forced to start issuing IPv6 addresses
 as IPv6 has as much larger number of possible addresses.
 
@@ -283,7 +280,6 @@ structs. It has already been used to successfully implement zero config OSPF.
 BIRD complies to RFC2328 and RFC5240 in it's implementations of OSPF. 
 
 \chapter{Design of System}
-\todo{The justification of approach should be included in this section IMO.}
 Much of the design of my project has been done by individuals and groups of
 people who have far more knowledge and experience working with networks than I
 do. 
@@ -306,9 +302,9 @@ Quagga is that it uses plain struct based C, and I have more experience writing
 object oriented code. 
 
 \begin{figure}
-\caption{Diagram of how Quagga is structured.}
 \centering
 \includegraphics[width=\textwidth]{../Diagrams/UML/quaggaZebra.png}
+\caption{Diagram of how Quagga is structured.}
 \end{figure}
 
 
@@ -324,9 +320,29 @@ each of the data structures defined in thd draft.
 
 \section{Test Networks}
 To ensure that my changes work as expected, I will need to test instances of it
-running on a few typical test networks. 
+running on a few typical test networks. Figures \ref{fig:SimpleTestNet} and
+\ref{fig:ComplexTestNet} show examples of possible test network. Figure
+\ref{fig:SimpleTestNet} shows a very simple configuration that would be typical
+in a home. Figure \ref{fig:ComplexTestNet} shows a more complex network that
+contains more problematic features such as multiple possible routes. 
 
-\missingfigure{Typical (future) home network topology(s)}
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{../Diagrams/Network/SimpleTestNet.png}
+\caption{Diagram of a simple test network.}
+\label{fig:SimpleTestNet}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{../Diagrams/Network/ComplexTestNet.png}
+\caption{Diagram of a more complex test network.}
+\label{fig:ComplexTestNet}
+\end{figure}
+
+
+
 
 \chapter{Report on Technical Progress}
 So far, I have made good progress on the project, and I am well on my way to
@@ -414,9 +430,8 @@ ambiguity in the specification.
 \subsection{User Testing}
 As my project is intended to be used by home users, it might be useful to also
 test on some actual users. The target audience would be technically able people
-who have no experience of configuring multi-subnet networks. 
-
-This would of course require ethics approval, so may not be possible.
+who have no experience of configuring multi-subnet networks. This would of course 
+require ethics approval, so may not be possible.
 \todo{Decide if I will test on people}
 
 \section{Extensions}
@@ -438,6 +453,13 @@ future it may become more common for users to require two separate connections.
 This could cause problems with traffic that needs to respond being sent to the
 wrong gateway. Source based routing is a way of preventing this by inspecting
 the source of the packet as well as it's destination.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{../Diagrams/Network/MultipleISP.png}
+\caption{Diagram of a network with multiple ISPs.}
+\label{fig:ComplexTestNet}
+\end{figure}
 
 \chapter{Project Management}
 
@@ -493,13 +515,6 @@ the texcount script to count the words in my documents. Texcount actually parses
 the \LaTeX document so that markup and headings are not counted in the word
 counts that it generated. 
 
-
-\section{Gantt Chart}
-No project would be complete without a Gantt chart... I'll try and find the one
-from Christmas dinner last year...
-
-\missingfigure{Gantt Chart}
-
 \section{Risk Analysis}
 
 When using the power supplied, there is a risk that I could get an electric
@@ -514,7 +529,6 @@ needed to use the software within ECS. Making use of a Distributed Version
 Control System (DCVS) should help prevent this from being an issue. Replicate
 code and resources in ECS, at home and in the cloud. 
 
-\todo{When was the fire?}
 There is a very real possibility of fire or some other unforeseeable damage to my
 data, in 2005 the old Mountbatten building burned to the ground and a lot of
 people lost work. To ensure that, if something like this happens, I will not be
@@ -533,6 +547,15 @@ Because of this I have chosen to structure my project in a modular way, with
 different stages that I can attempt if I have time. This approach works quite
 well as my project is fairly research based. 
 
+\pagebreak
+
+\begin{landscape}
+
+\section{Gantt Chart}
+No project would be complete without a Gantt chart... I'll try and find the one
+from Christmas dinner last year...
+
+\end{landscape}
 
 \pagebreak
 
@@ -559,11 +582,10 @@ well as my project is fairly research based.
 \includegraphics[width=0.75\linewidth]{../Diagrams/Network/TypicalHomenet.png}
 \end{center}
 This diagram shows a typical home network in the present day. The hardware
-inside the box labeled ``Homehub'' is typically provided to the consumer in one
-device which can simply be plugged in and should then just work. These devices
-have many names, including ``Homehub'', ``Wirelessbox'', ``SuperHub'' and ``Home
-gateway''. They are often also refered to as a router, although this is slightly
-misleading as they perform many other tasks that routing. 
+inside the box labeled ``Homehub'' is typically provided to customers as one
+plug in and play device. This type of device has many names, but is commonly
+refered to as a router, although this is slightly misleading as they perform 
+many other tasks that routing. 
 
 As can be seen from the diagram, the box provides the house with wireless and
 wired connections to the LAN and the internet. The WLAN is typically bridged
