@@ -6,6 +6,9 @@
 \author{Edward Seabrook} 
 \title{Third Year Project Progress Report}
 
+\usepackage[refpage]{nomencl}
+\makenomenclature
+
 % Makes Chapter heading look like Section heading
 \usepackage{titlesec}
 \titleformat{\chapter}% reformat chapter headings
@@ -38,6 +41,7 @@
 \usepackage{listings}
 \usepackage{appendix}
 \usepackage{pdflscape}
+
 
 % Not totally sure
 \usepackage{fancyhdr} 
@@ -78,20 +82,21 @@ I have chosen.
 
 A more accurate title for my project is now ``Implementing Zero configuration
 OSPFv3''. I shall be augmenting an existing implementation of the Open Shortest
-Path First (OSPF) network routing protocol so that it doesn't require any
-configuration to effectively route network traffic on a multiple subnet home
-network. The augmented implementation will be tested to ensure that it works
-correctly both with homogeneous instances and instances of alternative
-preexisting implementations. 
+Path First (OSPF) \nomenclature{OSPF}{Open Shortest Path First} network routing
+protocol so that it doesn't require any configuration to effectively route
+network traffic on a multiple subnet home network. The augmented implementation
+will be tested to ensure that it works correctly both with homogeneous instances
+and instances of alternative preexisting implementations. 
 
 \section{Background}
 As computing becomes more and more ubiquitous, the number of devices attached to
 home networks will increase. It is difficult to predict all the possible uses of
 network devices; some examples might include sensor networks to monitor the
 home, network attached appliances such as ovens and dishwashers and surveillance
-systems (e.g. CCTV). The Internet Engineering Task Force (IETF) Home Networking
-(homenet) working group is doing a lot of exciting work into the evolution of
-networking in residential homes. 
+systems (e.g. CCTV). The Internet Engineering Task Force (IETF)
+\nomenclature{IETF}{Internet Engineering Task Force} Home Networking (homenet)
+\nomenclature{homenet}{Home Networking} working group is doing a lot of exciting
+work into the evolution of networking in residential homes. 
 
 With an increasing number of devices, network traffic will quickly become very
 large. This is a problem that can be reduced by splitting the network into
@@ -102,7 +107,8 @@ Multiple subnets would also be a convenient way of enabling public access to a
 home network. A subnet could be created for guests to connect to. This guest
 network could provide some subset of the services of the main home network -
 internet access could be provided but file sharing protocols such as Server
-Message Block (SMB) would remain unaccessible.
+Message Block (SMB) \nomenclature{SMB}{Simple Message Block} would remain
+unaccessible.
 
 Routing is common place in large networks such as Universities or Businesses,
 where full time network administrators set up and maintain the networks.
@@ -111,8 +117,10 @@ solution that can simply be plugged in and left alone. This is where my project
 comes in. 
 
 Another problem that this project takes into consideration is the gradual
-transition from 32bit IPv4 to larger 128bit IPv6 addresses. As we run out of IPv4
-addresses, ISPs will be forced to start issuing IPv6 addresses to resolve the
+transition from 32bit IPv4 \nomenclature{IPv4}{Internet Protocol Version 4} to
+larger 128bit IPv6  \nomenclature{IPv6}{Internet Protocol Version 6} addresses.
+As we run out of IPv4 addresses, ISPs \nomenclature{ISP}{Internet Service
+Provider}  will be forced to start issuing IPv6 addresses to resolve the
 problem.
 
 \section{Goals}
@@ -544,6 +552,10 @@ This approach should work quite well as my project is fairly research based.
 This Gantt chart shows how I have spent my time so far, and how I expect the
 work to continued after the Christmas vacation.
 \end{landscape}
+
+\pagebreak
+
+\printnomenclature
 
 \pagebreak
 
