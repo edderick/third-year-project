@@ -25,7 +25,7 @@
 \titlespacing*{\subsubsection}{0pt}{0pt}{5pt}
 \titlespacing*{\paragraph}{0pt}{0pt}{5pt}
 
-% Set margins to requied
+% Set margins to required
 \usepackage[top=2.4cm, bottom=2.4cm, left=3.5cm, right=2.4cm]{geometry} 
 
 % Sort out margins for todonotes
@@ -41,7 +41,7 @@
 \usepackage{listings}
 \usepackage{appendix}
 \usepackage{pdflscape}
-
+\usepackage{cite}
 
 % Not totally sure
 \usepackage{fancyhdr} 
@@ -96,7 +96,7 @@ home, network attached appliances such as ovens and dishwashers and surveillance
 systems (e.g. CCTV). The Internet Engineering Task Force (IETF)
 \nomenclature{IETF}{Internet Engineering Task Force} Home Networking (homenet)
 \nomenclature{homenet}{Home Networking} working group is doing a lot of exciting
-work into the evolution of networking in residential homes. 
+work into the evolution of networking in residential homes\cite{homenet}.
 
 With an increasing number of devices, network traffic will quickly become very
 large. This is a problem that can be reduced by splitting the network into
@@ -166,30 +166,33 @@ document, where a more recent RFC has obsoleted an older RFC, I shall avoid
 mentioning the older document. 
 
 \subsection{RFC 2328} 
-This RFC defines the OSPFv2 routing protocol. The protocol is a current internet
-standard. It gives a complete description of the data structures and algorithms
-of OSPF for IPv4. The appendices of the document provides the reader with a
-clear description of the packets that are used in OSPF for IPv4.
+This RFC defines the OSPFv2 routing protocol\cite{rfc2328}. The protocol is a
+current internet standard. It gives a complete description of the data
+structures and algorithms of OSPF for IPv4. The appendices of the document
+provides the reader with a clear description of the packets that are used in
+OSPF for IPv4.
 
 \subsection{RFC 5340}
-This RFC defines the OSPFv3 protocol (OSPF for IPv6). The protocol is only a
-proposed standard, but is very widely accepted.  Since OSPFv3 in general is
-fairly similar to OSPFv2, the RFC describes only the differences between the two
-protocols. 
+This RFC defines the OSPFv3 protocol (OSPF for IPv6)\cite{rfc540}. The protocol
+is only a proposed standard, but is very widely accepted.  Since OSPFv3 in
+general is fairly similar to OSPFv2, the RFC describes only the differences
+between the two protocols. 
 
 \subsection{draft-dimitri-zospf-00}
 This draft was published in 2002, and expired in 2003 - it never passed version
-00.  However, it lays out many of the main concepts for later drafts. A method
+00\cite{draft-dimitri-zospf-00}.  However, it lays out many of the main concepts for later drafts. A method
 was proposed for running a cut down version of OSPFv3 for routing both IPv4 and
 IPv6 traffic without requiring any manual configuration. 
 
 \subsection{draft-ietf-ospf-ospfv3-autoconfig-00} 
-This draft defines OSPFv3 Auto-Configuration, it is the main draft that will be
-used for this project, it provides a set of modifications that can be made to
-the OSPFv3 protocol to run (in a slightly restricted manner e.g. single area)
-it in without needing any manual configuration. The draft discusses
-configurations that should be restricted to defaults, methods of selecting
-Router-IDs (RID) \nomenclature{RID}{Router ID} and ways of detecting duplicate RIDs. 
+This draft defines OSPFv3
+Auto-Configuration\cite{draft-ietf-ospf-ospfv3-autoconfig-00}, it is the main
+draft that will be used for this project, it provides a set of modifications
+that can be made to the OSPFv3 protocol enable it to run (in a slightly
+restricted manner e.g. single area) without needing any manual configuration.
+The draft discusses configurations that should be restricted to defaults,
+methods of selecting Router-IDs (RID) \nomenclature{RID}{Router ID} and ways of
+detecting duplicate RIDs. 
 
 The draft references many RFCs, a good understanding of the concepts 
 that they convey is required to implement the draft successfully:
@@ -202,9 +205,10 @@ that they convey is required to implement the draft successfully:
 \end{itemize}
 
 \subsection{draft-arkko-homenet-prefix-assignment-03}
-This draft is by the same author as the previous draft, it defines
-Prefix Assignment in Home Networks. As a testament to how recent this work is, a
-new version of this draft has been released since the beginning of this project. 
+This draft is by the same author as the previous draft, it defines Prefix
+Assignment in Home Networks\cite{draft-arkko-homenet-prefix-assignment-03}. As a
+testament to how recent this work is, a new version of this draft has been
+released since the beginning of this project. 
 
 The memo describes a method for dividing an IPv6 prefix across the subnets of a
 home network using Type Length Values (TLVs) \nomenclature{TLV}{Type Length
@@ -213,18 +217,18 @@ Advertisement}.
 
 \subsection{Cisco's Guide to Configuring OSPFv3}
 Aimed at network administrators, this document provides a nice high level
-overview of the OSPFv3 Protocol. I found it useful to use this document to
-understand the high level concepts without having to worry about low level
-details.
+overview of the OSPFv3 Protocol\cite{CiscoOSPFv3Guide}. I found it useful to use
+this document to understand the high level concepts without having to worry
+about low level details.
 
 \subsection{OSPF: Anatomy of an Internet Routing Protocol}
-This book was written by the creator of OSPF, J. Moy. It defines the design and
-structure of OSPF in a greater level of detail than the RFC.
+This book\cite{OSPFAIRP} was written by the creator of OSPF, J. Moy. It defines
+the design and structure of OSPF in a greater level of detail than the RFC.
 
 \subsection{OSPF: Complete Implementation}
-The companion of the first book, also written by J. Moy. Provides a complete
-implementation and walks you through how it has been put together. This book and
-it's companion were written before OSPFv3.
+The companion of the first book\cite{OSPFCI}, also written by J. Moy. Provides a
+complete implementation and walks you through how it has been put together. This
+book and it's companion were written before OSPFv3.
 
 \subsection{OSPF and IS-IS}
 Talks about choosing an IGP (Interior Gateway Protocol)
@@ -232,17 +236,17 @@ Talks about choosing an IGP (Interior Gateway Protocol)
 feature by feature comparison of OSPF with IS-IS
 \nomenclature{IS-IS}{Intermediate System To Intermediate System}(another
 distance vector routing protocol). This book is mostly about OSPFv2 but does
-touch on OSPFv3 towards the end.
+touch on OSPFv3 towards the end\cite{OSPFvsISIS}.
 
 \section{Practical Reading}		
 The practical information for this project is mainly from online tutorials and
 documentation of software projects.  
 
 \subsection{alix2d3 Installation Guide}
-This guide offered a comprehensive list of steps that need to be taken to
-install Ubuntu Linux on a PC Engines alix2d3.  The article is written in
-German but using Google translate I was able to follow it as it is mainly a list
-of shell commands.
+This guide\cite{germanGuide} offered a comprehensive list of steps that need to
+be taken to install Ubuntu Linux on a PC Engines alix2d3.\cite{alix2d3}  The article is
+written in German but using Google translate I was able to follow it as it is
+mainly a list of shell commands.
 
 The process begins with installing the compact flash card as a device on an
 existing Ubuntu desktop PC. Next the card is partitioned using \texttt{fdisk},
@@ -274,7 +278,7 @@ projects are well documented, they all use Git for version control and all have
 active mailing lists (both user and developer).
 
 \subsubsection{XORP}
-XORP is Implemented in C++ following an Object Oriented style. OSPFv2 and OSPFv3
+XORP\cite{XORPHome} is Implemented in C++ following an Object Oriented style. OSPFv2 and OSPFv3
 share much of the same code with conditional code separating the parts which are
 different.
 
@@ -282,7 +286,7 @@ XORP implements OSPFv2 to comply with RFC2328 and OSPFv3 to the specification
 defined in draft-ietf-ospf-ospfv3-update-23 (A draft version of RFC 5340).
 
 \subsubsection{Quagga}
-Quagga is a fork of the now defunct GNU Zebra project. It also implements
+Quagga\cite{QuaggaHome} is a fork of the now defunct GNU Zebra project. It also implements
 OSPFv3, taking a modular approach, providing an completely separate from OSPFv2.
 The protocols are implemented in C using a mainly \texttt{struct} based style.
 Vyatta, a software based virtual router, notably switched from XORP to Quagga. 
@@ -291,7 +295,7 @@ Quagga supports OSPFv2 as RFC 2328 and OSPFv3 to RFC2740. There are a few
 differences between RFC2740 and RFC5240, these are listed in the latter.
 
 \subsubsection{BIRD}
-BIRD is a more lightweight implementation. It also makes use of C
+BIRD\cite{BirdHome} is a more lightweight implementation. It also makes use of C
 \texttt{struct}s. It has been used before to successfully implement zero config
 OSPF. 
 
@@ -486,41 +490,30 @@ shall be carried out in an iterative process of plan, implement and evaluate. I
 also plan to use techniques from other methodologies such as Scrum. 
 
 \subsection{Git}
-I have chosen to use Git as my version control system. This choice was partially
-because Quagga uses Git, however there are many other good reasons for using
-Git, or any other Distributed Version Control System (DVCS).
-\nomenclature{DVCS}{Distributed Version Control System} Firstly, version
-control is essential to a software project as it enables you to keep track of
-changes over time and revert to old versions if necessary. Distributed version
-control is superior to traditional centralised version control system such as
-subversion (SVN) as it allows work to be done without internet connectivity and
-speeds up commit time (encouraging more frequent commits). I shall be
-using bitbucket.org to back up my repository in the ``cloud''.
+I have chosen to use Git\cite{git} as my version control system. This choice was
+partially because Quagga uses Git, however there are many other good reasons for
+using Git, or any other Distributed Version Control System (DVCS).
+\nomenclature{DVCS}{Distributed Version Control System} Firstly, version control
+is essential to a software project as it enables you to keep track of changes
+over time and revert to old versions if necessary. Distributed version control
+is superior to traditional centralised version control system such as subversion
+(SVN) as it allows work to be done without internet connectivity and speeds up
+commit time (encouraging more frequent commits). I shall be using bitbucket to
+back up my repository in the ``cloud''.
 
 \subsection{Trello}
-I shall be using Trello as a task management platform. Trello is a web app based
-on Kanban. It provides card than can be placed into lists and moved around
-between lists. Lists can have titles such as ``Thinking'', ``Doing'' and
-``Done''. Trello will help me to keep track of tasks in my.
+I shall be using Trello\cite{trello} as a task management platform. Trello is a
+web app based on Kanban. It provides card than can be placed into lists and
+moved around between lists. Lists can have titles such as ``Thinking'',
+``Doing'' and ``Done''. Trello will help me to keep track of tasks in my.
 
-\subsection{Jenkins}
-Jenkins is a continuous integration server, it can be configured to pull your
-code from a repository and build it to ensure it still works.  
-
-\subsection{\LaTeX}
-I have chosen to produce all of the documentation associated with this project
-using \LaTeX. I chose \LaTeX because it is a powerful tool that allows me to
-focus on writing my report rather than typesetting. It also tends to be more
-robust for longer documents than WYSIWYG editors such as Microsoft Word.
-
-\subsubsection{Todonotes Package}
-The package todonotes helps me keep track of ideas and tasks in my documents,
-keeping my ideas separate from my finished work.
-
-\subsubsection{Texcount}
-As word counts are important throughout the project, I am using texcount to
-count the words in my documents. Texcount parses the \LaTeX document so that
-markup and headings are not counted.
+\subsection{\LaTeX} 
+I have chosen to produce all of the documentation associated
+with this project using \LaTeX\cite{LaTeX}. I chose \LaTeX because it is a
+powerful tool that allows me to focus on writing my report rather than
+typesetting. It also tends to be more robust for longer documents than WYSIWYG
+editors such as Microsoft Word. I shall also be using many tools and packages to
+help me produce the report. (e.g.  TexCount and BibTeX)
 
 \section{Risk Analysis}
 Throughout my project there are many risks, I need to ensure that I take all the
@@ -579,106 +572,9 @@ work to continued after the Christmas vacation.
 \pagebreak
 
 
-\begin{thebibliography}{9}
-
+\bibliography{ProgressReport}{}
+\bibliographystyle{plain}
 \addcontentsline{toc}{chapter}{Bibliography}
-
-\bibitem{homenet}
-	Home Networking Group \\
-	IETF,\\
-	\url{http://datatracker.ietf.org/wg/homenet/}
-
-\bibitem{rfc2328}
-	OSPF Version 2 \\
-	J. Moy,\\
-	\url{http://www.ietf.org/rfc/rfc2328.txt}
-
-\bibitem{rfc5340}
-	OSPF for IPv6 \\
-	J. Moy, et al.\\
-	\url{http://www.ietf.org/rfc/rfc5340.txt}
-
-\bibitem{draft-dimitri-zospf-00}
-	Autoconfiguration of routers using a link state routing protocol \\
-	A. Dimitrelis, A. Williams\\
-	\url{http://tools.ietf.org/id/draft-dimitri-zospf-00.txt}
-
-\bibitem{draft-ietf-ospf-ospfv3-autoconfig-00}
-	OSPFv3 Auto-Configuration \\
-	A. Lindem, J. Arkko\\
-	\url{http://tools.ietf.org/html/draft-ietf-ospf-ospfv3-autoconfig-00}
-
-\bibitem{draft-arkko-homenet-prefix-assignment-03}
-	Prefix Assignment in a Home Network \\
-	A. Lindem, J. Arkkoi, B. Paterson\\
-	\url{http://tools.ietf.org/html/draft-arkko-homenet-prefix-assignment-03}
-
-\bibitem{CiscoOSPFv3Guide}
-	Configuring OSPFv3 \\
-	Cisco\\
-	\url{http://www.cisco.com/en/US/docs/switches/datacenter/sw/5\_x/nx-os/unicast/configuration/guide/l3\_ospfv3.html}
-
-\bibitem{OSPFAIRP}
-	OSPF: Anatomy of an Internet Routing Protocol\\
-	J. Moy\\
-
-\bibitem{OSPFCI}
-	OSPF: Complete Implementation\\
-	J. Moy\\
-
-\bibitem{OSPFvsISIS}
-	OSPF and IS-IS: Choosing an IGP for Large-Scale Networks\\
-	J. Doyle\\
-
-\bibitem{germanGuide}
-	CF-Bootmedium erstellen,\\
-	UbuntuUsers.de\\
-	http://wiki.ubuntuusers.de/Alix/CF-Bootmedium\_erstellen
-
-%% Do these belong here?
-
-\bibitem{XORPHome}
-	XORP\\
-	\url{http://www.xorp.org/}
-
-\bibitem{QuaggaHome}
-	Quagga\\
-	\url{http://www.nongnu.org/quagga/}
-
-\bibitem{BirdHome}
-	Bird\\
-	\url{http://bird.network.cz/}
-
-%% DO THESE BELONG HERE?
-
-\bibitem{alix2d3}
-	Alix2d3 Product File\\
-	PC Engines\\
-	\url{http://pcengines.ch/alix2d3.htm}
-
-% Probably don't need these, but do them so that I can be faster tomorrow
-
-\bibitem{git}
-	git \\
-	\url{http://git-scm.com/},
-
-\bibitem{trello} 
-	Trello \\
-	\url{https://trello.com/board/third-year-project/50b53fc0ec17d1c75f003c17}
-
-\bibitem{Jenkins}
-	Jenkins\\
-	\url{http://jenkins-ci.org/}
-
-\bibitem{LaTeX}
-	\LaTeX \\
-	\url{http://www.latex-project.org/}
-
-\bibitem{texcount}
-	TeXcount,\\
-	\url{http://app.uio.no/ifi/texcount/index.html}
-
-\end{thebibliography}
 
 \begin{landscape}
 \appendix 
