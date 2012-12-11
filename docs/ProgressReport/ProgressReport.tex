@@ -73,14 +73,14 @@ continual testing.
 \clearpage
 
 \chapter{Project Description}
-My initial project definition was very open ended as I was undecided between
-two projects. I was unsure of both the scope of a third year project, and my
-programming ability. The original project definition was to create
-``a Tool to Simplify Network Administration in the Home''. The first potential
-project was a home gateway monitor, the second was the project that
-I have chosen. 
+My initial project definition was very open ended as I was undecided between two
+projects. I was unsure of both the scope of a third year project, and my
+programming ability. The original project definition was to create ``a Tool to
+Simplify Network Administration in the Modern Home''. The first potential
+project was a home gateway monitor, the second was the project that I have
+chosen. 
 
-A more accurate title for my project is now ``Implementing Zero configuration
+A more accurate title for my project is now ``Implementing Zero Configuration
 OSPFv3''. I shall be augmenting an existing implementation of the Open Shortest
 Path First (OSPF) \nomenclature{OSPF}{Open Shortest Path First} network routing
 protocol so that it doesn't require any configuration to effectively route
@@ -189,16 +189,16 @@ used for this project, it provides a set of modifications that can be made to
 the OSPFv3 protocol to run (in a slightly restricted manner e.g. single area)
 it in without needing any manual configuration. The draft discusses
 configurations that should be restricted to defaults, methods of selecting
-Router-IDs (RID) and ways of detecting duplicate RIDs. 
+Router-IDs (RID) \nomenclature{RID}{Router ID} and ways of detecting duplicate RIDs. 
 
 The draft references many RFCs, a good understanding of the concepts 
 that they convey is required to implement the draft successfully:
 
 \begin{itemize}
-	\item RFC 5838 - OSPFv3-AF (Address Families)
-	\item RFC 6506 - OSPFv3-AUTH-TRAILER
-	\item RFC 3630 (4230 \& 5786) - Traffic Engineering Extensions 
-	\item RFC 4862 - iStateless address autoconfiguration (SLAAC for IPv6) 
+	\item {\bf RFC 5838} - OSPFv3-AF (Address Families)
+	\item {\bf RFC 6506} - OSPFv3-AUTH-TRAILER
+	\item {\bf RFC 3630} (4230 \& 5786) - Traffic Engineering Extensions 
+	\item {\bf RFC 4862} - iStateless address autoconfiguration (SLAAC for IPv6) 
 \end{itemize}
 
 \subsection{draft-arkko-homenet-prefix-assignment-03}
@@ -300,7 +300,7 @@ BIRD complies to RFC2328 and RFC5240 in it's implementations of OSPF.
 \chapter{Design of System}
 The design of my project has been done by individuals and groups of
 people who have far more knowledge and experience working with networks than I
-do. It is my job to understand these complicated designs and implement them
+do. I need to understand these complicated designs and implement them
 correctly.
 
 \section{Chosen System}
@@ -323,17 +323,19 @@ code.
 \centering
 \includegraphics[width=\textwidth]{../Diagrams/UML/quaggaZebra.png}
 \caption{Diagram of how Quagga is structured.}
+\label{fig:QuaggaStructure}
 \end{figure}
 
-Quagga is split up into several daemons. A daemon is a program that is run as
-a background process rather than interactively. Each of the daemons is
+Quagga is composed of several daemons. A daemon is a program that is run as
+a background process rather than interactively. Each daemon is
 responsible for one protocol. \texttt{ospfd} runs the OSPFv2 protocol, and
-\texttt{ospf6d} runs the OSPFv3 protocol. Each of these daemons makes use of 
-\texttt{zebrad} to alter the systems routing table. 
+\texttt{ospf6d} runs the OSPFv3 protocol. Each daemon makes use of 
+\texttt{zebrad} to alter the systems routing table, as shown in Figure
+\ref{fig:QuaggaStructure}. 
 
 As previously mentioned, Quagga is written in C and makes heavy use of
 \texttt{struct}s to mimic object oriented programming, there is a
-\texttt{struct} for each of the data structures defined in the RFC. 
+\texttt{struct} for each of the data structures defined in the RFC. \ 
 
 \section{Test Networks}
 To ensure the implementation works as expected, I will need to test instances of it
@@ -572,11 +574,100 @@ work to continued after the Christmas vacation.
 
 \addcontentsline{toc}{chapter}{Bibliography}
 
-\bibitem{heartImg}
-	Flickr Image of Heart \\
-	gustty,\\
-	\url{http://www.flickr.com/photos/gustty/126606794/}
+\bibitem{homenet}
+	Home Networking Group \\
+	IETF,\\
+	\url{http://datatracker.ietf.org/wg/homenet/}
 
+\bibitem{rfc2328}
+	OSPF Version 2 \\
+	J. Moy,\\
+	\url{http://www.ietf.org/rfc/rfc2328.txt}
+
+\bibitem{rfc5340}
+	OSPF for IPv6 \\
+	J. Moy, et al.\\
+	\url{http://www.ietf.org/rfc/rfc5340.txt}
+
+\bibitem{draft-dimitri-zospf-00}
+	Autoconfiguration of routers using a link state routing protocol \\
+	A. Dimitrelis, A. Williams\\
+	\url{http://tools.ietf.org/id/draft-dimitri-zospf-00.txt}
+
+\bibitem{draft-ietf-ospf-ospfv3-autoconfig-00}
+	OSPFv3 Auto-Configuration \\
+	A. Lindem, J. Arkko\\
+	\url{http://tools.ietf.org/html/draft-ietf-ospf-ospfv3-autoconfig-00}
+
+\bibitem{draft-arkko-homenet-prefix-assignment-03}
+	Prefix Assignment in a Home Network \\
+	A. Lindem, J. Arkkoi, B. Paterson\\
+	\url{http://tools.ietf.org/html/draft-arkko-homenet-prefix-assignment-03}
+
+\bibitem{CiscoOSPFv3Guide}
+	Configuring OSPFv3 \\
+	Cisco\\
+	\url{http://www.cisco.com/en/US/docs/switches/datacenter/sw/5\_x/nx-os/unicast/configuration/guide/l3\_ospfv3.html}
+
+\bibitem{OSPFAIRP}
+	OSPF: Anatomy of an Internet Routing Protocol\\
+	J. Moy\\
+
+\bibitem{OSPFCI}
+	OSPF: Complete Implementation\\
+	J. Moy\\
+
+\bibitem{OSPFvsISIS}
+	OSPF and IS-IS: Choosing an IGP for Large-Scale Networks\\
+	J. Doyle\\
+
+\bibitem{germanGuide}
+	CF-Bootmedium erstellen,\\
+	UbuntuUsers.de\\
+	http://wiki.ubuntuusers.de/Alix/CF-Bootmedium\_erstellen
+
+%% Do these belong here?
+
+\bibitem{XORPHome}
+	XORP\\
+	\url{http://www.xorp.org/}
+
+\bibitem{QuaggaHome}
+	Guagga\\
+	\url{http://www.nongnu.org/quagga/}
+
+\bibitem{BirdHome}
+	Bird\\
+	\url{http://bird.network.cz/}
+
+%% DO THESE BELONG HERE?
+
+\bibitem{alix2d3}
+	Alix2d3 Product File\\
+	PC Engines\\
+	\url{http://pcengines.ch/alix2d3.htm}
+
+% Probably don't need these, but do them so that I can be faster tomorrow
+
+\bibitem{git}
+	git \\
+	\url{http://git-scm.com/},
+
+\bibitem{trello} 
+	Trello \\
+	\url{https://trello.com/board/third-year-project/50b53fc0ec17d1c75f003c17}
+
+\bibitem{Jenkins}
+	Jenkins\\
+	\url{http://jenkins-ci.org/}
+
+\bibitem{LaTeX}
+	\LaTeX \\
+	\url{http://www.latex-project.org/}
+
+\bibitem{texcount}
+	TeXcount,\\
+	\url{http://app.uio.no/ifi/texcount/index.html}
 
 \end{thebibliography}
 
@@ -609,4 +700,3 @@ network.
 
 \end{landscape}
 \end{document}
-
