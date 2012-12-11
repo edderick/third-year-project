@@ -54,6 +54,9 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
+\def\nomlabel#1{\textbf{#1}\hfil}
+
+
 \begin{document}
 
 % Include title page
@@ -145,6 +148,7 @@ The following are things that the project should do:
 By the end of the project I would like to have:
 
 \begin{itemize}
+	\item A good understand of the OSPF routing protocol.
 	\item A better understanding of the process of the creation of internet
 	standards.
 	\item The ability to implement network protocols. 
@@ -173,7 +177,7 @@ provides the reader with a clear description of the packets that are used in
 OSPF for IPv4.
 
 \subsection{RFC 5340}
-This RFC defines the OSPFv3 protocol (OSPF for IPv6)\cite{rfc540}. The protocol
+This RFC defines the OSPFv3 protocol (OSPF for IPv6)\cite{rfc5340}. The protocol
 is only a proposed standard, but is very widely accepted.  Since OSPFv3 in
 general is fairly similar to OSPFv2, the RFC describes only the differences
 between the two protocols. 
@@ -244,7 +248,7 @@ documentation of software projects.
 
 \subsection{alix2d3 Installation Guide}
 This guide\cite{germanGuide} offered a comprehensive list of steps that need to
-be taken to install Ubuntu Linux on a PC Engines alix2d3.\cite{alix2d3}  The article is
+be taken to install Ubuntu Linux on a PC Engines alix2d3\cite{alix2d3}.  The article is
 written in German but using Google translate I was able to follow it as it is
 mainly a list of shell commands.
 
@@ -278,9 +282,9 @@ projects are well documented, they all use Git for version control and all have
 active mailing lists (both user and developer).
 
 \subsubsection{XORP}
-XORP\cite{XORPHome} is Implemented in C++ following an Object Oriented style. OSPFv2 and OSPFv3
-share much of the same code with conditional code separating the parts which are
-different.
+XORP\cite{XORPHome} is Implemented in C++ following an Object Oriented style.
+OSPFv2 and OSPFv3 share much of the same code with conditional code separating
+the parts which are different.
 
 XORP implements OSPFv2 to comply with RFC2328 and OSPFv3 to the specification
 defined in draft-ietf-ospf-ospfv3-update-23 (A draft version of RFC 5340).
@@ -490,7 +494,7 @@ shall be carried out in an iterative process of plan, implement and evaluate. I
 also plan to use techniques from other methodologies such as Scrum. 
 
 \subsection{Git}
-I have chosen to use Git\cite{git} as my version control system. This choice was
+I have chosen to use Git as my version control system. This choice was
 partially because Quagga uses Git, however there are many other good reasons for
 using Git, or any other Distributed Version Control System (DVCS).
 \nomenclature{DVCS}{Distributed Version Control System} Firstly, version control
@@ -498,18 +502,18 @@ is essential to a software project as it enables you to keep track of changes
 over time and revert to old versions if necessary. Distributed version control
 is superior to traditional centralised version control system such as subversion
 (SVN) as it allows work to be done without internet connectivity and speeds up
-commit time (encouraging more frequent commits). I shall be using bitbucket to
-back up my repository in the ``cloud''.
+commit time (encouraging more frequent commits). I shall be using Atlassian
+Bitbucket to back up my repository in the ``cloud''.
 
 \subsection{Trello}
-I shall be using Trello\cite{trello} as a task management platform. Trello is a
+I shall be using Trello as a task management platform. Trello is a
 web app based on Kanban. It provides card than can be placed into lists and
 moved around between lists. Lists can have titles such as ``Thinking'',
-``Doing'' and ``Done''. Trello will help me to keep track of tasks in my.
+``Doing'' and ``Done''. Trello will help me to keep track of tasks in my project.
 
 \subsection{\LaTeX} 
 I have chosen to produce all of the documentation associated
-with this project using \LaTeX\cite{LaTeX}. I chose \LaTeX because it is a
+with this project using \LaTeX. I chose \LaTeX because it is a
 powerful tool that allows me to focus on writing my report rather than
 typesetting. It also tends to be more robust for longer documents than WYSIWYG
 editors such as Microsoft Word. I shall also be using many tools and packages to
@@ -573,7 +577,7 @@ work to continued after the Christmas vacation.
 
 
 \bibliography{ProgressReport}{}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \addcontentsline{toc}{chapter}{Bibliography}
 
 \begin{landscape}
