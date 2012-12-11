@@ -6,7 +6,7 @@
 \author{Edward Seabrook} 
 \title{Third Year Project Progress Report}
 
-\usepackage[refpage]{nomencl}
+\usepackage{nomencl}
 \makenomenclature
 
 % Makes Chapter heading look like Section heading
@@ -159,10 +159,11 @@ reading covering the actual implementations to be used during the project.
 
 \section{Theoretical Reading}
 The majority of the information for this project is contained within various
-Request For Comments (RFCs) and similar drafts. RFCs are memorandums published
-by the IETF that are submitted for peer review. RFCs form the standards that are
-used across the Internet. In this document, where a more recent RFC has
-obsoleted an older RFC, I shall avoid mentioning the older document. 
+Request For Comments (RFCs) \nomenclature{RFC}{Request For Comments} and similar
+drafts. RFCs are memorandums published by the IETF that are submitted for peer
+review. RFCs form the standards that are used across the Internet. In this
+document, where a more recent RFC has obsoleted an older RFC, I shall avoid
+mentioning the older document. 
 
 \subsection{RFC 2328} 
 This RFC defines the OSPFv2 routing protocol. The protocol is a current internet
@@ -206,8 +207,9 @@ Prefix Assignment in Home Networks. As a testament to how recent this work is, a
 new version of this draft has been released since the beginning of this project. 
 
 The memo describes a method for dividing an IPv6 prefix across the subnets of a
-home network using Type Length Values (TLVs) in OSPF Link State Advertisements
-(LSAs).
+home network using Type Length Values (TLVs) \nomenclature{TLV}{Type Length
+Values}  in OSPF Link State Advertisements (LSAs) \nomenclature{LSA}{Link State
+Advertisement}.
 
 \subsection{Cisco's Guide to Configuring OSPFv3}
 Aimed at network administrators, this document provides a nice high level
@@ -225,10 +227,12 @@ implementation and walks you through how it has been put together. This book and
 it's companion were written before OSPFv3.
 
 \subsection{OSPF and IS-IS}
-Talks about choosing an IGP (Interior Gateway Protocol) for large networks,
-giving a feature by feature comparison of OSPF with IS-IS (another distance
-vector routing protocol). This book is mostly about OSPFv2 but does touch on
-OSPFv3 towards the end.
+Talks about choosing an IGP (Interior Gateway Protocol)
+\nomenclature{IGP}{Interior Gateway Protocol} for large networks, giving a
+feature by feature comparison of OSPF with IS-IS
+\nomenclature{IS-IS}{Intermediate System To Intermediate System}(another
+distance vector routing protocol). This book is mostly about OSPFv2 but does
+touch on OSPFv3 towards the end.
 
 \section{Practical Reading}		
 The practical information for this project is mainly from online tutorials and
@@ -308,11 +312,12 @@ implementation. Quagga is also used by the Vyatta project, giving it a large
 amount of exposure. 
 
 I also found it easiest to install set up and use Quagga. It has a precompiled
-package in Ubuntu's \texttt{APT} (Advanced Packaging Tool) repositories. One
-reason I decided against using BIRD is that an implementation for a new platform
-is more useful to the community. One potential downside to using Quagga is that
-it uses plain \texttt{struct} based C, and I have more experience writing object
-oriented code. 
+package in Ubuntu's \texttt{APT} (Advanced Packaging Tool)
+\nomenclature{APT}{Advanced Packaging Tool} repositories. One reason I decided
+against using BIRD is that an implementation for a new platform is more useful
+to the community. One potential downside to using Quagga is that it uses plain
+\texttt{struct} based C, and I have more experience writing object oriented
+code. 
 
 \begin{figure}
 \centering
@@ -403,7 +408,8 @@ still need to be completed.
 \section{Study Quagga}
 I will need to study in depth the source code of Quagga so that I have a
 good idea of what needs altering to implement the required changes. I will
-produce Class diagrams and other UML (Unified Modelling Language) diagrams to 
+produce Class diagrams and other UML (Unified Modelling Language)
+\nomenclature{UML}{Unified Modelling Language} diagrams to 
 summarise the architecture of the software. The process of producing these
 diagrams should help ensure that I understand the code. 
 
@@ -480,7 +486,8 @@ also plan to use techniques from other methodologies such as Scrum.
 \subsection{Git}
 I have chosen to use Git as my version control system. This choice was partially
 because Quagga uses Git, however there are many other good reasons for using
-Git, or any other Distributed Version Control System (DVCS). Firstly, version
+Git, or any other Distributed Version Control System (DVCS).
+\nomenclature{DVCS}{Distributed Version Control System} Firstly, version
 control is essential to a software project as it enables you to keep track of
 changes over time and revert to old versions if necessary. Distributed version
 control is superior to traditional centralised version control system such as
@@ -536,8 +543,8 @@ this happens, I will not be affected, I shall make frequent backups of my work.
 As my project involves using specialist hardware, there is a possibility that
 the hardware could break. Fortunately the operating system (Ubuntu) that is
 running on the alix2d3s is completely compatible with any x86 based computer. By
-adding a second Network Interface Card (NIC) to my desktop PC, I am able to run
-the software on there. 
+adding a second Network Interface Card (NIC) \nomenclature{NIC}{Network
+Interface Card} to my desktop PC, I am able to run the software on there. 
 
 I could have misjudged the difficulty of the project and be unable to complete
 the project on schedule.  Because of this I have chosen to structure my project
@@ -557,6 +564,7 @@ work to continued after the Christmas vacation.
 
 \printnomenclature
 
+\addcontentsline{toc}{chapter}{Nomenclature}
 \pagebreak
 
 
