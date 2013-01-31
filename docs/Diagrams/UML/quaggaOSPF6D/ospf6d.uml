@@ -39,18 +39,11 @@ ospf6_route_table <-- ospf6_area : range_table
 ospf6_route_table <-- ospf6_area : summary_prefix
 ospf6_route_table <-- ospf6_area : summary_router
 
-list <-- ospf6_area : if_list
-
 ospf6_lsdb <-- ospf6_area : lsdb
 ospf6_lsdb <-- ospf6_area : lsdb_self
 
 ospf6_route_table <-- ospf6_area : spf_table
 ospf6_route_table <-- ospf6_area : route_table
-
-thread <-- ospf6_area : thread_spf_calculation
-thread <-- ospf6_area : thread_route_calculation
-thread <-- ospf6_area : thread_router_lsa
-thread <-- ospf6_area : thread_intra_prefix_lsa
 
 AreaAnnounceList o-- ospf6_area : _export 
 AreaAcceptanceList o-- ospf6_area : import 
@@ -69,6 +62,12 @@ class ospf6_area {
 	char options[3]
 	uint spf_calculation
 	uint route_lsa_size_limit
+	list if_list
+	thread thread_spf_calculation
+	thread thread_route_calculation
+	thread thread_router_lsa
+	thread thread_intra_prefix_lsa
+
 }
 
 class AreaAnnounceList {
@@ -104,21 +103,13 @@ class ospf6_as_external_lsa {
 
 interface <-- ospf6_interface : interface
 ospf6_area <-- ospf6_interface : area
-list <-- ospf6_interface : neighbour_list
-in6_addr <-- ospf6_interface : linklocal_addr
 
 ospf6_lsdb <-- ospf6_interface : lsdb
 ospf6_lsdb <-- ospf6_interface : lsdb_self
 ospf6_lsdb <-- ospf6_interface : lsupdate_list
 ospf6_lsdb <-- ospf6_interface : lsack_list
 
-thread <-- ospf6_interface : thread_send_hello
-thread <-- ospf6_interface : thread_send_lsupdate
-thread <-- ospf6_interface : thread_send_lsack
 
-thread <-- ospf6_interface : thread_network_lsa
-thread <-- ospf6_interface : thread_link_lsa
-thread <-- ospf6_interface : thread_intra_prefix_lsa 
 
 
 class ospf6_interface {
@@ -143,13 +134,23 @@ class ospf6_interface {
 	uint prev_bdr
 
 	string plist_name
+
+	list neighbour_list
+	in6_addr linklocal_addr
+
+	thread thread_send_hello
+	thread thread_send_lsupdate
+	thread thread_send_lsack
+
+	thread thread_network_lsa
+	thread thread_link_lsa
+	thread thread_intra_prefix_lsa 
 }
 
 
 
 ' ### OSPF6_INTRA ###
 
-in6_addr o-- ospf6_link_lsa : linklocal_addr
 
 class ospf6_router_lsa {
 	char bits
@@ -178,6 +179,7 @@ class ospf6_link_lsa {
 	char priority
 	char options[3]
 	uint prefix_num
+	in6_addr linklocal_addr
 }
 
 class ospf6_intra_prefix_lsa {
@@ -193,13 +195,6 @@ class ospf6_intra_prefix_lsa {
 ospf6_lsa <-- ospf6_lsa : prev
 ospf6_lsa <-- ospf6_lsa : next
 
-timeval o-- ospf6_lsa : birth
-timeval o-- ospf6_lsa : originated 
-timeval o-- ospf6_lsa : received
-timeval o-- ospf6_lsa : installed
-
-thread <-- ospf6_lsa : expire
-thread <-- ospf6_lsa : refresh
 
 ospf6_lsa_header <-- ospf6_lsa : header
 
@@ -217,7 +212,15 @@ class ospf6_lsa {
 	string name
 	char lock
 	char flag
-	int retrans_count 
+	int retrans_count
+
+	timeval birth
+	timeval originated 
+	timeval received
+	timeval installed
+
+	thread expire
+	thread refresh
 }
 
 class ospf6_lsa_handler {
@@ -287,24 +290,16 @@ class ospf6_lsupdate {
 ' ### OSPF6_NEIGHBOR ###
 
 ospf6_interface <-- ospf6_neighbor : ospf6_if
-timeval o-- ospf6_neighbor: last_changed
-in6_addr o-- ospf6_neighbor : linklocal_addr
 ospf6_dbdesc o-- ospf6_neighbor : dbdesc_last
 
-ospf_lsdb <-- ospf6_neighbor : summary_list
-ospf_lsdb <-- ospf6_neighbor : request_list
-ospf_lsdb <-- ospf6_neighbor : retrans_list
+ospf6_lsdb <-- ospf6_neighbor : summary_list
+ospf6_lsdb <-- ospf6_neighbor : request_list
+ospf6_lsdb <-- ospf6_neighbor : retrans_list
 
-ospf_lsdb <-- ospf6_neighbor : dbdesc_list
-ospf_lsdb <-- ospf6_neighbor : lsreq_list
-ospf_lsdb <-- ospf6_neighbor : lsupdate_list
-ospf_lsdb <-- ospf6_neighbor : lsack_list
-
-thread <-- ospf6_neighbor : inactivity_timer
-thread <-- ospf6_neighbor : thread_send_dbdesc
-thread <-- ospf6_neighbor : thread_send_lsreq
-thread <-- ospf6_neighbor : thread_send_lsupdate
-thread <-- ospf6_neighbor : thread_send_lsack
+ospf6_lsdb <-- ospf6_neighbor : dbdesc_list
+ospf6_lsdb <-- ospf6_neighbor : lsreq_list
+ospf6_lsdb <-- ospf6_neighbor : lsupdate_list
+ospf6_lsdb <-- ospf6_neighbor : lsack_list
 
 
 class ospf6_neighbor {
@@ -322,6 +317,15 @@ class ospf6_neighbor {
 	char options[3]
 	char dbdesc_bits
 	uint dbdesc_seqnum
+
+	timeval last_changed
+	in6_addr linklocal_addr
+
+	thread inactivity_timer
+	thread thread_send_dbdesc
+	thread thread_send_lsreq
+	thread thread_send_lsupdate
+	thread thread_send_lsack
 }
 
 
@@ -337,15 +341,12 @@ class ospf6_prefix {
 
 ' ### OSPF6_ROUTE ###
 
-in6_addr o-- ospf6_nexthop : address
 ospf6_ls_origin o-- ospf6_path : origin
 route_node <-- ospf6_route : rnode
 ospf6_route_table <-- ospf6_route : table
 ospf6_route <-- ospf6_route : next
 ospf6_route <-- ospf6_route : last
 prefix o-- ospf6_route : prefix 
-timeval o-- ospf6_route : installed
-timeval o-- ospf6_route : changed
 ospf6_path o-- ospf6_route : path
 ospf6_nexthop o-- ospf6_route : nexthop[]
 route_table <-- ospf6_route_table : table
@@ -353,6 +354,9 @@ route_table <-- ospf6_route_table : table
 
 class ospf6_nexthop {
 	uint ifindex
+	in6_addr address
+	timeval installed
+	timeval changed
 }
 
 class ospf6_ls_origin {
@@ -399,7 +403,6 @@ ospf6_area <-- ospf6_vertex : area
 ospf6_lsa <-- ospf6_lsa : lsa
 ospf6_nexthop <-- ospf6_vertex : nexthop[]
 ospf6_vertex <-- ospf6_vertex : parent
-list <-- ospf6_vertex : child_list 
 
 class ospf6_vertex {
 	uint type
@@ -408,13 +411,12 @@ class ospf6_vertex {
 	char hops
 	char capability
 	char options[3]
+	list child_list 
 }
 
 
 ' ### OSPF6_TOP ###
 
-timeval o-- ospf6 : starttime
-list <-- ospf6 : area_list
 
 ospf6_lsdb <-- ospf6 : lsdb
 ospf6_lsdb <-- ospf6 : lsdb_self
@@ -428,12 +430,15 @@ route_table <-- ospf6 : external_id_table
 RedistributeRouteMap o-- ospf6 : rmap[]
 route_map <-- RedistributeRouteMap : map
 
-thread <-- ospf6 : maxage_remover
 
 class ospf6 {
 	uint router_id
 	uint router_id_static
 	char flag
+
+	timeval starttime
+	list area_list
+	thread maxage_remover
 }
 
 class RedistributeRouteMap {
