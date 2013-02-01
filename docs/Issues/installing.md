@@ -40,7 +40,7 @@ Now a little bit of configuration is required. cd /usr/local/quagga.
 Either make a real config file for the daemon, or just create a file containing "password test".
 
 
-You should now be able to run sudo ospf6d.
+You should now be able to run sudo ospf6d. If you can't, try ldconfig.
 
 
 [wiki]: http://wiki.nil.com/Installing_and_running_Quagga
