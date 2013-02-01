@@ -11,6 +11,8 @@ sudo apt-get build-dep quagga
 This should fetch all the packages that quagga depends on. I see no reason to
 build these from source, since I shall not be modifying them. 
 
+It seems that a packahed called libtool is also needed to ensure installation works. 
+
 Next it should be possible to run ./bootstrap. AFAIK this produces (among other
 things) the configure script. 
 
