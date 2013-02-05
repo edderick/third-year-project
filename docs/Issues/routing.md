@@ -46,3 +46,25 @@ Will do what you want on a linux machine.
 For the Thomson "O2 Wireless Box", you can telnet into it and then use the ip
 section followed by the various rt commands to configure a static route.
 
+Just One Interface
+------------------
+
+I had a lot of problems getting this all working. I thought that going in one
+interface, and coming back out the same one as a different subnet, should work.
+Early experimentation suggested that it didn't. Once all the other kinks were
+ironed out, it seemed to work just fine. :)
+
+Adding an IP Address
+--------------------
+
+This lil' snippet is pretty useful: 
+
+ip addr add 192.168.3.1/24 broadcast 192.168.3.255 dev eth0 
+
+similarly:
+
+ip addr del 192.168.3.1/24 dev eth0 
+
+and:
+
+ip link set eth2 up

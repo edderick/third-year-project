@@ -11,3 +11,11 @@ this prevents static IP addreessing.
 It is possible to add an alias address in the dhclient.conf file found in 
 /etc/dhcp or /etc/dhcp3.
 
+Specify DNS Server Under Linux
+==============================
+
+There **IS** a better way (when I learn it, I should update this), but for now just edit:
+
+/etc/resolv.conf
+
+Job done!
