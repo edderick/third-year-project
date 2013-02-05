@@ -1,0 +1,10 @@
+#! /bin/bash
+
+rm *.aux
+rm *.log 
+rm *.dvi
+rm *.synctex.gz
+rm *.pdf
+rm *.toc
+rm *.out
+rm *.nlo
