@@ -4,8 +4,12 @@ Netkit
 Netkit is a network emulation tool that allows you to very easily run several
 debian virtual machines, one one host pc.
 
+__Note__: I should really rave about how good this would be to get the second
+years doing; You just can't get this kind of understanding through studying
+alone. 
+
 Building Quagga for NetKit
-==========================
+--------------------------
 
 I have created file system image of a file system ready to have quagga made and
 installed. This can be done in the same way as it would be done natively under
@@ -29,3 +33,14 @@ vhalt -r moo
 Then tar it up with:
 
 tar -cjSf name.tar.bz fs
+
+Labs
+----
+
+In NetKit, a lab is a method of creating many VMs set up with interfaces
+connected to specified collision domains. 
+
+I don't think that .disk files should be relied on - instead files should be
+added to the directory structure to be coppied in on boot, or script files
+added for startup and shutdown.
+
