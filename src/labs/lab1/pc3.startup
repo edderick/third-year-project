@@ -2,4 +2,4 @@ ip link set eth0 up
 ip addr add 192.168.3.2/24 broadcast 192.168.3.255 dev eth0
 
 ip link set eth1 up
-ip addr add 192.168.2.2/24 broadcast 192.168.2.255 dev eth0
+ip addr add 192.168.2.2/24 broadcast 192.168.2.255 dev eth1
