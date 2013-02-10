@@ -12,11 +12,14 @@ Forwarding
 
 Turns out you must explicitly specify that you wish packets to be forwarded by
 the router. This can be done at runtime by setting
-/proc/sys/net/ipv4/ip_forward to 1. This isn't a persistant change, but does
+/proc/sys/net/ipv4/ip_forward to 1. This isn't a persistent change, but does
 take effect immediately. 
 
-For a more permenent solution, use google, then update this document after
-testing :) Thanks.
+Note that this is IPv4 only, so is fairly irrelevant for OSPFv3.
+/proc/sys/net/ipv6/all/forwarding must be set for IPv6 traffic to be forwarded.
+
+A more permanent solution can be achieved by adding the appropriate lines to
+/etc/sysctl.conf
 
 NAT
 ---
@@ -41,7 +44,12 @@ The simplest way I have found is to set up a static route, something based on:
 
 sudo route add -net 192.168.3.0/24 gw 192.168.1.111
 
-Will do what you want on a linux machine. 
+Note: This is actually a deprecated way of setting this up. iproute2 has
+replaced route, use:
+
+sudo ip route add 192.168.3.0/24 via 192.168.1.111
+
+Will do what you want on a Linux machine. 
 
 For the Thomson "O2 Wireless Box", you can telnet into it and then use the ip
 section followed by the various rt commands to configure a static route.
