@@ -6,4 +6,8 @@ ip link set eth1 up
 ip addr add 192.168.2.2/24 broadcast 192.168.2.255 dev eth1
 ip addr add fc01::2/64 dev eth1
 
+# This line should now be redundant
 echo 1 >/proc/sys/net/ipv6/conf/all/forwarding
+
+/usr/local/sbin/zebra -d
+/usr/local/sbin/ospf6d -d
