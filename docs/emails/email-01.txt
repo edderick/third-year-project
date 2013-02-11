@@ -1,0 +1,34 @@
+Hello Everyone, 
+
+First of all, let me introduce myself. I am Edward Seabrook, I am a third year
+undergraduate studying Computer Science at the University of Southampton. For
+my third year project I shall be extending Quagga's ospf6d to implement
+auto-configuration OSPFv3. I felt I should let the community know, and see if 
+anyone has any advice.
+
+The changes that I plan on making are based on a draft standard[1] published by
+Ericsson. The draft also depends on some other drafts that may or may not
+require implementing as well. If anyone has any reasons they feel these changes
+would be impossible with Quagga, please let me know!
+
+I would like my work to be as useful as possible to the community, as such I
+aim on complying with the standards that the project follows. I have read the
+GNU coding standards document as recommended in the Quagga Hacking guide. If
+anyone has any other tips or caveats I would love to hear them.
+
+Currently I shall be storing my code in a fork of Guagga on GitHub. If there is
+a preferred way of doing this I will be more that happy to switch to it. I have
+forked the latest release and plan on sticking with this release for the
+duration of the project - I have read that ospf6d is undergoing some
+fundamental changes, depending on the scale of these changes I may be able to
+apply my changes to the new code. 
+
+As a final note, I am new to mailing lists, so please excuse me if I have done
+anything wrong here!
+
+Thanks, 
+Edward Seabrook
+(http://users.ecs.soton.ac.uk/ejfs1g10)
+
+
+[1] http://tools.ietf.org/id/draft-ietf-ospf-ospfv3-autoconfig-00.txt
