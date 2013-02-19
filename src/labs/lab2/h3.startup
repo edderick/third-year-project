@@ -1,0 +1,4 @@
+ip link set eth0 up
+ip addr add fc13::2/64 dev eth0
+
+ip route add default via fc13::1 dev eth0

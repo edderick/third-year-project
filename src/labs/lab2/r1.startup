@@ -1,0 +1,11 @@
+ip link set eth0 up
+ip addr add fc00::1/64 dev eth0
+
+ip link set eth1 up
+ip addr add fc11::1/64 dev eth1
+
+# This line should now be redundant
+echo 1 >/proc/sys/net/ipv6/conf/all/forwarding
+
+/usr/local/sbin/zebra -d
+/usr/local/sbin/ospf6d -d
