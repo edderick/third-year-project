@@ -15,3 +15,4 @@ Informational
 -------------
 
 * http://tools.ietf.org/html/draft-ietf-homenet-arch-07
+* http://tools.ietf.org/html/rfc3769 
