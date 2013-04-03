@@ -1,2 +1,9 @@
 *.disk
 *.swp
+*.ready
+*.aux
+*.log
+*.nlo
+*.out
+*.pdf
+*.toc
