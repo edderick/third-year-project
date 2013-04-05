@@ -7,6 +7,9 @@ ip link set eth1 up
 ip link set eth2 up
 #ip addr add fc02::0/64 dev eth1
 
+ip link set eth3 up
+#ip addr add fc03::0/64 dev eth1
+
 # This line should now be redundant
 echo 1 >/proc/sys/net/ipv6/conf/all/forwarding
 
