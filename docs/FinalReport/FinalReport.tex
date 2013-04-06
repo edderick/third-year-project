@@ -192,15 +192,38 @@ workgroups and expected use of the hosts.
 
 Many organisations were able to obtain large chunks of IPV4 address space, the
 University of Southampton was able to obtain a /16 (152.78.0.0) giving them
-around 65000 addresses to play with.
+around 65000 addresses to play with. Having this many addresses allows each
+machine on the network to be globally addressable - people's initial reaction
+to this is often that it would be insecure, but a good firewall is far more effective
+protection than NAT. Even with this many addresses, the University still
+struggles. This is due at part to address space wastage, the now deprecated ISS
+wireless service still takes up a large proportion of the address space. 
 
-Talk about larger networks and how they already exploit more advance features.
+Although it is not yet a common sight, the networks run by ECS are dual stack,
+meaning the machines are allocated both IPV4 and IPV6 addresses. This
+demonstrates than IPV6 is mature enough to be deployed in large networks.
 
-Also explain how they require full time systems administrators to configure them!
-
-Note that ECS has IPV6 (Dual stack)
+It should be noted however, that at the moment, to run a network the size of
+the University's, many specialist staff are required to configure the network
+and ensure its day to day running. This is something that the vast majority of
+households are not able to obtain.
 
 \section{Future}
+In the future users will want more from their home networks. We are likely to
+see a dramatic increase in the number of devices in the average home, ranging
+from more laptops and tablets, to more sensors and home automation devices.
+As these types of traffic may be heterogeneous, it would be beneficial to split
+the network up into multiple subnets to ensure the best performance from each
+network. 
+
+Guest networks are already an option provided by many high end wireless access
+points. By using Virtual Access Points (VAPs) guest clients can connect to the
+internet, but are restricted from having full access to the local network. To
+facilitate this, hard coded local IPV4 addresses are usually used, with the
+advent of IPV6 and globally valid addresses, a mechanism to assign IP addresses
+and route traffic is required.  
+
+
 \begin{itemize}
 \item Multiple subnets. 
 \item Homenet WG? Finding solutions to the above problem
