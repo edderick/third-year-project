@@ -88,15 +88,15 @@ A clear statement of the problem and goals of the project.
 
 Start with a general overview of home networking. Futuristic network schpiel.
 
-\section{IPV6}
+\section{IPv6}
 To comminicate with a computer, we need a way to uniquely identify it. At
-present, IPV4 is the dominating technology for addressing computers on the
-internet. Unfortunately when IPV4 was designed, it was not forseeable that we
+present, IPv4 is the dominating technology for addressing computers on the
+internet. Unfortunately when IPv4 was designed, it was not forseeable that we
 would need more than 4 billion addresses, so a neat 32 bit identifier was used.
-In 2011 however, IANA ran out of IPV4 addresses. 
+In 2011 however, IANA ran out of IPv4 addresses. 
 
-One solution to the IPV4 address space exhaustion problem is migration to
-IPV6; a protocol that is fundamentally similar to IPV4, but instead uses 128
+One solution to the IPv4 address space exhaustion problem is migration to
+IPv6; a protocol that is fundamentally similar to IPV4, but instead uses 128
 bit addresses. This gives us far more addresses to work with - in fact a total
 of $3.4028237\times10^{38}$ unique addresses. With estimates for the total
 number of grains of sand on Earth being around $7.5\times10^{18}$, the number
@@ -106,7 +106,7 @@ this address space should be sufficient for atleast the forseeable future.
 
 \begin{itemize}
 \item IPv4 Address space exhaustion
-\item Bag of sand - address each robot with IPV6?
+\item Bag of sand - address each robot with IPv6?
 \item Always hand out a /64 to a network.
 \end{itemize}
 
@@ -147,7 +147,7 @@ both use Dijkstra's algorithm to calculate these shortest paths.
 
 OSPF and IS-IS are both very similar protocols, the main difference is that
 IS-IS is as a Layer 2 protocol is Layer 3 agnostic, whereas OSPF is depended on
-IPV4 or IPV6 depending on the version.
+IPv4 or IPv6 depending on the version.
 
 \subsection{Exterior Gateway Protocols}
 Not concerned with Exterior Gateway Protocols (EGP), the main example being
@@ -166,7 +166,7 @@ Need some text to go here because you can't just have two heading back to back!!
 \subsection{Home}
 Modern home and small/home office (SOHO) networks all tend to follow the same
 patterns. A single ISP provides a connection to the internet using the phone
-line or television cable.  The ISP will typically provide a single IPV4 address
+line or television cable.  The ISP will typically provide a single IPv4 address
 (/32), usually this is an unstable (dynamic) allocation although a static IP is
 often offered as a premium service. 
 
@@ -190,7 +190,7 @@ Businesses tend to employ many of the more advanced features of networking.
 They are often split into many subnets depending on the physical locations,
 workgroups and expected use of the hosts. 
 
-Many organisations were able to obtain large chunks of IPV4 address space, the
+Many organisations were able to obtain large chunks of IPv4 address space, the
 University of Southampton was able to obtain a /16 (152.78.0.0) giving them
 around 65000 addresses to play with. Having this many addresses allows each
 machine on the network to be globally addressable - people's initial reaction
@@ -200,8 +200,8 @@ struggles. This is due at part to address space wastage, the now deprecated ISS
 wireless service still takes up a large proportion of the address space. 
 
 Although it is not yet a common sight, the networks run by ECS are dual stack,
-meaning the machines are allocated both IPV4 and IPV6 addresses. This
-demonstrates than IPV6 is mature enough to be deployed in large networks.
+meaning the machines are allocated both IPv4 and IPv6 addresses. This
+demonstrates than IPv6 is mature enough to be deployed in large networks.
 
 It should be noted however, that at the moment, to run a network the size of
 the University's, many specialist staff are required to configure the network
@@ -219,8 +219,8 @@ network.
 Guest networks are already an option provided by many high end wireless access
 points. By using Virtual Access Points (VAPs) guest clients can connect to the
 internet, but are restricted from having full access to the local network. To
-facilitate this, hard coded local IPV4 addresses are usually used, with the
-advent of IPV6 and globally valid addresses, a mechanism to assign IP addresses
+facilitate this, hard coded local IPv4 addresses are usually used, with the
+advent of IPv6 and globally valid addresses, a mechanism to assign IP addresses
 and route traffic is required.  
 
 The IETF's Homenet working group are working on the architecture of the home
@@ -260,7 +260,7 @@ goals for the project were:
 The project was based mainly on two drafts that are closely related.
 
 \section{OSPFv3 Autoconfiguration}
-This draft describes how OSPF for IPV6 can be extended to run without requiring
+This draft describes how OSPF for IPv6 can be extended to run without requiring
 any configuration. The draft enforces some default values specified in the
 original OSPF RFCs.
 
@@ -536,7 +536,7 @@ Requires ISPs to start using IPv6.
 Outside my control. 
 Note: Andrews and Arnold.
 
-=$>$ Things beyond my controls - IPV6 etc
+=$>$ Things beyond my controls - IPv6 etc
 
 \chapter{References}
 References to the literature
