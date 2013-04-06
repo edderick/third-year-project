@@ -223,54 +223,94 @@ facilitate this, hard coded local IPV4 addresses are usually used, with the
 advent of IPV6 and globally valid addresses, a mechanism to assign IP addresses
 and route traffic is required.  
 
+The IETF's Homenet working group are working on the architecture of the home
+network of the future. 
 
-\begin{itemize}
-\item Multiple subnets. 
-\item Homenet WG? Finding solutions to the above problem
 
 /* Don't directly mention drafts, just problems they solve. */
-
-\item autoconf - The main draft, Router IDs \& and extensible platform for adding more autoconf stuff to.
+\begin{itemize}
+\item autoconf - The main draft, Router IDs \& and extensible platform for
+  adding more autoconf stuff to.
 \item prefix delegation - The bulk of the work!
 \end{itemize}
 
 \section{Goals}
-Good software shouldn't be visible to it's users
+This project set out to meet many goals, over the course of the project, the
+goals transformed slightly as my understanding of the problem improved. The
+goals for the project were:
 
-==$>$ Just plug the devices in and it's good to go. 
+\todo{Update the goals}
+
+\begin{itemize}
+\item Allow multiple subnets in the home; allow hosts to communicate from one
+  subnet to another.
+\item Require no configuration: The user should not need to enter any settings,
+  they should simply plug in the router, and it should work.
+\item Produce something of value for the community. The code I produce should
+  adhere to style and quality guidelines to ensure it is useful.
+\item Verify past implementations of the drafts.
+\item Discover any ambiguities in the drafts.
+\end{itemize}
 
 ==Emphasise bleeding edge?==
 
 \chapter{Literature Review} 
-A review of the \textbf{background} literature
+\todo{Could go on forever. Need to be concise.}
 
-=$>$ Could go on forever. Need to be consice. 
+The project was based mainly on two drafts that are closely related.
 
----$>$ Probably want to talk about other stuff
+\section{OSPFv3 Autoconfiguration}
+This draft describes how OSPF for IPV6 can be extended to run without requiring
+any configuration. The draft enforces some default values specified in the
+original OSPF RFCs.
 
-Required In depth discussion:
-\begin{itemize}
-\item Draft IETF autoconf 
-\item Draft Jarri PD
-\end{itemize}
+The main content of the draft is the specification of a mechanism for
+generating Router IDs and then ensuring that there are no conflicts across the
+network. A new LSA type is introduced for this purpose.
 
-Worthy of an honorable mention:
+\section{OSPFv3 Prefix Assignment}
+This draft extends what is described in the Autoconfiguration draft to solve
+the issue of prefix delegation. As well as offering a realistic solution to a
+problem, the draft also demonstrates the extensibility of the Autoconfiguration
+draft. 
 
-\begin{itemize}
-\item draft-CHOWN - Puts forward a vision of future home networking
-\item RFC2328 - OSPFv2 - Studied in depth to understand how the ospf Protocol works. Lot of stuff about Areas that I don't need\ldots
-\item RFC5340 - OSPFv3 - Studied in depth. Explains the diference between an OSPFv3 implementation and and OSPFv2.
-\item draft-dimitri-zOSPF - An old draft that had similar aims.
-\item RFC5329 - OSPFv3-TE - Allows network wide QoS type stuff. Not sure why interesting anymore :p
-\item RFC5250 - Opaque LSAs - A generic type of LSA. 
-\end{itemize}
+A method for breaking up a short prefix delegation (possibly a /48 issued by
+ISP) is given, along with a strategy for avoiding conflicts in the assignment
+across the network.
 
-Books:
+\section{Other Important Drafts}
+There are several other papers that are relevant to this project. These are
+both articles that are relevant as background knowledge and those that have
+been referenced from one another.
 
+\subsection{Home Networking Architecture for IPv6} 
+[draft-ietf-homenet-arch-07] puts forward a vision of future home networking.
+
+\subsection{OSPF Version 2}
+I studied [RFC2328] in depth to understand how the OSPF Protocol works. Lot of
+stuff about Areas that I don't need\ldots
+
+\subsection{OSPF for IPv6}
+Also referred to as OSPFv3. RFC5340 Studied in depth. Explains the difference
+between an OSPFv3 implementation and and OSPFv2.
+
+\subsection{Autoconfiguration of routers using a link state routing protocol}
+draft-dimitri-zOSPF - An old draft that had similar aims.
+
+\subsection{Traffic Engineering Extensions to OSPF Version 3}
+Allows network wide QoS type stuff. Not sure why interesting anymore :p
+
+\subsection{The OSPF Opaque LSA Option}
+RFC5250 - Opaque LSAs - A generic type of LSA. Useful to me mainly because of
+the brief discussion about reachability.
+
+\section{Books}
+\todo{List the books}
+There were a few books that were relevant to this project: 
 \begin{itemize}
 \item Good for getting a general overview
 \item Clarify things from the RFCs 
-\item THEY DON'T COVER ANY OF THE NEW STUFF COZ IT'S BLEEDIN' EDGE!!one
+\item THEY DON'T COVER ANY OF THE NEW STUFF COZ IT'S BLEEDIN' EDGE!!
 \end{itemize}
 
 \chapter{Analysis}
