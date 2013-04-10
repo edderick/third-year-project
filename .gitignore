@@ -9,3 +9,5 @@
 *.toc
 *.bbl
 *.blg
+*.ilg
+*.nls
