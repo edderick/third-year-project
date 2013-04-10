@@ -102,7 +102,7 @@ Unfortunately, the vast majority of home networks do not have a professional
 System Administrator around to configure and maintain them. This means ideally
 a network shouldn't require any configuration to work.
 
-A less relevent problem is \nomenclature{IPv4}{Internet Protocol Version 4}
+A less relevant problem is \nomenclature{IPv4}{Internet Protocol Version 4}
 address space exhaustion. 
 
 \section{The Goals}
@@ -142,7 +142,7 @@ NAT, the router rewrites the address of the packets from the globally
 allocated IP address to a local address often in the subnet 192.168.1.0/24.
 The port number is often used to multiplex between the different hosts on the
 network. To allow applications like Skype to function Universal Plug and Play
-(UPnP) \nomenclature{UPnP}{Universal Plug and Play}, a technlogoy that allow
+(UPnP) \nomenclature{UPnP}{Universal Plug and Play}, a technology that allow
 automatic port mapping on a network, is often used. IP addresses are
 delegated to the hosts of the local network using the Dynamic Host
 Configuration Protocol (DHCP) \nomenclature{DHCP}{Dynamic Host Configuration
@@ -150,7 +150,7 @@ Protocol}.
 
 The solution is usually provided as a single item of Customer Premises
 Equipment (CPE) \nomenclature{CPE}{Customer Premises Equipment}, these devices
-are refered to by many names, most commonly as a ``Router''.  This device
+are referred to by many names, most commonly as a ``Router''.  This device
 provides the modem for connecting to the internet, an Ethernet switch with
 around 4 ports, and a wireless access point (802.11x) that is usually bridged
 to the wired network to provide just one subnet. 
@@ -201,9 +201,9 @@ The Internet Engineering Task Force's (IETF) Homenet working group
 future. 
 
 \section{IPv6}
-To comminicate with a computer, we need a way to uniquely identify it. At
+To communicate with a computer, we need a way to uniquely identify it. At
 present, IPv4 is the dominating technology for addressing computers on the
-internet. Unfortunately when IPv4 was designed, it was not forseeable that we
+internet. Unfortunately when IPv4 was designed, it was not foreseeable that we
 would need more than 4 billion addresses, so a neat 32 bit identifier was used.
 In 2011 however, The Internet Assigned Numbers Authority (IANA)
 \nomenclature{IANA}{Internet Assigned Numbers Authority} ran out of IPv4
@@ -215,14 +215,14 @@ bit addresses. This gives us far more addresses to work with - in fact a total
 of $3.4028237\times10^{38}$ unique addresses. With estimates for the total
 number of grains of sand on Earth being around $7.5\times10^{18}$, the number
 of stars visible from Earth falling at about $7.0\times10^{22}$, and more
-relevently the estimated human population of Earth being $7.0\times10^{9}$,
-this address space should be sufficient for atleast the forseeable future. 
+relevantly the estimated human population of Earth being $7.0\times10^{9}$,
+this address space should be sufficient for at least the foreseeable future. 
 
 IPv6 address ranges are often given in (Classless Inter-Domain Routing) CIDR
 \nomenclature{CIDR}{Classless Inter-Domain Routing} notation. In this notation
 an IPv6 address is written, followed by a slash and then and number between 0
 and 128. This number represents the number of bits in the IPv6 address that
-idenitfy the network, and the rest of the bits idenitfy the host.
+identify the network, and the rest of the bits identify the host.
 
 IPv6 prefixes tend to be /64, as this is required by Stateless Address
 Autoconfiguration (SLAAC)\nomenclature{SLAAC}{Stateless Address
@@ -254,7 +254,7 @@ infinity when a router goes down.
 
 The most common Distance Vector protocol is Routing Information Protocol (RIP)
 \nomenclature{RIP}{Routing Information Protocol}, a routing protocol famous for
-defining 15 as infinity. The most recent revison of RIP is known as RIPng,
+defining 15 as infinity. The most recent revision of RIP is known as RIPng,
 standing for RIP Next Generation. IGRP and EIGRP are Cisco's own propriety
 alternatives.
 
@@ -264,8 +264,8 @@ a full understanding of the network topology. From this representation of the
 networks topology, the router then performs some calculations to work out the
 best route. The two most common Link-State routing protocols, Open Shortest
 Path First (OSPF) \nomenclature{OSPF}{Open Shortest Path First} and
-Intermeditate Syetem to Intermediate System (IS-IS)
-\nomenclature{IS-IS}{Intermediate Syetem - Intermediate System}, both use
+Intermediate System to Intermediate System (IS-IS)
+\nomenclature{IS-IS}{Intermediate System - Intermediate System}, both use
 Dijkstra's algorithm to calculate these shortest paths. 
 
 OSPF and IS-IS are both very similar protocols, the main difference is that
@@ -298,7 +298,7 @@ the original OSPF RFCs, and restricting a few features of OSPF such as
 allowing only the backbone area to be used. It then goes on to specify a
 mechanism for generating Router IDs and ensuring that there are no conflicts
 across the network. This is achieved by the introduction of a new Link State
-Advertisment (LSA) \nomenclature{LSA}{Link State Advertisment} type.
+Advertisement (LSA) \nomenclature{LSA}{Link State Advertisement} type.
 
 \section{OSPFv3 Prefix Assignment}
 Building on the work of the Autoconfiguration draft, this draft solves
@@ -325,7 +325,7 @@ I studied [RFC2328] in depth to understand how the OSPF Protocol works. The
 memo is surprisingly easy to read, and offers a complete discussion of how the 
 OSPF protocol is designed to build routing tables for IPv4. 
 
-Although the document contains many details that are irrelevent to this project, 
+Although the document contains many details that are irrelevant to this project, 
 including a long discussion on areas, and details of the SPF algorithms
 
 \subsection{OSPF for IPv6}
@@ -336,7 +336,7 @@ between OSPFv2 and OSPFv3.
 [draft-dimitri-zOSPF] - An old draft that had similar aims to the OSPFv3 
 Autoconfiguration draft. This draft focuses on allowing autoconfiguration for both 
 IPv4 and IPv6 rather than just IPv6; this made it a more complex and restrictive 
-soltion. 
+solution. 
 
 \subsection{The OSPF Opaque LSA Option}
 RFC5250 introduces the opaque LSA\@. An opaque LSA is a generic type of LSA
@@ -353,8 +353,8 @@ were useful for clarifying things that were not very clear from the RFCs. They
 were also useful for reinforcing my general understanding of the protocol, as
 they gave a similar level overview, written from a slightly different angle. 
 
-Unfortuately the books didn't cover much OSPFv3 because it is a relatively
-recent development, and there was no mention atall of more recent drafts (such
+Unfortunately the books didn't cover much OSPFv3 because it is a relatively
+recent development, and there was no mention at all of more recent drafts (such
 as the autoconfig draft) because they are very much on the cutting edge.
 
 \chapter{Analysis}
@@ -362,12 +362,12 @@ as the autoconfig draft) because they are very much on the cutting edge.
 
 \section{Alternatives}
 There are also other approaches that could be used to solved the same problems
-as these drafts. The different approaches all have thier own pros and cons, but
+as these drafts. The different approaches all have their own pros and cons, but
 to get a full understanding of the problems that occur with each of the
-solutions, it is neccesary to produce implementations of each soltution.
+solutions, it is necessary to produce implementations of each solution.
 
 \subsection{IPv4 Address as Router ID}
-A possible solution to the Router ID assignment probem would be simply to use
+A possible solution to the Router ID assignment problem would be simply to use
 the local IPv4 Address of the routers first interface. IPv4 Addresses seem like
 a good candidate for the Router ID as they are both locally unique 32 bit
 identifiers. This solution would be likely to provide a unique ID that doesn't
@@ -378,18 +378,18 @@ see the use of IPv4 addresses diminishing. IPv6 addresses are not such a good
 candidate for Router ID for many reasons. Firstly they are not 32 bits, so it
 would be difficult to create an identifier known to be unique from this value.
 Secondly an interface is likely to have many IPv6 Addresses. Of these addresses
-the only address it is guarenteed to have is a link local address, which is not
-guarenteed to be unique across the whole network. 
+the only address it is guaranteed to have is a link local address, which is not
+guaranteed to be unique across the whole network. 
 
 \subsection{DHCP6-PD}
 \todo{Add a description of the actual DHCP6-PD packet} 
 DHCP for IPv6 Prefix Delegation (DHCP6-PD) \nomenclature{DHCP6-PD}{DHCP for
 IPv6 Prefix Delegation}, is a method for handing a prefix from one router to
-another. It is then at the disgression of the recieving router how it wishes to
+another. It is then at the discretion of the receiving router how it wishes to
 hand out the prefixes contained in the prefix of the PD message. 
 
 One solution to the prefix assignment issue would be to simply use a
-hierachical system. Each router splits up the prefix recieved from an upstream
+hierarchical system. Each router splits up the prefix received from an upstream
 router and delegates an equal size prefix to each of the downstream routers
 connected to it. A positive side of this approach is that it is very simple.
 The negative is that if the network is unbalanced, it is possible that one side
@@ -414,7 +414,7 @@ interfaces into the same link.
 \section{How OSPF works}
 \todo{Show that I understand fully how OSPF works.} Open Shortest Path First
 (OSPF) as previously mentioned is a link-state routing protocol. A complete
-image of the network is built up by flooding Link State Advertisments (LSA)
+image of the network is built up by flooding Link State Advertisements (LSA)
 across the network. 
 
 A variety of different message types exist in OSPF, including Hello messages,
@@ -426,7 +426,7 @@ The routers store the LSAs that they know about in their Link State Database
 (LSDB) \nomenclature{LSDB}{Link State Database}.  To identify which router
 originated an LSA, each router is given a unique Router ID.
 
-\subsection{Links State Advertisments}
+\subsection{Links State Advertisements}
 There are Several different LSA types in OSPF\@. Each LSA is originated by
 a router on the network and forwarded on by other routers depending on its
 flooding scope. Each LSA contains some information about the network. 
@@ -446,9 +446,9 @@ using these interfaces.
 Network LSAs are originated by just one router for each subnet, they are
 flooded to a single area. The router that must originate this LSA is called the
 Designated Router (DR) \nomenclature{DR}{Designated Router}, and is elected
-by folowing the steps of the Designated router Election algorithm. The Backup
+by following the steps of the Designated router Election algorithm. The Backup
 Designated Router (BDR) \nomenclature{BDR}{Backup Designated Router} is
-elected in a similar way, and must be prepared to start emmiting a Network LSA
+elected in a similar way, and must be prepared to start emitting a Network LSA
 if the DR becomes unreachable. 
 
 The Network LSA contains a list of routers that are connected to that subnet.
@@ -457,7 +457,7 @@ the Router LSAs.
 
 \subsubsection{Other LSAs}
 There are also several other LSA types that are defined by various different
-drafts.  Many of these LSA types are irrelevent in this project as they are
+drafts.  Many of these LSA types are irrelevant in this project as they are
 concerned with networks that consist of many areas, or networks that are
 concerned with details outside of the current Autonomous System (AS). Since
 OSPFv3 Autoconfig dictates that only one area shall be used, these LSA types
@@ -469,13 +469,13 @@ The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6.
 For a discussion of how the Shortest Path First calculations are done. See
 Appendix X. 
 
-\todo{Add some stuff about djirkstras to the appendix}
+\todo{Add some stuff about Dijkstra's to the appendix}
 
 - Top-$>$Area-$>$Interface
 
 \section{Implementation Candidates}
-There are pleanty of implementations of OSPFv3 to chose from. Although there
-are propietry commercial implemenations available, such as the one provided by
+There are plenty of implementations of OSPFv3 to chose from. Although there
+are propriety commercial implementations available, such as the one provided by
 Cisco routers, I have only considered Open Source packages as these are
 available for me to extend.
 
@@ -484,7 +484,7 @@ Bird is a fairly lightweight suite of routing protocols. It is written in C.
 
 There are already two implementations of Autoconfiguration OSPFv3. The first
 was written in C as a branch of Bird. The other, written in lua, was created by
-using an extension to bird that allows LSAs to be processed by externternal
+using an extension to bird that allows LSAs to be processed by external
 programs.
 
 \subsection{Quagga}
@@ -494,7 +494,7 @@ and doesn't make much use of external libraries. There are currently no public
 implementations of autoconfig OSPFv3.
 
 \subsection{XORP}
-XORP is annother heavy implementation. It is written in C++, there aren't any
+XORP is another heavy implementation. It is written in C++, there aren't any
 publicly available versions of Autconfig OSPFv3. It seems that the activity
 surrounding XORP is in decline. 
 
@@ -515,7 +515,7 @@ A detailed design
 
 \section{Simplifications}
 
-To allow OSPFv3 to function without requiring any coonfiguration, a number of
+To allow OSPFv3 to function without requiring any configuration, a number of
 simplifications must be made to how it runs. These simplifications restrict
 some of the fine tuning required by large enterprise networks, but shouldn't
 severely reduce the functionality offered to home users. 
@@ -525,14 +525,14 @@ As the networks that are being configured are unlikely to be very large, there
 are no real benefits gained from using areas. In autoconfiguration OSPF, all
 interfaces on all routers will be part of Area 0.0.0.0, the backbone area.
 
-Removing mutliple areas also reduces the complexity in other aspects. Various
+Removing multiple areas also reduces the complexity in other aspects. Various
 summary LSA types are no longer needed, and the flooding scope of area now
 covers the whole network.
 
 \subsection{Default Values}
 The draft specifies that various default values are used. These default values
 are mainly values that were proposed as optional defaults in the original RFCs,
-and are now specifed as obligatory defaults for Autoconfig OSPF\@. 
+and are now specified as obligatory defaults for Autoconfig OSPF\@. 
 
 Firstly, with the exception of those that clearly should not run OSPF, such as
 those that are manually configured, or those connected directly to an ISP, all
@@ -560,7 +560,7 @@ information to be passed around in these packets.
 
 \subsection{TLVs}
 \todo{Confirm that length is in bytes}
-The payload of the the AC-LSA is a set of Type-Length-Value (TLV). Each TLV
+The payload of the AC-LSA is a set of Type-Length-Value (TLV). Each TLV
 defines the type, or meaning, of the data; the length that it occupies in
 BYTES(?); and then the data itself. 
 
@@ -586,7 +586,7 @@ manual configuration.
 \subsubsection{Assigned Prefix TLV}
 The Assigned Prefix TLV is also defined int the Prefix Assignment draft. A
 router adds an Assigned Prefix TLV to its AC-LSA when it makes an assignment
-from an Aggrgegated prefix. 
+from an Aggregated prefix.  
 
 Each assignment is made to just one interface on the network, conflicts are
 resolved if they occur, and is exactly /64 as this is the length used by SLAAC.
@@ -607,12 +607,12 @@ the router that has a high probability of being unique on the network.
 
 In my implementation I chose to use a sum of the MAC \nomenclature{MAC
 Address}{Media Access Control Address} addresses of the attached interfaces.
-Although, the MAC addresses are not guarenteed to be unique as manafacturers
+Although, the MAC addresses are not guaranteed to be unique as manufacturers
 could cut corners - if they are not, there are likely to be bigger problems
 anyway.
 
 \subsection{Router ID Generation}
-According to autoconfig OSPF, the Router ID should be a pseduo-random number,
+According to autoconfig OSPF, the Router ID should be a pseudo-random number,
 based on the Router Hardware Fingerprint. As the router will need to reassign
 its Router ID to a new number if there is a conflict, a seed value must be
 stored. This value is passed rand\_r function call, which modifies it to
@@ -638,7 +638,7 @@ with the numerically lower Link-Local Address must generate a new Router ID\@.
 \subsubsection{Network-Wide Collisions}
 To detect collisions that occur for routers that are not directly connected,
 all apparent Self Originated AC-LSAs are inspected to ensure that they are
-truely Self originated LSAs. This is done by checking that the Router Hardware
+truly Self originated LSAs. This is done by checking that the Router Hardware
 Fingerprints match. If they don't then the router with the lower Router
 Hardware Fingerprint must change it's Router ID. 
 
@@ -653,15 +653,15 @@ prefix assignment from this aggregated prefix.
 
 There is no prescribed method in the draft for making an assignment in the
 draft, beyond the fact that the prefix assigned must not already be an
-assignment. My implemnetation has been written so it is easy to change the
+assignment. My implementation has been written so it is easy to change the
 method used for picking a new prefix for the assignment. 
 
 The current method I currently use is to simply step through the prefixes in
 numerical order, this method has the disadvantage of being likely to collide
-with a prefix alocated by another router in the network concurrently allocating
+with a prefix allocated by another router in the network concurrently allocating
 prefixes.  However this can be an advantage during the testing phase as it
 makes these cases more common, and as such handling these cases will undergo
-greater testing. The other advantage is that this algorithm is guarenteed to
+greater testing. The other advantage is that this algorithm is guaranteed to
 either halt, or produce an error once the address space has been exhausted. 
 
 Another method, used by one of the bird implementations is to allocate at
@@ -683,18 +683,18 @@ to allow local connectivity. ULAs are similar in concept to an IPv4 Private
 address (e.g. 192.168.1.0) although are generally not used with NAT\@. 
 
 The ULA generation algorithm is defined in [AN RFC], and aims to be as unique
-as possible. The the ULA is based on a portion of a combination of the current
+as possible. The ULA is based on a portion of a combination of the current
 network time (in Network Time Protocol (NTP) \nomenclature{NTP}{Network Time
 Protocol} format), and an interface's 64bit MAC address. 
 
 Once a ULA has been generated it is advertised as though it were a normal
 aggregated prefix. If a router with a higher Router ID becomes reachable, or an
-aggregated prefix from another source is recieved, the ULA is deprecated. 
+aggregated prefix from another source is received, the ULA is deprecated. 
 
 \section{Quagga}
 Qaugga is written in C89, following the GNU coding standards. These rules help
 to improve the portability of the code, meaning that if there is a C compiler,
-and the operating system is POSIX compiliant, then Quagga is likely to compile
+and the operating system is POSIX compliant, then Quagga is likely to compile
 for it.  Quagga doesn't support Microsoft Windows (or WinDoze as the GNU coding
 standards would put it). 
 
@@ -751,7 +751,7 @@ Stick a screen shot in the appendix :)
 Should I talk about how I configured it all to work with a tunnel broker here?
 
 Using Hurricane Electrics Tunnel broker service, I was able to give my network
-truely global connectivity
+truly global connectivity. I was able to ping the devices from a remote server.
 
 \section{Alix2d3}
 Bit harder, but still did it anyway.
@@ -779,7 +779,7 @@ GitHub is really good. And I'm pretty sure they put a lot of effort into backup.
 \subsection{Trello}
 Gotta love that task management system
 
-\section{Risk Assesment}
+\section{Risk Assessment}
 Asses that risk; Like a Boss
 
 \chapter{Evaluation}
@@ -823,7 +823,7 @@ Some things aren't very prescriptive in the draft
 Some things I have thought about, but haven't actually done yet.
 
 \section{DHCP6-PD}
-Would be nice to have quagga intercept DHCP6-PD messages and use the prefixes
+Would be nice to have Quagga intercept DHCP6-PD messages and use the prefixes
 as aggregated prefixes. 
 
 At the moment I didn't manage to do this and I it was deemed beyond project
@@ -842,7 +842,7 @@ little standardization - Really something apple would need to contribute to.
 
 \section{Security Considerations}
 Currently the only security that exists in the implementation is IPSec (IP
-level security). It might be neccessary for future implementations to implement
+level security). It might be necessary for future implementations to implement
 security.
 
 Security was a feature of OSPFv2 but it was removed in OSPFv3 in favour of using 
