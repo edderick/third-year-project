@@ -4,7 +4,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \author{Edward Seabrook} 
-\title{Third Year Project Progress Report}
+\title{Third Year Project Final Report}
 
 \usepackage{nomencl}
 \makenomenclature
@@ -67,7 +67,7 @@ As home networks become more and more complex, it is inevitable that they will
 require splitting into multiple subnets. As the average home user is unable to
 configure a router, a minimal configuration solution is required. In this
 project I produced an implementation zero configuration OSPF based on drafts
-published by the IETF. 
+published by the IETF\@. 
 \end{abstract}
 
 \tableofcontents
@@ -86,23 +86,24 @@ published by the IETF.
 
 \chapter{Introduction}
 \todo{A clear statement of the problem and goals of the project.}
-The title of my project is ``Implementing Zero Configuration OSPFv3''. During the
-project, I have modified an open source implementation of OSPFv3, to comply with two
-recently published internet drafts. The changes allow routed networks to be set up
-without the need for manual configuration.
+The title of my project is ``Implementing Zero Configuration OSPFv3''. During
+the project, I have modified an open source implementation of OSPFv3, to comply
+with two recently published internet drafts. The changes allow routed networks
+to be set up without the need for manual configuration.
 
 \section{The Problem}
 As computing becomes more and more ubiquitous the complexity of an average home
-network will increase. Not only will the number of devices rise, but with the advent
-of sensor networks and home automation, the number of types and topologies of 
-these networks will grow. To ensure these more complex networks run smoothly, 
-networks must be separated into multiple subnets.
+network will increase. Not only will the number of devices rise, but with the
+advent of sensor networks and home automation, the number of types and
+topologies of these networks will grow. To ensure these more complex networks
+run smoothly, networks must be separated into multiple subnets.
 
-Unfortunately, the vast majority of home networks do not have a professional System
-Administrator around to configure and maintain them. This means ideally a network
-shouldn't require any configuration to work.
+Unfortunately, the vast majority of home networks do not have a professional
+System Administrator around to configure and maintain them. This means ideally
+a network shouldn't require any configuration to work.
 
-A less relevent problem is \nomenclature{IPv4}{Internet Protocol Version 4} address space exhaustion. 
+A less relevent problem is \nomenclature{IPv4}{Internet Protocol Version 4}
+address space exhaustion. 
 
 \section{The Goals}
 This project set out to meet many goals, over the course of the project, the
@@ -124,8 +125,8 @@ goals for the project were:
 
 \chapter{Background}
 \todo{Is this section a big waffle?}
-To enable me to explain my project properly, I first need to explain concepts that 
-it relies on.
+To enable me to explain my project properly, I first need to explain concepts
+that it relies on.
 
 \section{Home Networks}
 Modern home and small/home office (SOHO) networks all tend to follow the same
@@ -139,9 +140,9 @@ usually employed. With NAT, the router rewrites the address of the packets from
 the globally allocated IP address to a local address often in the subnet
 192.168.1.0/24. The port number is often used to multiplex between the
 different hosts on the network. To allow applications like Skype to function
-Universal Plug and Play (UPnP), a technlogoy that allow automatic port mapping on a 
-network. is often used. IP addresses are delegated to the hosts of the local
-network using the Dynamic Host Configuration Protocol (DHCP). 
+Universal Plug and Play (UPnP), a technlogoy that allow automatic port mapping
+on a network, is often used. IP addresses are delegated to the hosts of the
+local network using the Dynamic Host Configuration Protocol (DHCP). 
 
 The solution is usually provided as a single item of Customer Premises
 Equipment (CPE), refered to by many names, most commonly as a ``Router''.
@@ -164,7 +165,7 @@ to this is often that it would be insecure, but a good firewall is far more
 effective protection than NAT. Even with this many addresses, the University
 still struggles. This is due at part to address space wastage, the now
 deprecated ISS wireless service still takes up a large proportion of the
-address space. 
+address space.
 
 Although it is not yet a common sight, the networks run by ECS are dual stack,
 meaning the machines are allocated both IPv4 and IPv6 addresses. This
@@ -191,7 +192,9 @@ advent of IPv6 and globally valid addresses, a mechanism to assign IP addresses
 and route traffic is required.  
 
 \todo{Stop. Elaborate and Listen}
-The Internet Engineering Task Force's (IETF) Homenet working group are working on the architecture of the home network of the future. 
+The Internet Engineering Task Force's (IETF) Homenet working group
+\cite{homenet} are working on the architecture of the home network of the
+future. 
 
 \section{IPv6}
 To comminicate with a computer, we need a way to uniquely identify it. At
@@ -567,13 +570,14 @@ manafacturers could cut corners - if they are not, there are likely to be bigger
 problems anyway.
 
 \subsection{Router ID Generation}
-According to autoconfig OSPF, the Router ID should be a pseduo-random number, based 
-on the Router Hardware Fingerprint. As the router will need to reassign its Router 
-ID to a new number if there is a conflict, a seed value must be stored. This value 
-is passed rand_r function call, which modifies it to maintain the state of the 
-random sequence.
+According to autoconfig OSPF, the Router ID should be a pseduo-random number,
+based on the Router Hardware Fingerprint. As the router will need to reassign
+its Router ID to a new number if there is a conflict, a seed value must be
+stored. This value is passed rand\_r function call, which modifies it to
+maintain the state of the random sequence.
 
-I found one of the harder parts of the project was cleanly shutting down OSPF, changing it's router ID, and then bringing it back up again. 
+I found one of the harder parts of the project was cleanly shutting down OSPF,
+changing it's router ID, and then bringing it back up again. 
 
 \subsection{Router ID Conflict Resolution}
 As the Router IDs are assigned randomly, there is a chance that there could be a 
@@ -809,7 +813,7 @@ Note: Andrews and Arnold.
 \addcontentsline{toc}{chapter}{Nomenclature}
 \pagebreak
 
-\bibliography{ProgressReport}{}
+\bibliography{FinalReport}{}
 \bibliographystyle{unsrt}
 \addcontentsline{toc}{chapter}{Bibliography}
 
@@ -820,6 +824,3 @@ Note: Andrews and Arnold.
 Appendices providing detailed technical references
 
 \end{document}
-
-\end{document}
-
