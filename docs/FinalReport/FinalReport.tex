@@ -683,9 +683,9 @@ to allow local connectivity. ULAs are similar in concept to an IPv4 Private
 address (e.g. 192.168.1.0) although are generally not used with NAT\@. 
 
 The ULA generation algorithm is defined in [AN RFC], and aims to be as unique
-as possible. The ULA is based on a portion of a combination of the current
-network time (in Network Time Protocol (NTP) \nomenclature{NTP}{Network Time
-Protocol} format), and an interface's 64bit MAC address. 
+as possible. The ULA is based on a hash of a portion of a combination of the 
+current network time (in Network Time Protocol (NTP) \nomenclature{NTP}{Network 
+Time Protocol} format), and an interface's 64bit MAC address. 
 
 Once a ULA has been generated it is advertised as though it were a normal
 aggregated prefix. If a router with a higher Router ID becomes reachable, or an
@@ -708,44 +708,188 @@ took me a long hard stare to realise that I was looking at a function
 declaration. Fortunately as time went on, reading, and writing, this formatting
 became second nature to me. 
 
-Quagga tends to avoid relying on any external libraries. There is a library
-folder in the repository.
+Quagga tends to avoid relying on any external libraries. There is a ``lib''
+folder in the source code repository that contains a collection of non-protocol 
+specific code. This library provides commonly used data structures and 
+algorithms to all of the implemented protocols. 
+
+One of the library items that I made quite heavy use of was "Thread". Threads 
+are a similar concept to operating system threads. They are made up of pointers 
+to functions that will be called either upon some event, or after some amount of 
+time has passed. I don't fully understand this module, but I believed that it is 
+purely an application level construct. The program only ever executes as one 
+process, so only one thing is actually being executed at any given time. 
+Although this does mean that the multicore architecture of modern CPUs 
+\nomenclature{CPU}{Central Processing Unit} is not exploited, this does mean 
+that as I developer I don't have to worry about making my program thread safe.
+
+``Linklist'' was another useful element of the library. It implements a linked 
+list data structure - a series of nodes that have pointers to the next and the 
+previous node in the list. Many of the data structures that I required in my 
+program were variable lengthed lists, and ``linklist'' worked well for this. 
+``Linklist'' also offers a macro called ``ALL\_LIST\_ELEMENTS'' that can be used 
+in a similary way to Java's enhanced for loop, although it requires variables to 
+hold pointers to the current node and the next node. One major draw back of 
+``Linklist'' is that because of limitations of C, the data is stored as a 
+typeless poiner, and therefore is not type safe. As long as the developer is 
+careful, however, this shouldn't be an issue. 
+
+Another library component is Prefix. It represents an IPv4 or IPv6 address, and 
+offers an array of functions that can be performed on them. One of the most 
+useful features is the ability to convert back and forth between strings and 
+in6\_addrs (the representation used in POSIX kernels). This is useful for both 
+user interface code and debugging messages. There were also macros available for 
+testing whether two IP addresses were the same - the memcmp function is used by 
+these macros. I extending prefix to include a function that determined whether
+or not a given prefix contained another prefix. 
+
+The other interesting thing in the library is MD5 
+\nomenclature{MD5}{Message-Digest Algorithm 5}. As its name suggests it creates 
+a cryptographic hash of  the data it is provided with. For the generation of 
+ULAs, is is reccomended that a SHA-1 
+\nomenclature{SHA-1}{Secure Hash Algorithm 1}, a similar but more secure 
+cyptographic hash is used. As I didn't have a SHA-1 implementation available to
+me, I felt that MD5 would be a suitble substitute. 
+
+Being written in C, Quagga is not object oriented. The layout of the code 
+however, is influenced by object oriented programming. Structs are used 
+extensively to represent the different "objects" in the program, many of the 
+functions operate on these structs, in a similar way to how methods act on the 
+objects they belong to.
+
+I found that writing such a large and complex program was quite difficult at 
+times, I felt that getting the correct level of abstraction across the different 
+functions was quite tricky. The lack of inherticance and polymorphism was also 
+something I felt I had to work around. 
+
+Another thing that I found tricky when writing C code, especially C code that is 
+expected to have very long uptimes, is ensuring that it is free from memory leaks. 
+If memory that is allocated usign the malloc system call is not deallocated using 
+free then it will become unusable. Eventually this unusable meory can build up so 
+much that the program cannot obtain any more memory from the operating system, and 
+the program will crash.
 
 *Talk about the style of Quagga's code?
-==$>$ Do I put in about Threads here?
 Cite the Hacking Guide and the GNU coding standards.
 
-- The issues that I found
-    Little Endian vs Big Endian
+\subsection{vtysh}
+\todo{Maybe I have lied in other parts of the document - 
+vtysh depends on libreadline}
+vtysh \nomenclature{vtysh}{The Command Line Interface for Quagga} is a Virtual 
+Teletype shell. It is the primary interactive user interface for Quagga. It is 
+possible to access vtysh either locally on the router using the vtysh command, 
+or remotely using telnet. telnet connections are made directly to the routing 
+protocol daemon, i.e. telnet :: ospf6d.  
+
+\todo{Maybe expand on why the shorter commands work}
+The layout of the interface is based on that commonly found in Cisco routers. 
+Commands like "show ipv6 ospf6 database detail", or the shorter yet umabiguous 
+"sh ipv os da de", can be used. The afforementioned command will list out, in 
+full detail, the contents of all of the LSAs that ospf6d knows about. 
+
+\section{Router Advertisements}
+Router Advertisements (RAs) \nomenclature{RA}{Router Advertisement} 
+are part of the Neighbor Discovery Protocol (NDP), 
+\nomenclature{NDP}{Neighbor Discovery protocol} and are used to 
+advertise prefixes that an interface should generate itself an IPv6 
+address for, and the address and routing domains of the router that is 
+making the advertisements. 
+
+Typically routers make use of radvd \nomenclature{radvd}{The Router 
+Advertisment Daemon} to send out RAs. I felt that coupling Quagga to 
+another piece of software would be undesirable. My reasoning for this 
+is that firstly, one cannot be sure that the package will always the 
+most popular choice. Secondly, if the API for radvd changes, then 
+Quagga would also need to be changed. And finally there don't seem to 
+be any clean ways of interfacing with radvd, the daemon must be 
+halted, configuration files updated and then the daemon is restarted.
+
+\todo{Should I have a whole section on Zebra \& Zclient?}
+Fortunately Quagga has its own, albeit incomplete, code for sending 
+out router advertisements. This functionality is hidden away inside 
+Zebra, the part of the code that is resposible for updating the 
+routing table. The \emph{correct} way of accessing this functionality 
+from within the routing protocol implementation (i.e. ospf6d), is to 
+send a message using the libary component zClient, which is then
+received and enacted upon by zServ, part of Zebra. 
+
+\todo{Add to the appendix pictures of these messages}
+Intially the only way to set whether or not router advertisements were 
+on or off, and to set which prefixes the router advertised as usable, 
+was to use the telnet user interface VTY. I extended the zClient-zServ 
+protocol to include messages to expose this functionality to the 
+routing protocol implementations. 
+
+\section{Endians}
+One on going issue in my project was the way in which numbers were 
+represented. The x86 architecture used in most modern desktop 
+processors is little endian. This means that when a value is 
+represented as more than one byte, the least significant (lowest in 
+value) byte of the data is stored first. On the contrast when 
+transmitting data on the network using the IP protocol, network byte 
+order is defined as big endian, i.e. the most significant bytes are 
+transmitted first. 
+
+I found this to be a source of quite a lot of confusion as often I 
+neglected to convert from network order to host order, and then spent 
+a long time debugging to work out what was going wrong. Fortunately 
+for all the standard sized data types there are functions to convert 
+between the two endians. htons converts host shorts (unsigned 
+16 bit integers) to network shorts; ntohs does the opposite. htonl and 
+ntohl also exist to work on longs (unsigned 32 bit integers). 
+
+One positive of having different endians on the network and the architecture used 
+in development is that it makes you think about the endians. If the development 
+platform used the same endians as the network then it would be very easy to 
+forget about endians altogether. It would then become very messy if the software 
+was ported to a platform that used different endians to the network.
     
-- Something about RADVD
-    
--Chat about C?
-
-= I would like to have something about C
-
-\begin{itemize}
-  \item Structs
-  \item MEMORY LEAKS?
-  \item Lack of Objects - How do you write clean code without objects
-\end{itemize}
-
 \chapter{Testing}
-Testing strategy and results
+\todo{Testing strategy and results}
+To ensure that my code worked as I believed that it did, it needed to be tested. 
+
+\section{Assertions}
+To ensure that my code failed early and completely if something was wrong, I 
+peppered my code with assertions. Assertions are statements that state that 
+something is true, and will do nothing if it is. If the assertion is incorrect, 
+then the program will halt.
+
+I added assertions in my code to check for circumstances that should under no 
+circumstances occur. This ensures that the code never executes in a an invalid 
+state, producing incorrect results. 
 
 \section{Unit Testing}
-Created unit tests to give me confidence that the code I wrote was correct. 
+\todo{Generate some kind of unit test report}
+I created unit tests to ensure that the code did the things that I had intended it 
+to do, my unit tests focused heavily on the edge cases. Creating these unit tests 
+gave me confidence that my code did what I intended it to do, however, it didn't 
+ensure that my intentions were correct. 
 
 As I was using C I was unable to make use of a unit testing framework such as
 JUnit. I also felt basing my code on external libraries tended to go against
 the ethos of the Quagga.
 
+I created my unit tests by creating a ``mock'' environment in which to run my 
+code. This mock environment consists of structs that are filled in as though the 
+application has been running successfuly.  I then executed the algorithms inside 
+this enviroment. After running the algorithm, I checked to make sure that the 
+actual outcome was the same as the expected outcome. If the state that the model 
+was in at the end of the test was the same as expected then the test was said to 
+have passed, otherwise it was said to have failed. 
+
 \section{Netkit} 
+Netkit. 
+
 Made testing fresh and easy. 
 
 REALLY LET TIM KNOW HOW GOOD IT IS!
 
 Stick a screen shot in the appendix :)
+
+\section{radvdump}
+radvdump is a tool that can be used to "dump" the contents of any router 
+advertisements that are received. 
+
 
 \section{Tunnel Broker}
 Should I talk about how I configured it all to work with a tunnel broker here?
@@ -858,7 +1002,7 @@ It would be nice to see this kind of system deployed in the home.
 Requires ISPs to start using IPv6.
 Outside my control. 
 Note: Andrews and Arnold.
-
+ 
 =$>$ Things beyond my controls - IPv6 etc
 
 \pagebreak
