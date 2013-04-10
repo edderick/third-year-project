@@ -79,21 +79,127 @@ published by the IETF.
 \item Tim Chown - Offered support as project supervisor
 \item David Lamparter - Responded to my queries about how Quagga works
 \item Jari Arkko - Wrote the drafts that I was implementing
-
-\item Markus Stenberg \& Benjamin Paterson - Provided implementations against which to interop test
+\item Markus Stenberg \& Benjamin Paterson - Provided implementations against which 
+      to interop test
+\item Freinds \& Family for proof reading this document.
 \end{itemize}
 
 \chapter{Introduction}
-A clear statement of the problem and goals of the project.
+\todo{A clear statement of the problem and goals of the project.}
+The title of my project is ``Implementing Zero Configuration OSPFv3''. During the
+project, I have modified an open source implementation of OSPFv3, to comply with two
+recently published internet drafts. The changes allow routed networks to be set up
+without the need for manual configuration.
 
-Start with a general overview of home networking. Futuristic network schpiel.
+\section{The Problem}
+As computing becomes more and more ubiquitous the complexity of an average home
+network will increase. Not only will the number of devices rise, but with the advent
+of sensor networks and home automation, the number of types and topologies of 
+these networks will grow. To ensure these more complex networks run smoothly, 
+networks must be separated into multiple subnets.
+
+Unfortunately, the vast majority of home networks do not have a professional System
+Administrator around to configure and maintain them. This means ideally a network
+shouldn't require any configuration to work.
+
+A less relevent problem is \nomenclature{IPv4}{Internet Protocol Version 4} address space exhaustion. 
+
+\section{The Goals}
+This project set out to meet many goals, over the course of the project, the
+goals transformed slightly as my understanding of the problem improved. The
+goals for the project were:
+\todo{Update the goals}
+\begin{itemize}
+\item Allow multiple subnets in the home; allow hosts to communicate from one
+  subnet to another.
+\item Require no configuration: The user should not need to enter any settings,
+  they should simply plug in the router, and it should work.
+\item Produce something of value for the community. The code I produce should
+  adhere to style and quality guidelines to ensure it is useful.
+\item Verify past implementations of the drafts.
+\item Discover any ambiguities in the drafts.
+\end{itemize}
+
+==Emphasise bleeding edge?==
+
+\chapter{Background}
+\todo{Is this section a big waffle?}
+To enable me to explain my project properly, I first need to explain concepts that 
+it relies on.
+
+\section{Home Networks}
+Modern home and small/home office (SOHO) networks all tend to follow the same
+patterns. A single ISP provides a connection to the internet using the phone
+line or television cable.  The ISP will typically provide a single IPv4 address
+(/32), usually this is an unstable (dynamic) allocation although a static IP is
+often offered as a premium service. 
+
+To allow multiple hosts on the network, Network Address Translation (NAT) is
+usually employed. With NAT, the router rewrites the address of the packets from
+the globally allocated IP address to a local address often in the subnet
+192.168.1.0/24. The port number is often used to multiplex between the
+different hosts on the network. To allow applications like Skype to function
+Universal Plug and Play (UPnP), a technlogoy that allow automatic port mapping on a 
+network. is often used. IP addresses are delegated to the hosts of the local
+network using the Dynamic Host Configuration Protocol (DHCP). 
+
+The solution is usually provided as a single item of Customer Premises
+Equipment (CPE), refered to by many names, most commonly as a ``Router''.
+This device provides the modem for connecting to the
+internet, an Ethernet switch with around 4 ports, and a wireless access point
+(802.11x) that is usually bridged to the wired network to provide just one
+subnet. 
+
+\section{Campus and Enterprise Networks}
+Larger networks like the ones found on University Campuses and Larger
+Businesses tend to employ many of the more advanced features of networking.
+They are often split into many subnets depending on the physical locations,
+workgroups and expected use of the hosts. 
+
+Many organisations were able to obtain large chunks of IPv4 address space, the
+University of Southampton was able to obtain a /16 (152.78.0.0) giving them
+around 65000 addresses to play with. Having this many addresses allows each
+machine on the network to be globally addressable - people's initial reaction
+to this is often that it would be insecure, but a good firewall is far more
+effective protection than NAT. Even with this many addresses, the University
+still struggles. This is due at part to address space wastage, the now
+deprecated ISS wireless service still takes up a large proportion of the
+address space. 
+
+Although it is not yet a common sight, the networks run by ECS are dual stack,
+meaning the machines are allocated both IPv4 and IPv6 addresses. This
+demonstrates than IPv6 is mature enough to be deployed in large networks.
+
+It should be noted however, that at the moment, to run a network the size of
+the University's, many specialist staff are required to configure the network
+and ensure its day to day running. This is something that the vast majority of
+households are not able to obtain.
+
+\section{Future Networks}
+In the future users will want more from their home networks. We are likely to
+see a dramatic increase in the number of devices in the average home, ranging
+from more laptops and tablets, to more sensors and home automation devices.
+As these types of traffic may be heterogeneous, it would be beneficial to split
+the network up into multiple subnets to ensure the best performance from each
+network. 
+
+Guest networks are already an option provided by many high end wireless access
+points. By using Virtual Access Points (VAPs) guest clients can connect to the
+internet, but are restricted from having full access to the local network. To
+facilitate this, hard coded local IPv4 addresses are usually used, with the
+advent of IPv6 and globally valid addresses, a mechanism to assign IP addresses
+and route traffic is required.  
+
+\todo{Stop. Elaborate and Listen}
+The Internet Engineering Task Force's (IETF) Homenet working group are working on the architecture of the home network of the future. 
 
 \section{IPv6}
 To comminicate with a computer, we need a way to uniquely identify it. At
 present, IPv4 is the dominating technology for addressing computers on the
 internet. Unfortunately when IPv4 was designed, it was not forseeable that we
 would need more than 4 billion addresses, so a neat 32 bit identifier was used.
-In 2011 however, IANA ran out of IPv4 addresses. 
+In 2011 however, The Internet Assigned Numbers Authority (IANA) ran out of IPv4 
+addresses. 
 
 One solution to the IPv4 address space exhaustion problem is migration to
 IPv6; a protocol that is fundamentally similar to IPV4, but instead uses 128
@@ -104,15 +210,16 @@ of stars visible from Earth falling at about $7.0\times10^{22}$, and more
 relevently the estimated human population of Earth being $7.0\times10^{9}$,
 this address space should be sufficient for atleast the forseeable future. 
 
-\begin{itemize}
-\item IPv4 Address space exhaustion
-\item Bag of sand - address each robot with IPv6?
-\item Always hand out a /64 to a network.
-\end{itemize}
+IPv6 address ranges are often given in (Classless Inter-Domain Routing) CIDR 
+notation. In this notation an IPv6 address is written, followed by a slash and then 
+and number between 0 and 128. This number represents the number of bits in the IPv6 
+address that idenitfy the network, and the rest of the bits idenitfy the host.
+
+IPv6 prefixes tend to be /64, as this is required by Stateless Address 
+Autoconfiguration (SLAAC). A /48 prefix may be allocated by an ISP to allow the user 
+to assign multiple subnets on their network.
 
 \section{Routing}
-Explain what routing is:
-
 For packets of data to find their way around networks, they require
 routing. The routing we are concerned with is Layer 3 routing. When an IP
 packet is sent, it's address is compared with those stored in the kernel's
@@ -150,273 +257,415 @@ IS-IS is as a Layer 2 protocol is Layer 3 agnostic, whereas OSPF is depended on
 IPv4 or IPv6 depending on the version.
 
 \subsection{Exterior Gateway Protocols}
-Not concerned with Exterior Gateway Protocols (EGP), the main example being
-Border Gateway (BGP). These kinds of protocols are more concerned with policy
-than the technical distance of the destinations.
-
-\begin{itemize}
-\item Links state - OSPF: each router knows whole topology
-\item Distance Vector - RIP): each router advertises how far away destinations are
-\item Really want to mention BATMAN. ;)
-\end{itemize}
-
-\section{Present}
-Need some text to go here because you can't just have two heading back to back!!
-
-\subsection{Home}
-Modern home and small/home office (SOHO) networks all tend to follow the same
-patterns. A single ISP provides a connection to the internet using the phone
-line or television cable.  The ISP will typically provide a single IPv4 address
-(/32), usually this is an unstable (dynamic) allocation although a static IP is
-often offered as a premium service. 
-
-To allow multiple hosts on the network, Network Address Translation (NAT) is
-usually employed. With NAT, the router rewrites the address of the packets from
-the globally allocated IP address to a local address often in the subnet
-192.168.1.0/24. The port number is often used to multiplex between the
-different hosts on the network. To allow applications like Skype to function
-upnp is often used. 
-
-The solution is usually provided as a single item of Customer Premises
-Equipment (CPE), refered to a a ``HomeHub'', ``SuperHub'', ``WirelessBox'' or
-simply ``Router''. This device provides the modem for connecting to the
-internet, an Ethernet switch with around 4 ports, and a wireless access point
-(802.11x) that is usually bridged to the wired network to provide just one
-subnet. 
-
-\subsection{Campus and Enterprise}
-Larger networks like the ones found on University Campuses and Larger
-Businesses tend to employ many of the more advanced features of networking.
-They are often split into many subnets depending on the physical locations,
-workgroups and expected use of the hosts. 
-
-Many organisations were able to obtain large chunks of IPv4 address space, the
-University of Southampton was able to obtain a /16 (152.78.0.0) giving them
-around 65000 addresses to play with. Having this many addresses allows each
-machine on the network to be globally addressable - people's initial reaction
-to this is often that it would be insecure, but a good firewall is far more effective
-protection than NAT. Even with this many addresses, the University still
-struggles. This is due at part to address space wastage, the now deprecated ISS
-wireless service still takes up a large proportion of the address space. 
-
-Although it is not yet a common sight, the networks run by ECS are dual stack,
-meaning the machines are allocated both IPv4 and IPv6 addresses. This
-demonstrates than IPv6 is mature enough to be deployed in large networks.
-
-It should be noted however, that at the moment, to run a network the size of
-the University's, many specialist staff are required to configure the network
-and ensure its day to day running. This is something that the vast majority of
-households are not able to obtain.
-
-\section{Future}
-In the future users will want more from their home networks. We are likely to
-see a dramatic increase in the number of devices in the average home, ranging
-from more laptops and tablets, to more sensors and home automation devices.
-As these types of traffic may be heterogeneous, it would be beneficial to split
-the network up into multiple subnets to ensure the best performance from each
-network. 
-
-Guest networks are already an option provided by many high end wireless access
-points. By using Virtual Access Points (VAPs) guest clients can connect to the
-internet, but are restricted from having full access to the local network. To
-facilitate this, hard coded local IPv4 addresses are usually used, with the
-advent of IPv6 and globally valid addresses, a mechanism to assign IP addresses
-and route traffic is required.  
-
-The IETF's Homenet working group are working on the architecture of the home
-network of the future. 
-
-
-/* Don't directly mention drafts, just problems they solve. */
-\begin{itemize}
-\item autoconf - The main draft, Router IDs \& and extensible platform for
-  adding more autoconf stuff to.
-\item prefix delegation - The bulk of the work!
-\end{itemize}
-
-\section{Goals}
-This project set out to meet many goals, over the course of the project, the
-goals transformed slightly as my understanding of the problem improved. The
-goals for the project were:
-
-\todo{Update the goals}
-
-\begin{itemize}
-\item Allow multiple subnets in the home; allow hosts to communicate from one
-  subnet to another.
-\item Require no configuration: The user should not need to enter any settings,
-  they should simply plug in the router, and it should work.
-\item Produce something of value for the community. The code I produce should
-  adhere to style and quality guidelines to ensure it is useful.
-\item Verify past implementations of the drafts.
-\item Discover any ambiguities in the drafts.
-\end{itemize}
-
-==Emphasise bleeding edge?==
+In this project I was not concerned with Exterior Gateway Protocols (EGP), the
+main example being Border Gateway (BGP). These kinds of protocols do routing
+based on policy than the technical distance of the destinations.
 
 \chapter{Literature Review} 
 \todo{Could go on forever. Need to be concise.}
 
-The project was based mainly on two drafts that are closely related.
+The project was based mainly on two closely related drafts, both written by the same
+authors. If these drafts are approved by the IETF they will end up becoming Request 
+for Comments (RFC) which are the technical documents that specify how the internet 
+works. The most notable RFCs are placed on a Standards Track, and if they are 
+successful will become recognised as a proposed standard. Eventually proposed 
+standards may become Internet standard and are seen as the highest form of standard 
+the IETF produces. 
 
 \section{OSPFv3 Autoconfiguration}
 This draft describes how OSPF for IPv6 can be extended to run without requiring
-any configuration. The draft enforces some default values specified in the
-original OSPF RFCs.
-
-The main content of the draft is the specification of a mechanism for
-generating Router IDs and then ensuring that there are no conflicts across the
-network. A new LSA type is introduced for this purpose.
+configuration. The draft begins by enforcing some default values specified in the
+original OSPF RFCs, and restricting a few features of OSPF such as allowing only the 
+backbone area to be used. It then goes on to specify a mechanism for generating 
+Router IDs and ensuring that there are no conflicts across the network. This is 
+achieved by the introduction of a new Link State Advertisment (LSA) type.
 
 \section{OSPFv3 Prefix Assignment}
-This draft extends what is described in the Autoconfiguration draft to solve
-the issue of prefix delegation. As well as offering a realistic solution to a
-problem, the draft also demonstrates the extensibility of the Autoconfiguration
-draft. 
+Building on the work of the Autoconfiguration draft, this draft solves
+the issue of delegating IPv6 network prefixes from a larger pool of IPv6 
+prefixes. As well as offering a realistic solution to a problem, the draft 
+also demonstrates the extensibility of the Autoconfiguration draft. 
 
 A method for breaking up a short prefix delegation (possibly a /48 issued by
-ISP) is given, along with a strategy for avoiding conflicts in the assignment
+ISP) into many longer (/64) prefixes is given, along with a strategy for avoiding conflicts in the assignment
 across the network.
 
 \section{Other Important Drafts}
-There are several other papers that are relevant to this project. These are
-both articles that are relevant as background knowledge and those that have
+There are several other documents that are relevant to this project. These are
+both articles that are relevant as background knowledge and papers that have
 been referenced from one another.
 
 \subsection{Home Networking Architecture for IPv6} 
-[draft-ietf-homenet-arch-07] puts forward a vision of future home networking.
+[draft-ietf-homenet-arch-07] puts forward a vision of future home networking. The 
+draft puts forward a complete architecture for future home networks, and goes on to 
+give a discussion of many emerging technologies. 
 
 \subsection{OSPF Version 2}
-I studied [RFC2328] in depth to understand how the OSPF Protocol works. Lot of
-stuff about Areas that I don't need\ldots
+I studied [RFC2328] in depth to understand how the OSPF Protocol works. The 
+memo is surprisingly easy to read, and offers a complete discussion of how the 
+OSPF protocol is designed to build routing tables for IPv4 . 
+
+Although the document contains many details that are irrelevent to this project, 
+including a long discussion on areas, and details of the SPF algorithms
 
 \subsection{OSPF for IPv6}
-Also referred to as OSPFv3. RFC5340 Studied in depth. Explains the difference
-between an OSPFv3 implementation and and OSPFv2.
+[RFC5340] defines OSPFv3. The RFC builds on RFC2328, explaining the differences between OSPFv2 and OSPFv3. 
 
-\subsection{Autoconfiguration of routers using a link state routing protocol}
-draft-dimitri-zOSPF - An old draft that had similar aims.
-
-\subsection{Traffic Engineering Extensions to OSPF Version 3}
-Allows network wide QoS type stuff. Not sure why interesting anymore :p
+\subsection{Autoconfiguration of Routers Using a Link State Routing Protocol}
+[draft-dimitri-zOSPF] - An old draft that had similar aims to the OSPFv3 
+Autoconfiguration draft. This draft focuses on allowing autoconfiguration for both 
+IPv4 and IPv6 rather than just IPv6; this made it a more complex and restrictive 
+soltion. 
 
 \subsection{The OSPF Opaque LSA Option}
-RFC5250 - Opaque LSAs - A generic type of LSA. Useful to me mainly because of
-the brief discussion about reachability.
+RFC5250 introduces the opaque LSA. An opaque LSA is a generic type of LSA that can 
+be used to transmit application specific data. The concept is similar to that used 
+in the autoconfiguration draft, but it does not make use of Type-Length-Values 
+(TLVs). I found this draft useful mostly because of its brief discussion about the  
+reachability of LSAs.
 
 \section{Books}
 \todo{List the books}
-There were a few books that were relevant to this project: 
-\begin{itemize}
-\item Good for getting a general overview
-\item Clarify things from the RFCs 
-\item THEY DON'T COVER ANY OF THE NEW STUFF COZ IT'S BLEEDIN' EDGE!!
-\end{itemize}
+There were a few books that were relevant to this project. In general the books were 
+useful for clarifying things that were not very clear from the RFCs. They were also 
+useful for reinforcing my general understanding of the protocol, as they gave a 
+similar level overview, written from a slightly different angle. 
+
+Unfortuately the books didn't cover much OSPFv3 because it is a relatively recent 
+development, and there was no mention atall of more recent drafts (such as the 
+autoconfig draft) because they are very much on the cutting edge.
 
 \chapter{Analysis}
 An analysis and specification of the solution to the problem
 
 \section{Alternatives}
-Chat about possible alternatives to this solution
+There are also other approaches that could be used to solved the same problems as 
+these drafts. The different approaches all have thier own pros and cons, but to get 
+a full understanding of the problems that occur with each of the solutions, it is 
+neccesary to produce implementations of each soltution.
 
-\subsection{DHCP-PD}
-Main realistic alternative
+\subsection{IPv4 Address as Router ID}
+A possible solution to the Router ID assignment probem would be simply to use the 
+local IPv4 Address of the routers first interface. IPv4 Addresses seem like a good 
+candidate for the Router ID as they are both locally unique 32 bit identifiers. This 
+solution would be likely to provide a unique ID that doesn't require configuring by 
+the user.
+ 
+However, as we head forward into a world dominated by IPv6, we are likely to see the 
+use of IPv4 addresses diminishing. IPv6 addresses are not such a good candidate for 
+Router ID for many reasons. Firstly they are not 32 bits, so it would be difficult 
+to create an identifier known to be unique from this value. Secondly an interface is 
+likely to have many IPv6 Addresses. Of these addresses the only address it is 
+guarenteed to have is a link local address, which is not guarenteed to be unique 
+across the whole network. 
 
-Issue of hierachical delegation (Inefficient use of address space)
+\subsection{DHCP6-PD}
+\todo{Add a description of the actual DHCP6-PD packet} 
+Dynamic Host Configuration Protocol for IPv6 - Prefix Delegation, is a method for 
+handing a prefix from one router to another. It is then at the disgression of the 
+recieving router how it wishes to hand out the prefixes contained in the prefix of 
+the PD message. 
 
---Stateless \& Statefull + SLAAC?
+One solution to the prefix assignment issue would be to simply use a hierachical 
+system. Each router splits up the prefix recieved from an upstream router and 
+delegates an equal size prefix to each of the downstream routers connected to it. A 
+positive side of this approach is that it is very simple. The negative is that if 
+the network is unbalanced, it is possible that one side of the network could end up 
+being delegated a far larger address space than it requires, while the other side is 
+left without enough address space.  
 
 \subsection{Manual Configuration?}
-Possible, but users won't find it all that easy!
+It would also be possible to just accept the fact that as networks become more 
+complex, they will require more configuration. In a current home network, many end 
+users don't have any understanding of how the system they have in place works, and 
+wouldn't want to touch the configuration anyway. Home users may end up with a better 
+experience if a trained engineer were to set up their home network for them. This 
+would lead to more jobs, but it is a slightly defeatist attitude, and isn't strictly 
+true. 
+
+\subsection{Other Routing Protocols}
+Of course any other routing protocol is a candidate for this kind of solution. OSPF 
+was chosen as it as good convergence rates and doesn't suffer from many problems due 
+to misconfiguration of the network - such as plugging two interfaces into the same 
+link.
 
 \section{How OSPF works}
-Show that I understand fully how OSPF works. 
+\todo{Show that I understand fully how OSPF works.}
+Open Shortest Path First (OSPF) as previously mentioned is a link-state routing 
+protocol. A complete image of the network is built up by flooding Link State 
+Advertisments (LSA) across the network. 
 
---$>$ Mention v2 \& v3
+A variety of different message types exist in OSPF, including Hello messages, sent 
+out periodically to discover new adjacencies. Database Descriptions, Link State 
+Requests, Link State Updates and Link State Acknowledgments, all of which have 
+fairly self descriptive names.
 
-Details of the core LSA types. Mention the other LSAs
+The routers store the LSAs that they know about in their Link State Database (LSDB). 
+To identify which router originated an LSA, each router is given a unique Router ID.
 
-- Network, Router 
+\subsection{Links State Advertisments}
+There are Several different LSA types in OSPF. Each LSA is originated by a router on 
+the network and forwarded on by other routers depending on its flooding scope. Each 
+LSA contains some information about the network. 
+ 
+The two most important LSA types are the Router LSA and the Network LSA. Together 
+they can be used to build up a complete picture of the areas that the router belongs 
+to. 
 
-- Top->Area->Interface
+\subsubsection{Router LSA}
+The Router LSA is originated by each router and is flooded to the whole area. Router 
+LSAs contain information about the state of the router and its capabilities. They 
+also contain information about the interfaces attached to the router, the types of 
+these interfaces, and the metrics associated with using these interfaces. 
+
+\subsubsection{Network LSA}
+Network LSAs are originated by just one router for each subnet, they are flooded to 
+a single area. The router that must originate this LSA is called the Designated 
+Router (DR), and is elected by folowing the steps of the Designated router Election 
+algorithm. The Backup Designated Router (BDR) is elected in a similar way, and must 
+be prepared to start emmiting a Network LSA if the DR becomes unreachable. 
+
+The Network LSA contains a list of routers that are connected to that subnet. There are no weights associated with these connections as they are covered by the Router LSAs. 
+
+\subsubsection{Other LSAs}
+There are also several other LSA types that are defined by various different drafts. 
+Many of these LSA types are irrelevent in this project as they are concerned with 
+networks that consist of many areas, or networks that are concerned with details 
+outside of the current Autonomous System (AS). Since OSPFv3 Autoconfig dictates that 
+only one area shall be used, these LSA types can be ignored.   
+
+\subsection{Differences between OSPFv2 and OSPFv3}
+The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6. 
+
+For a discussion of how the Shortest Path First calculations are done. See Appendix 
+X. \todo{Add some stuff about djirkstras to the appendix}
+
+- Top-$>$Area-$>$Interface
 
 \section{Implementation Candidates}
-=== Does a comparison of the routing daemons go in here?
+There are pleanty of implementations of OSPFv3 to chose from. Although there are 
+propietry commercial implemenations available, such as the one provided by Cisco 
+routers, I have only considered Open Source packages as these are available for me 
+to extend.
 
 \subsection{Bird}
-Lighterweight. C. Talk about Ben and Markus's implementations.
+Bird is a fairly lightweight suite of routing protocols. It is written in C. 
+
+There are already two implementations of Autoconfiguration OSPFv3. The first was 
+written in C as a branch of Bird. The other, written in lua, was created by using an 
+extension to bird that allows LSAs to be processed by externternal programs.
 
 \subsection{Quagga}
-Fairly heavy weight, extensible, C, No implementation. Very active project
+Quagga is a more heavyweight package, it is a fork of a now defunct GNU project 
+called Zebra. Quagga aims to be compatible with a wide variety of platforms, and 
+doesn't make much use of external libraries. There are currently no public
+implementations of autoconfig OSPFv3.
 
 \subsection{XORP}
-XORP => Heaviest weight C++ No implementation. A dying project.
+XORP is annother heavy implementation. It is written in C++, there aren't any publicly available versions of Autconfig OSPFv3. It seems that the activity surrounding XORP is in decline. 
 
 \section{Chosen Implementation}
-Why did I chose quagga?
-
-\begin{itemize}
-\item Mailing list
-\item Separation of v2 and v3
-\item No existing implementation =$>$ more useful to the community
-\end{itemize}
+I chose to base by project on Quagga. Firstly I found that after subscribing to all 
+three developer mailing lists, Quagga seemed to be the most active project. Secondly 
+I liked the clear separation between the code for OSPFv2 and OSPFv3 that Quagga 
+offered, since my project would only be concerned with IPV6. Finally I felt that 
+Quagga was a good choice as there weren't any existing implementations, so my 
+contributions would be more useful to the community.
 
 = A hand wavy explanation?
 
 \chapter{Design}
 A detailed design
 
-= Discuss How it actually all works?
+= Discuss How the drafts specify it all to work?
 
---$>$ Only one area!
+\section{Simplifications}
+
+To allow OSPFv3 to function without requiring any coonfiguration, a number of 
+simplifications must be made to how it runs. These simplifications restrict some of 
+the fine tuning required by large enterprise networks, but shouldn't severely reduce 
+the functionality offered to home users. 
+
+\subsection{Operation on One Area}
+As the networks that are being configured are unlikely to be very large, there are 
+no real benefits gained from using areas. In autoconfiguration OSPF, all interfaces 
+on all routers will be part of Area 0.0.0.0, the backbone area.
+
+Removing mutliple areas also reduces the complexity in other aspects. Various 
+summary LSA types are no longer needed, and the flooding scope of area now covers the whole network.
+
+\subsection{Default Values}
+The draft specifies that various default values are used. These default values are 
+mainly values that were proposed as optional defaults in the original RFCs, and are 
+now specifed as obligatory defaults for Autoconfig OSPF. 
+
+Firstly, with the exception of those that clearly should not run OSPF, such as those 
+that are manually configured, or those connected directly to an ISP, all interfaces 
+should be autoconfigured as the correct type. Most OSPFv3 implementations already do 
+this. 
+
+Secondly, a default HelloInterval of 10 seconds is used, and a default 
+RouterDeadInterval of 40 seconds is used. There is also an optional reduction of the 
+router inactivity time from that of RouterDeadInterval down to a minimum of 
+HelloInterval + 1 seconds. 
+
+Finally, with regard to OSPFv3 Address Families, all interfaces should use the 
+default value of 0 as their Interface Instance ID. This values specifies that the 
+interface uses unicast IPv6.  
 
 \section{New LSA Type}
-To do what we gotta do, we add the LSA type Auto Configuration LSA. 
+\todo{Stick a diagram in the Appendix}
+The OSPFv3 Autoconfiguration draft specifies a new LSA type to ensure that there are 
+no conflicts in Router ID across the network. This new LSA is known as an Auto 
+Configuration LSA and currently uses an experimental Type value. The value will 
+eventually be assigned by IANA. 
 
-Diagram time (Use a simple ASCII diagram maybe?)
+The AC-LSA is designed to be extensible, the aim is to allow other bits of informati
+on to be passed around in these packets. 
 
 \subsection{TLVs}
-
-Type-Length-Values the payload of the AC LSA. 
-
-Extensible
+\todo{Confirm that length is in bytes}
+The payload of the the AC-LSA is a set of Type-Length-Value (TLV). Each TLV defines 
+the type, or meaning, of the data; the length that it occupies in BYTES(?); and then 
+the data itself. 
 
 \subsubsection{Router-Hardware-Fingerprint TLV}
+The Router-Hardware-Fingerprint (RHWFP) TLV is specified in the Autoconfiguration 
+draft. It's value is  an identifier that should be unique for its originating router across the whole network. 
 
-Explain what the TLV contains. No need to talk about how it is generated.
+RHWFP TLVs are used to ensure that there are no conflicts in the Router ID across the network.
 
 \subsubsection{Aggregated Prefix TLV}
+The Aggregated Prefix TLV is defined in the Prefix Assignment draft, it represents a short IPv6 prefix delegation that can be used to assign prefixes to the different subnets. 
 
-Shorter than /64 
+An aggregated prefix should have a length of less than or equal to /64. Typically an ISP is expected to provide a /48.
 
-Assignments made from it
+Aggregated prefixes have many possible sources, the main two being DHCP6-PD and manual configuration. 
 
 \subsubsection{Assigned Prefix TLV}
+The Assigned Prefix TLV is also defined int the Prefix Assignment draft. A router adds an Assigned Prefix TLV to its AC-LSA when it makes an assignment from an Aggrgegated prefix. 
 
-Exactly /64 
-
-Assigned to an interface
+Each assignment is made to just one interface on the network, conflicts are resolved if they occur, and is exactly /64 as this is the length used by SLAAC.
 
 \chapter{Implementation}
 The implementation
 
 + How I actually did the dirty
 
-\section{Core algorithms?}
+\section{Core Algorithms}
+\todo{This stuff might fit better into the previous section}
+There are many algorithms used in autconfig OSPFv3 to ensure that the network is 
+configured correctly.
 
-\begin{itemize}
-  \item Router Hardware Fingerprint Generation
-  \item Router ID Conflict Resolution
-  \item Prefix Assignment
-  \item Prefix Conflict Resolution
-  \item ULA Generation
-\end{itemize} 
+\subsection{Router Hardware Fingerprint Generation}
+The Router Hardware Fingerprint is a value that is based on some properties of the 
+router that has a high probability of being unique on the network. 
+
+In my implementation I chose to use a sum of the MAC addresses of the attached 
+interfaces. Although, the MAC addresses are not guarenteed to be unique as 
+manafacturers could cut corners - if they are not, there are likely to be bigger 
+problems anyway.
+
+\subsection{Router ID Generation}
+According to autoconfig OSPF, the Router ID should be a pseduo-random number, based 
+on the Router Hardware Fingerprint. As the router will need to reassign its Router 
+ID to a new number if there is a conflict, a seed value must be stored. This value 
+is passed rand_r function call, which modifies it to maintain the state of the 
+random sequence.
+
+I found one of the harder parts of the project was cleanly shutting down OSPF, changing it's router ID, and then bringing it back up again. 
+
+\subsection{Router ID Conflict Resolution}
+As the Router IDs are assigned randomly, there is a chance that there could be a 
+collision, where two routers on the network assign themselves the same Router ID. 
+This means that a mechanism for resolving this conflicts is needed. 
+
+The drafts specifies two separate mechanisms for detecting, and resolving, 
+conflicts. 
+
+\subsubsection{Local Collisions}
+A local collision, one where there is an adjacency between the conflicting routers, 
+is detected when any valid LSA is detected to have the same Router ID but a 
+different Link-Local IPv6 address. To resolve this conflict, the router with the 
+numerically lower Link-Local Address must generate a new Router ID. 
+
+\subsubsection{Network-Wide Collisions}
+To detect collisions that occur for routers that are not directly connected, all 
+apparent Self Originated AC-LSAs are inspected to ensure that they are truely Self 
+originated LSAs. This is done by checking that the Router Hardware Fingerprints 
+match. If they don't then the router with the lower Router Hardware Fingerprint must 
+change it's Router ID. 
+
+\subsection{Prefix Assignment}
+When a router notices a change in the current set of AC-LSAs in the LSDB, the prefix 
+assignment algorithm is scheduled to run. 
+
+During the prefix assignment algorithm, all aggregated prefix - interface pairs are 
+examined. If there is not already an assignment, and the router has the highest 
+Router ID of all active neighbours on that link, then it must make a prefix 
+assignment from this aggregated prefix. 
+
+There is no prescribed method in the draft for making an assignment in the draft, 
+beyond the fact that the prefix assigned must not already be an assignment. My 
+implemnetation has been written so it is easy to change the method used for picking 
+a new prefix for the assignment. 
+
+The current method I currently use is to simply step through the prefixes in 
+numerical order, this method has the disadvantage of being likely to collide with a 
+prefix alocated by another router in the network concurrently allocating prefixes. 
+However this can be an advantage during the testing phase as it makes these cases 
+more common, and as such handling these cases will undergo greater testing. The 
+other advantage is that this algorithm is guarenteed to either halt, or produce an 
+error once the address space has been exhausted. 
+
+Another method, used by one of the bird implementations is to allocate at random for a fixed number of tries, then if that failed to fall back to sequential allocation. 
+
+\todo{This may well be the place to start talking about RADVD}
+
+\subsection{Prefix Conflict Resolution}
+\todo{Review the code to see how many places do this}
+Prefix conflicts are dealt with at many different levels in the algorithm. 
+
+\subsection{ULA Generation}
+If a there are no aggregated prefixes in the routing domain after a specified amount 
+of time (120 second?) then the router with the highest Router ID must generate a 
+Unique Local Address (ULA) to allow local connectivity. ULAs are similar in concept 
+to an IPv4 Private address (e.g. 192.168.1.0) although are generally not used with 
+NAT. 
+
+The ULA generation algorithm is defined in [AN RFC], and aims to be as unique as 
+possible. The the ULA is based on a portion of a combination of the current network 
+time (in Network Time Protocol (NTP) format), and an interface's 64bit MAC address. 
+
+Once a ULA has been generated it is advertised as though it were a normal aggregated 
+prefix. If a router with a higher Router ID becomes reachable, or an aggregated prefix from another source is recieved, the ULA is deprecated. 
+
+\section{Quagga}
+Qaugga is written in C89, following the GNU coding standards. These rules help to 
+improve the portability of the code, meaning that if there is a C compiler, and the 
+operating system is POSIX compiliant, then Quagga is likely to compile for it. 
+Quagga doesn't support Microsoft Windows (or WinDoze as the GNU coding standards 
+would put it). 
+
+At first I found some of the stylistic guidelines of the GNU coding standards
+unusual, and difficult to read. Placing a space between function calls and the 
+opening parenthesis of their parameter list, declaring the return type of a function 
+on a separate line to the name of the function, and placing the opening curly brace 
+of a block on a new line all seemed strange to me at first. I am ashamed to admit 
+that when I first opened one of Quagga's source files, it took me a long hard stare 
+to realise that I was looking at a function declaration. Fortunately as time went
+on, reading, and writing, this formatting became second nature to me. 
+
+Quagga tends to avoid relying on any external libraries. There is a library folder in the repository.
 
 *Talk about the style of Quagga's code?
+==$>$ Do I put in about Threads here?
 Cite the Hacking Guide and the GNU coding standards.
 
 - The issues that I found
     Little Endian vs Big Endian
+    
+- Something about RADVD
     
 -Chat about C?
 
@@ -431,7 +680,12 @@ Cite the Hacking Guide and the GNU coding standards.
 \chapter{Testing}
 Testing strategy and results
 
-Should I put about the tunnel broker in here?
+\section{Unit Testing}
+Created unit tests to give me confidence that the code I wrote was correct. 
+
+As I was using C I was unable to make use of a unit testing framework such aas 
+JUnit. I also felt basing my code on external libraries tended to go against the 
+ethos of the Quagga.
 
 \section{Netkit} 
 Made testing fresh and easy. 
@@ -454,8 +708,6 @@ Bit harder, but still did it anyway.
 Tested against other existing implementations.
 
 Assertions -$>$ IF I actually put some in my code\ldots
-
-\textbf{DO I NEED UNIT TESTS?}
 
 \chapter{Project Management}
 /* Might be able to sneak this bit into the Appendix */
@@ -485,6 +737,7 @@ A critical evaluation
 \begin{itemize}
 \item Wrote loads of C
 \item Ended up with something that seems to work.
+\item Somewhere round here talk about how Distributed algorithms require a different type of though to understand. They often seem far too little work has been done locally...
 \end{itemize}
 
 \section{What Could Have Gone Better?}
@@ -530,6 +783,17 @@ Too little standardization - Really something apple would need to contribute to.
 == I DO WANT TO HAVE A GO AT DOING SERVICE DISCOVERY.
 -- There is a possibility I will be able to get an RFC out of it :D :D :D
 
+\section{Security Considerations}
+Currently the only security that exists in the implementation is IPSec (IP level security). It might be neccessary for future implementations to implement security.
+
+Security was a feature of OSPFv2 but it was removed in OSPFv3 in favour of using 
+IPSec. In some circumstances, IPSec is considered difficult to employ. RFC6506 
+reintroduces OSPF level security. 
+
+This RFC could be implemented to add Security to Autoconfigured networks. It would 
+be possible to provide CPE that comes with a randomly generated key similar to the 
+randomly generated Wireless PSKs that currently come with wireless access points.
+
 \section{Realization}
 It would be nice to see this kind of system deployed in the home. 
 Requires ISPs to start using IPv6.
@@ -538,11 +802,24 @@ Note: Andrews and Arnold.
 
 =$>$ Things beyond my controls - IPv6 etc
 
-\chapter{References}
-References to the literature
+\pagebreak
+
+\printnomenclature
+
+\addcontentsline{toc}{chapter}{Nomenclature}
+\pagebreak
+
+\bibliography{ProgressReport}{}
+\bibliographystyle{unsrt}
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\appendix 
+%\appendixpage
 
 \chapter{Appendices}
 Appendices providing detailed technical references
+
+\end{document}
 
 \end{document}
 
