@@ -8,6 +8,7 @@ all:
 	pdflatex $(TEXFILE)
 	makeindex $(FILE).nlo -s nomencl.ist -o $(FILE).nls
 	pdflatex $(TEXFILE)
+	chmod a+r $(FILE).pdf
 
 pdf:	all
 	
