@@ -505,6 +505,7 @@ implementations, so my contributions would be more useful to the community.
 
 \chapter{Design}
 \todo{A detailed design}
+\todo{This document needs more UML}
 
 \section{Simplifications}
 To allow OSPFv3 to function without requiring any configuration, a number of
@@ -869,36 +870,114 @@ the model was in at the end of the test was the same as expected then the test
 was said to have passed, otherwise it was said to have failed. 
 
 \section{Netkit} 
-Netkit. 
+\todo{REALLY LET TIM KNOW HOW GOOD IT IS!}
+Netkit is a package that allows developers to easily test network
+software and configuration. By using User Mode Linux (UML)
+\nomenclature{UML}{User Mode Linux} the user can run several virtual hosts on
+their desktop pc. 
 
-Made testing fresh and easy. 
+Netkit presents the user with an \texttt{xterm} virtual terminal for each
+virtual host they are running. The virtual hosts act as though they are real
+machines, and can have multiple virtual interfaces, that appear to the virtual
+host as real interfaces. Netkit allows these virtual interfaces to be joined
+together by specifying their collision domains - setting two interfaces to have
+the same collision domain has the same effect as plugging two hosts into the
+same network switch. Netkit also allows a special type of collision domain
+called a ``tap'', that can be used to share the host computers network
+connectivity with the Netkit network.
 
-REALLY LET TIM KNOW HOW GOOD IT IS!
+I found that Netkit provided me with an indispensable testing environment.
+Having up seven or so terminal windows on a single computer, is much more
+convenient than having seven separate devices that must be configured
+separately. Netkit has a serious advantage over using \texttt{ssh} or
+\texttt{telnet} - as it isn't dependent on network connectivity, you are free
+to make any change to the network without the fear of losing your remote
+connection.   
+
+Compiling the code from within Netkit was also much faster than it was
+compiling it on the Alix2d3s, the difference was between several hours on the
+Alix2d3s and several minutes in Netkit. This was because rather than using a
+500MHz AMD Geode (A low power System-on-chip designed for the embedded market
+in around 2002), Netkit was able to make use of my desktop PC's 3.3GHz (Speed
+stepped to 3.7GHz) Intel i5 2500k (A mid-high end processor from 2011) for
+compiling. 
+
+I feel that Netkit is a really great tool for understanding how networks
+actually work. I found that translating my knowledge of networks from a
+reasonably practical theoretic understanding of how they should work, to
+configuring networks to actually work was quite difficult. The trivial things
+that one is unlikely to study in great detail often turned out to be the issue
+when I was having problems getting things working - an example is setting
+\texttt{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6 traffic to
+be forwarded. Its the kind of thing that theoretically,  doesn't need learning,
+but in practice, it is very important if you want your router to work as a
+router. Netkit was very useful in helping me make this jump. 
 
 \todo{Stick a screen shot in the appendix :)}
+\todo{Also probably want a diagram of my main test lab}
+\todo{On top of that maybe add a ``Manual'' for Netkit to the Appendix} 
 
 \section{radvdump}
-\texttt{radvdump} is a tool that can be used to "dump" the contents of any
-router advertisements that are received. 
+\texttt{radvdump} is a tool that can be used to ``dump'' the contents of any
+router advertisements that are received. It is designed to be used with
+\texttt{radvd} and outputs the contents of a RA in the style of a
+\texttt{radvd} configuration file. 
 
+I made use of this tool to ensure that Quagga was successfully sending RAs and
+that they had the contents that I expected them to have. 
+
+\todo{Add an example of one of these to the appendix}
 
 \section{Tunnel Broker}
-Should I talk about how I configured it all to work with a tunnel broker here?
+\todo{Add a more detailed description of how a tunnel is set up and works in the Appendix.}
+Using Hurricane Electric's (HE) Tunnel broker service, I was able to give my
+network truly global connectivity. With an HE tunnel, you are Initially
+provided with a single /64 IPv6 prefix, but it is possible to request a larger
+allocation of /48. The tunnel is then set up at their end so that any traffic
+that is destined to your subnet is routed to the endpoint that you specified.  
 
-Using Hurricane Electrics Tunnel broker service, I was able to give my network
-truly global connectivity. I was able to ping the devices from a remote server.
+\todo{Maybe Apendix would like to have the route table entries to do this?}
+By configuring a static route, for the allocated /48 prefix, that forwarded all
+traffic into the Netkit network. Then setting up Quagga within the Netkit
+network to use the allocated prefix as its aggregated prefix, I was able to
+make my the IPv6 addresses globally reachable. Using a remote server
+(\texttt{uglogin}) I was then able to ping the virtual devices inside Netkit,
+demonstrating that the devices had global addressability.
 
 \section{Alix2d3}
-Bit harder, but still did it anyway.
+Although I was relatively confident that testing my code using Netkit was
+sufficient to show that it worked correctly, I tested my code running on two
+Alix2d3 devices. This offered me a more tangible proof that my code was
+functioning correctly. It also allowed me to do the kind of things that home users
+are likely to do, like plugging the routers together in strange and arbitrary
+configurations.
+
+Testing on the Alix2d3s was much more difficult and time consuming that testing
+with Netkit, so I avoided doing this bulk of the testing this way. I employed a
+more black box approach to testing like this, plugging the devices in and
+checking that everything seemed to be working. 
 
 \section{Interoperability}
+\todo{Get Markus' code working!}
+One of the goals of my project was to verify that the implementations produced
+by other developers was compatible with the code that I produced. 
 
-Tested against other existing implementations.
+Both of the implementations I was testing against used Bird as their routing
+daemon suite. As Bird and Quagga both implement the same specifications for
+OSPFv3, I felt it was safe to assume that Vanilla Bird would be compatible with
+Vanilla Quagga. 
 
-Assertions -$>$ IF I actually put some in my code\ldots
+\subsection{Ben's Implementation}
+Ben's implementation was written in C, I found it very easy to install onto my
+Netkit testbed. 
+
+\subsection{Markus' Implementation}
+Markus' implementation was written in lua, haven't actually got it running yet.
+Hopefully using his OpenWRT convenience feed will be easier. 
+
 
 \chapter{Project Management}
-/* Might be able to sneak this bit into the Appendix */
+\todo{If I have too many words, This can be pulled into appendix?}
 
 \section{Gantt Charts}
 The most exciting part of this document!
