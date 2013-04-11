@@ -74,7 +74,7 @@ published by the IETF\@\nomenclature{IETF}{Internet Engineering Task Force}.
 \clearpage
 
 \chapter{Acknowledgements}
-
+\todo{Write as prose}
 \begin{itemize}
 \item Tim Chown - Offered support as project supervisor
 \item David Lamparter - Responded to my queries about how Quagga works
@@ -121,7 +121,7 @@ goals for the project were:
 \item Discover any ambiguities in the drafts.
 \end{itemize}
 
-==Emphasise bleeding edge?==
+\todo{Emphasise bleeding edge}
 
 \chapter{Background}
 \todo{Is this section a big waffle?}
@@ -159,7 +159,7 @@ to the wired network to provide just one subnet.
 Larger networks like the ones found on University Campuses and Larger
 Businesses tend to employ many of the more advanced features of networking.
 They are often split into many subnets depending on the physical locations,
-workgroups and expected use of the hosts. 
+work groups and expected use of the hosts. 
 
 Many organisations were able to obtain large chunks of IPv4 address space, the
 University of Southampton was able to obtain a /16 (152.78.0.0) giving them
@@ -195,7 +195,7 @@ having full access to the local network. To facilitate this, hard coded local
 IPv4 addresses are usually used, with the advent of IPv6 and globally valid
 addresses, a mechanism to assign IP addresses and route traffic is required. 
 
-\todo{Stop. Elaborate and Listen}
+\todo{Elaborate}
 The Internet Engineering Task Force's (IETF) Homenet working group
 \cite{homenet} are working on the architecture of the home network of the
 future. 
@@ -280,7 +280,7 @@ protocols do routing based on policy than the technical distance of the
 destinations.
 
 \chapter{Literature Review} 
-\todo{Could go on forever. Need to be concise.}
+\todo{Could go on forever. Need to be concise. Don't waste words.}
 
 The project was based mainly on two closely related drafts, both written by the
 same authors. If these drafts are approved by the IETF they will end up
@@ -288,8 +288,8 @@ becoming Request for Comments (RFC) \nomenclature{RFC}{Request for Comments}
 which are the technical documents that specify how the internet works. The most
 notable RFCs are placed on a Standards Track, and if they are successful will
 become recognised as a proposed standard. Eventually proposed standards may
-become Internet standard and are seen as the highest form of standard the
-IETF produces. 
+become Internet standard and are seen as the highest form of standard the IETF
+produces. 
 
 \section{OSPFv3 Autoconfiguration}
 This draft describes how OSPF for IPv6 can be extended to run without requiring
@@ -396,7 +396,7 @@ The negative is that if the network is unbalanced, it is possible that one side
 of the network could end up being delegated a far larger address space than it
 requires, while the other side is left without enough address space.  
 
-\subsection{Manual Configuration?}
+\subsection{Manual Configuration}
 It would also be possible to just accept the fact that as networks become more
 complex, they will require more configuration. In a current home network, many
 end users don't have any understanding of how the system they have in place
@@ -412,10 +412,10 @@ problems due to misconfiguration of the network - such as plugging two
 interfaces into the same link.
 
 \section{How OSPF works}
-\todo{Show that I understand fully how OSPF works.} Open Shortest Path First
-(OSPF) as previously mentioned is a link-state routing protocol. A complete
-image of the network is built up by flooding Link State Advertisements (LSA)
-across the network. 
+\todo{Show that I understand fully how OSPF works.} 
+Open Shortest Path First (OSPF) as previously mentioned is a link-state routing
+protocol. A complete image of the network is built up by flooding Link State
+Advertisements (LSA) across the network. 
 
 A variety of different message types exist in OSPF, including Hello messages,
 sent out periodically to discover new adjacencies. Database Descriptions, Link
@@ -466,15 +466,12 @@ can be ignored.
 \subsection{Differences between OSPFv2 and OSPFv3}
 The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6. 
 
+\todo{Add some stuff about Dijkstra's to the appendix}
 For a discussion of how the Shortest Path First calculations are done. See
 Appendix X. 
 
-\todo{Add some stuff about Dijkstra's to the appendix}
-
-- Top-$>$Area-$>$Interface
-
 \section{Implementation Candidates}
-There are plenty of implementations of OSPFv3 to chose from. Although there
+There are plenty of implementations of OSPFv3 to choose from. Although there
 are propriety commercial implementations available, such as the one provided by
 Cisco routers, I have only considered Open Source packages as these are
 available for me to extend.
@@ -506,15 +503,10 @@ that Quagga offered, since my project would only be concerned with IPV6.
 Finally I felt that Quagga was a good choice as there weren't any existing
 implementations, so my contributions would be more useful to the community.
 
-= A hand wavy explanation?
-
 \chapter{Design}
-A detailed design
-
-= Discuss How the drafts specify it all to work?
+\todo{A detailed design}
 
 \section{Simplifications}
-
 To allow OSPFv3 to function without requiring any configuration, a number of
 simplifications must be made to how it runs. These simplifications restrict
 some of the fine tuning required by large enterprise networks, but shouldn't
@@ -539,10 +531,11 @@ those that are manually configured, or those connected directly to an ISP, all
 interfaces should be autoconfigured as the correct type. Most OSPFv3
 implementations already do this. 
 
-Secondly, a default HelloInterval of 10 seconds is used, and a default
-RouterDeadInterval of 40 seconds is used. There is also an optional reduction
-of the router inactivity time from that of RouterDeadInterval down to a minimum
-of HelloInterval + 1 seconds. 
+Secondly, a default \texttt{HelloInterval} of 10 seconds is used, and a default
+\texttt{RouterDeadInterval} of 40 seconds is used. There is also an optional
+reduction of the router inactivity time from that of
+\texttt{RouterDeadInterval} down to a minimum of \texttt{HelloInterval} + 1
+seconds. 
 
 Finally, with regard to OSPFv3 Address Families, all interfaces should use the
 default value of 0 as their Interface Instance ID\@. This values specifies that
@@ -566,7 +559,7 @@ BYTES(?); and then the data itself.
 
 \subsubsection{Router-Hardware-Fingerprint TLV}
 The Router-Hardware-Fingerprint (RHWFP) TLV is specified in the
-Autoconfiguration draft. It's value is  an identifier that should be unique for
+Autoconfiguration draft. Its value is an identifier that should be unique for
 its originating router across the whole network. 
 
 RHWFP TLVs are used to ensure that there are no conflicts in the Router ID
@@ -592,9 +585,7 @@ Each assignment is made to just one interface on the network, conflicts are
 resolved if they occur, and is exactly /64 as this is the length used by SLAAC.
 
 \chapter{Implementation}
-The implementation
-
-+ How I actually did the dirty
+\todo{The implementation}
 
 \section{Core Algorithms}
 \todo{This stuff might fit better into the previous section}
@@ -615,7 +606,7 @@ anyway.
 According to autoconfig OSPF, the Router ID should be a pseudo-random number,
 based on the Router Hardware Fingerprint. As the router will need to reassign
 its Router ID to a new number if there is a conflict, a seed value must be
-stored. This value is passed rand\_r function call, which modifies it to
+stored. This value is passed \texttt{rand\_r} function call, which modifies it to
 maintain the state of the random sequence.
 
 I found one of the harder parts of the project was cleanly shutting down OSPF,
@@ -723,159 +714,159 @@ Although this does mean that the multicore architecture of modern CPUs
 \nomenclature{CPU}{Central Processing Unit} is not exploited, this does mean 
 that as I developer I don't have to worry about making my program thread safe.
 
-``Linklist'' was another useful element of the library. It implements a linked 
-list data structure - a series of nodes that have pointers to the next and the 
-previous node in the list. Many of the data structures that I required in my 
-program were variable lengthed lists, and ``linklist'' worked well for this. 
-``Linklist'' also offers a macro called ``ALL\_LIST\_ELEMENTS'' that can be used 
-in a similary way to Java's enhanced for loop, although it requires variables to 
-hold pointers to the current node and the next node. One major draw back of 
-``Linklist'' is that because of limitations of C, the data is stored as a 
-typeless poiner, and therefore is not type safe. As long as the developer is 
-careful, however, this shouldn't be an issue. 
+``Linklist'' was another useful element of the library. It implements a linked
+list data structure - a series of nodes that have pointers to the next and the
+previous node in the list. Many of the data structures that I required in my
+program were variable length lists, and ``linklist'' worked well for this.
+``Linklist'' also offers a macro called ``\texttt{ALL\_LIST\_ELEMENTS}'' that
+can be used in a similarly way to Java's enhanced \texttt{for} loop, although it requires
+variables to hold pointers to the current node and the next node. One major
+draw back of ``Linklist'' is that because of limitations of C, the data is
+stored as a typeless pointer, and therefore is not type safe. As long as the
+developer is careful, however, this shouldn't be an issue. 
 
-Another library component is Prefix. It represents an IPv4 or IPv6 address, and 
-offers an array of functions that can be performed on them. One of the most 
-useful features is the ability to convert back and forth between strings and 
-in6\_addrs (the representation used in POSIX kernels). This is useful for both 
-user interface code and debugging messages. There were also macros available for 
-testing whether two IP addresses were the same - the memcmp function is used by 
-these macros. I extending prefix to include a function that determined whether
-or not a given prefix contained another prefix. 
+Another library component is Prefix. It represents an IPv4 or IPv6 address, and
+offers an array of functions that can be performed on them. One of the most
+useful features is the ability to convert back and forth between C strings
+(\texttt{char *}) and \texttt{in6\_addrs} (the representation used in POSIX
+kernels). This is useful for both user interface code and debugging messages.
+There were also macros available for testing whether two IP addresses were the
+same - the \texttt{memcmp} function is used by these macros. I extending prefix
+to include a function that determined whether or not a given prefix contained
+another prefix. 
 
 The other interesting thing in the library is MD5 
 \nomenclature{MD5}{Message-Digest Algorithm 5}. As its name suggests it creates 
 a cryptographic hash of  the data it is provided with. For the generation of 
-ULAs, is is reccomended that a SHA-1 
+ULAs, is is recommended that a SHA-1 
 \nomenclature{SHA-1}{Secure Hash Algorithm 1}, a similar but more secure 
-cyptographic hash is used. As I didn't have a SHA-1 implementation available to
-me, I felt that MD5 would be a suitble substitute. 
+cryptographic hash is used. As I didn't have a SHA-1 implementation available to
+me, I felt that MD5 would be a suitable substitute. 
 
 Being written in C, Quagga is not object oriented. The layout of the code 
-however, is influenced by object oriented programming. Structs are used 
+however, is influenced by object oriented programming. \texttt{struct}s are used 
 extensively to represent the different "objects" in the program, many of the 
-functions operate on these structs, in a similar way to how methods act on the 
+functions operate on these \texttt{struct}s, in a similar way to how methods act on the 
 objects they belong to.
 
 I found that writing such a large and complex program was quite difficult at 
 times, I felt that getting the correct level of abstraction across the different 
-functions was quite tricky. The lack of inherticance and polymorphism was also 
-something I felt I had to work around. 
+functions was quite tricky. The lack of inheritance and polymorphism was also 
+something I felt I had to work around to write clean code. 
 
-Another thing that I found tricky when writing C code, especially C code that is 
-expected to have very long uptimes, is ensuring that it is free from memory leaks. 
-If memory that is allocated usign the malloc system call is not deallocated using 
-free then it will become unusable. Eventually this unusable meory can build up so 
-much that the program cannot obtain any more memory from the operating system, and 
-the program will crash.
+Another thing that I found tricky when writing C code, especially C code that
+is expected to have very long up times, is ensuring that it is free from memory
+leaks.  If memory that is allocated using the \texttt{malloc} system call is
+not deallocated using free then it will become unusable. Eventually this
+unusable memory can build up so much that the program cannot obtain any more
+memory from the operating system, and the program will crash.
 
-*Talk about the style of Quagga's code?
-Cite the Hacking Guide and the GNU coding standards.
+\todo{Cite the Hacking Guide and the GNU coding standards.}
 
 \subsection{vtysh}
 \todo{Maybe I have lied in other parts of the document - 
 vtysh depends on libreadline}
-vtysh \nomenclature{vtysh}{The Command Line Interface for Quagga} is a Virtual 
+\texttt{vtysh} \nomenclature{vtysh}{The Command Line Interface for Quagga} is a Virtual 
 Teletype shell. It is the primary interactive user interface for Quagga. It is 
-possible to access vtysh either locally on the router using the vtysh command, 
-or remotely using telnet. telnet connections are made directly to the routing 
-protocol daemon, i.e. telnet :: ospf6d.  
+possible to access \texttt{vtysh} either locally on the router using the \texttt{vtysh} command, 
+or remotely using telnet. \texttt{telnet} connections are made directly to the routing 
+protocol daemon, i.e. \texttt{telnet :: ospf6d}.  
 
 \todo{Maybe expand on why the shorter commands work}
-The layout of the interface is based on that commonly found in Cisco routers. 
-Commands like "show ipv6 ospf6 database detail", or the shorter yet umabiguous 
-"sh ipv os da de", can be used. The afforementioned command will list out, in 
-full detail, the contents of all of the LSAs that ospf6d knows about. 
+The layout of the interface is based on that commonly found in Cisco routers.
+Commands like ``\texttt{show ipv6 ospf6 database detail}'', or the shorter yet
+unambiguous ``texttt{sh ipv os da de}'', can be used. The aforementioned
+command will list out, in full detail, the contents of all of the LSAs that
+\texttt{ospf6d} knows about. 
 
 \section{Router Advertisements}
-Router Advertisements (RAs) \nomenclature{RA}{Router Advertisement} 
-are part of the Neighbor Discovery Protocol (NDP), 
-\nomenclature{NDP}{Neighbor Discovery protocol} and are used to 
-advertise prefixes that an interface should generate itself an IPv6 
-address for, and the address and routing domains of the router that is 
-making the advertisements. 
+Router Advertisements (RAs) \nomenclature{RA}{Router Advertisement} are part of
+the Neighbor Discovery Protocol (NDP), \nomenclature{NDP}{Neighbor Discovery
+protocol} and are used to advertise prefixes that an interface should generate
+itself an IPv6 address for, and the address and routing domains of the router
+that is making the advertisements. 
 
-Typically routers make use of radvd \nomenclature{radvd}{The Router 
-Advertisment Daemon} to send out RAs. I felt that coupling Quagga to 
-another piece of software would be undesirable. My reasoning for this 
-is that firstly, one cannot be sure that the package will always the 
-most popular choice. Secondly, if the API for radvd changes, then 
-Quagga would also need to be changed. And finally there don't seem to 
-be any clean ways of interfacing with radvd, the daemon must be 
-halted, configuration files updated and then the daemon is restarted.
+Typically routers make use of \texttt{radvd} \nomenclature{radvd}{The Router
+Advertisement Daemon} to send out RAs. I felt that coupling Quagga to another
+piece of software would be undesirable. My reasoning for this is that firstly,
+one cannot be sure that the package will always the most popular choice.
+Secondly, if the API for \texttt{radvd} changes, then Quagga would also need to be
+changed. And finally there don't seem to be any clean ways of interfacing with
+\texttt{radvd}, the daemon must be halted, configuration files updated and then the
+daemon is restarted.
 
-\todo{Should I have a whole section on Zebra \& Zclient?}
-Fortunately Quagga has its own, albeit incomplete, code for sending 
-out router advertisements. This functionality is hidden away inside 
-Zebra, the part of the code that is resposible for updating the 
-routing table. The \emph{correct} way of accessing this functionality 
-from within the routing protocol implementation (i.e. ospf6d), is to 
-send a message using the libary component zClient, which is then
-received and enacted upon by zServ, part of Zebra. 
+\todo{Should I have a whole section on Zebra \& Zclient?} 
+Fortunately Quagga has its own, albeit incomplete, code for sending out router
+advertisements.  This functionality is hidden away inside Zebra, the part of
+the code that is responsible for updating the routing table. The \emph{correct}
+way of accessing this functionality from within the routing protocol
+implementation (i.e.  \texttt{ospf6d}), is to send a message using the library
+component \texttt{zClient}, which is then received and enacted upon by
+\texttt{zServ}, part of Zebra. 
 
-\todo{Add to the appendix pictures of these messages}
-Intially the only way to set whether or not router advertisements were 
-on or off, and to set which prefixes the router advertised as usable, 
-was to use the telnet user interface VTY. I extended the zClient-zServ 
-protocol to include messages to expose this functionality to the 
-routing protocol implementations. 
+\todo{Add to the appendix pictures of these messages} 
+Initially the only way to set whether or not router advertisements were on or
+off, and to set which prefixes the router advertised as usable, was to use the
+telnet user interface \texttt{VTY}. I extended the \texttt{zClient-zServ}
+protocol to include messages to expose this functionality to the routing
+protocol implementations. 
 
 \section{Endians}
-One on going issue in my project was the way in which numbers were 
-represented. The x86 architecture used in most modern desktop 
-processors is little endian. This means that when a value is 
-represented as more than one byte, the least significant (lowest in 
-value) byte of the data is stored first. On the contrast when 
-transmitting data on the network using the IP protocol, network byte 
-order is defined as big endian, i.e. the most significant bytes are 
-transmitted first. 
+One on going issue in my project was the way in which numbers were represented.
+The x86 architecture used in most modern desktop processors is little endian.
+This means that when a value is represented as more than one byte, the least
+significant (lowest in value) byte of the data is stored first. On the contrast
+when transmitting data on the network using the IP protocol, network byte order
+is defined as big endian, i.e.\@ the most significant bytes are transmitted
+first. 
 
-I found this to be a source of quite a lot of confusion as often I 
-neglected to convert from network order to host order, and then spent 
-a long time debugging to work out what was going wrong. Fortunately 
-for all the standard sized data types there are functions to convert 
-between the two endians. htons converts host shorts (unsigned 
-16 bit integers) to network shorts; ntohs does the opposite. htonl and 
-ntohl also exist to work on longs (unsigned 32 bit integers). 
+I found this to be a source of quite a lot of confusion as often I neglected to
+convert from network order to host order, and then spent a long time debugging
+to work out what was going wrong. Fortunately for all the standard sized data
+types there are functions to convert between the two endians. \texttt{htons}
+converts host shorts (unsigned 16 bit integers) to network shorts;
+\texttt{ntohs} does the opposite. \texttt{htonl} and \texttt{ntohl} also exist
+to work on longs (unsigned 32 bit integers). 
 
-One positive of having different endians on the network and the architecture used 
-in development is that it makes you think about the endians. If the development 
-platform used the same endians as the network then it would be very easy to 
-forget about endians altogether. It would then become very messy if the software 
-was ported to a platform that used different endians to the network.
+One positive of having different endians on the network and the architecture
+used in development is that it makes you think about the endians. If the
+development platform used the same endians as the network then it would be very
+easy to forget about endians altogether. It would then become very messy if the
+software was ported to a platform that used different endians to the network.
     
 \chapter{Testing}
 \todo{Testing strategy and results}
-To ensure that my code worked as I believed that it did, it needed to be tested. 
+To ensure that my code worked as I believed that it did, it needed to be
+tested. 
 
 \section{Assertions}
-To ensure that my code failed early and completely if something was wrong, I 
-peppered my code with assertions. Assertions are statements that state that 
-something is true, and will do nothing if it is. If the assertion is incorrect, 
+To ensure that my code failed early and completely if something was wrong, I
+peppered my code with assertions. Assertions are statements that state that
+something is true, and will do nothing if it is. If the assertion is incorrect,
 then the program will halt.
 
-I added assertions in my code to check for circumstances that should under no 
-circumstances occur. This ensures that the code never executes in a an invalid 
+I added assertions in my code to check for circumstances that should under no
+circumstances occur. This ensures that the code never executes in an invalid
 state, producing incorrect results. 
 
 \section{Unit Testing}
 \todo{Generate some kind of unit test report}
-I created unit tests to ensure that the code did the things that I had intended it 
-to do, my unit tests focused heavily on the edge cases. Creating these unit tests 
-gave me confidence that my code did what I intended it to do, however, it didn't 
-ensure that my intentions were correct. 
+I created unit tests to ensure that the code did the things that I had intended
+it to do, my unit tests focused heavily on the edge cases. Creating these unit
+tests gave me confidence that my code did what I intended it to do, however, it
+didn't ensure that my intentions were correct. 
 
 As I was using C I was unable to make use of a unit testing framework such as
 JUnit. I also felt basing my code on external libraries tended to go against
 the ethos of the Quagga.
 
-I created my unit tests by creating a ``mock'' environment in which to run my 
-code. This mock environment consists of structs that are filled in as though the 
-application has been running successfuly.  I then executed the algorithms inside 
-this enviroment. After running the algorithm, I checked to make sure that the 
-actual outcome was the same as the expected outcome. If the state that the model 
-was in at the end of the test was the same as expected then the test was said to 
-have passed, otherwise it was said to have failed. 
+I created my unit tests by creating a ``mock'' environment in which to run my
+code. This mock environment consists of \texttt{struct}s that are filled in as though
+the application has been running successfully.  I then executed the algorithms
+inside this environment. After running the algorithm, I checked to make sure
+that the actual outcome was the same as the expected outcome. If the state that
+the model was in at the end of the test was the same as expected then the test
+was said to have passed, otherwise it was said to have failed. 
 
 \section{Netkit} 
 Netkit. 
@@ -884,11 +875,11 @@ Made testing fresh and easy.
 
 REALLY LET TIM KNOW HOW GOOD IT IS!
 
-Stick a screen shot in the appendix :)
+\todo{Stick a screen shot in the appendix :)}
 
 \section{radvdump}
-radvdump is a tool that can be used to "dump" the contents of any router 
-advertisements that are received. 
+\texttt{radvdump} is a tool that can be used to "dump" the contents of any
+router advertisements that are received. 
 
 
 \section{Tunnel Broker}
