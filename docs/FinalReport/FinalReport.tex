@@ -381,9 +381,9 @@ Secondly an interface is likely to have many IPv6 Addresses. Of these addresses
 the only address it is guaranteed to have is a link local address, which is not
 guaranteed to be unique across the whole network. 
 
-\subsection{DHCP6-PD}
-\todo{Add a description of the actual DHCP6-PD packet} 
-DHCP for IPv6 Prefix Delegation (DHCP6-PD) \nomenclature{DHCP6-PD}{DHCP for
+\subsection{DHCPv6-PD}
+\todo{Add a description of the actual DHCPv6-PD packet} 
+DHCP for IPv6 Prefix Delegation (DHCvP6-PD) \nomenclature{DHCPv6-PD}{DHCP for
 IPv6 Prefix Delegation}, is a method for handing a prefix from one router to
 another. It is then at the discretion of the receiving router how it wishes to
 hand out the prefixes contained in the prefix of the PD message. 
@@ -574,7 +574,7 @@ to the different subnets.
 An aggregated prefix should have a length of less than or equal to /64.
 Typically an ISP is expected to provide a /48.
 
-Aggregated prefixes have many possible sources, the main two being DHCP6-PD and
+Aggregated prefixes have many possible sources, the main two being DHCPv6-PD and
 manual configuration. 
 
 \subsubsection{Assigned Prefix TLV}
@@ -1003,11 +1003,11 @@ Gotta love that task management system
 \section{Risk Assessment}
 \todo{Either copy from Progress Report or create a table}
 
-
 \chapter{Evaluation}
-A critical evaluation
+\todo{A critical evaluation}
 
 \section{What Went Well?}
+In general I felt that project was successfull. 
 
 \begin{itemize}
 \item Wrote loads of C
@@ -1025,61 +1025,114 @@ A critical evaluation
 \item More feedback from community??
 \end{itemize}
 
-\chapter{Conclusions And Future Work}
-Conclusions and future work
+\chapter{Conclusions and Future Work}
+\todo{Conclusions and future work}
 
 \section{Conclusions}
+\todo{Add the ambiguities I previously came up with}
+In this project I have shown that it is possible to extend Quagga to implement
+zero configuration OSPFv3. Along the way I learned a lot. I also uncovered a
+few areas of the draft that I feel are slightly ambiguous or under
+prescriptive. 
 
-It is possible to do
+\section{Continuing the project}
+Now that the project is over, I plan to continue with the work I have been
+doing.  My goal is to have the code that I have written merged back into the
+Quagga mainline. Before this can happen, the code will need to go through a
+cleanup stage and a series of code reviews to ensure that it is of sufficient
+quality, and is relevant to fit with the rest of the Quagga project.
 
-Some things aren't very prescriptive in the draft
-
-\begin{itemize}
-\item It works! 
-\item Release source code to community
-\item Code reviews
-\item Attend IETF 87
-\end{itemize}
+I also hope to be able to attend the 87th IETF meeting that will take place
+during the summer holidays. I have applied for the ECS Student Development
+fund, to help me fund the trip. If I am able to go it will give me the
+opportunity to discuss future work, and participate in interoperability tests.
 
 \section{Future Work}
-The scope of my project was fairly large. As it is a very current research
+The scope of my project was fairly large. As it is such a current research
 area, and the drafts I have implemented are designed to be very extensible,
-there is a large amount of work that could be based on what I have
-produced. 
+there is a large amount of work that could be based on what I have produced. 
 
-\section{DHCP6-PD}
-Would be nice to have Quagga intercept DHCP6-PD messages and use the prefixes
-as aggregated prefixes. 
+\subsection{DHCPv6-PD}
+Ideally an implementation of OSPFv3 Prefix Assignment should be able to handle
+aggregated prefixes DHCPv6-PD. I decided fairly early on in the project that
+this would be beyond the scope of the project. 
 
-At the moment I didn't manage to do this and I it was deemed beyond project
-scope.
+There are two ways that I would suggest implementing this functionality. The
+first is to make use of an existing DHCPv6 Client such as WIDE-DHCPv6, and find
+a way to hook into the PD message functionality. The other would be to add
+functionality to Quagga itself to handle the DHCPv6-PD messages. 
 
-\section{Source Based Routing}
-I might actually create a branch of my code to do a quick proof of concept. At
-the moment, it would be beyond the scope of the project to implement this. 
+I feel that adding this functionality to Quagga would be the better solution
+since it doesn't couple Quagga to any other projects. It would however be
+likely to require a lot more work to achieve.
 
-\section{Multi-hop Service discovery}
-I think that this would be worthy of a third year project on it's own.  Too
-little standardization - Really something apple would need to contribute to. 
+\subsection{Source Based Routing}
+\todo{Thinking of doing a prototype/proof of concept}
+In the future it may become more common for households to have more than one
+broadband connection. Having a cable connection, with a ADSL line for backup is
+a scenario that may become common in the home of the future. 
 
-\section{Security Considerations}
+The issue with this type of set up is that to prevent various attacks, in
+accordance with BCP 38, ISPs are likely to drop any traffic that has a source
+address that does not fall within the prefix that it allocated to that network.
+As such, if multiple ISPs are used, the network traffic must be routed to the
+correct ISP. 
+
+Source Based routing is a possible solution to this. Source based routing works
+by forwarding traffic based on the source address of the packet, as well as its
+destination address. This can be implemented in POSIX by making use of
+\texttt{iproute2}'s ability to have multiple route tables, one for each
+distinct prefix.  Rules are then added to the routing policy database to select
+which routing table to use based on the source address.
+
+Quagga currently doesn't offer any control over the routing policy database.
+This functionality could possibly be replicated as a proof of concept by using
+the command \texttt{ip rule} using a scripting language.
+
+\subsection{Multi-hop Service discovery}
+Service discovery has become very popular in modern networks. It's major use
+cases include finding media streaming severs and printers on a home network. At
+present, a device must be connected to the same subnet as a service for it to
+be able to discover it as the service discovery messages are not forwarded by
+the router. 
+
+It would be possible for Quagga to be extended to flood these service discovery
+messages across the whole network, allowing services on one subnet, to be
+accessible from another. Major use cases for this include: monitoring home
+appliances from within the home workstation network, and displaying images on a
+screen from a guest network.
+
+There are currently no drafts suggesting how this would be done, ideally Apple
+Inc.\@ would eventually extend their service discovery platform, Bonjour, to
+use this kind of technology.
+
+\subsection{Security Considerations}
 Currently the only security that exists in the implementation is IPSec (IP
-level security). It might be necessary for future implementations to implement
-security.
+level security). It might be beneficial to add an extra layer of security to future 
+releases.
 
-Security was a feature of OSPFv2 but it was removed in OSPFv3 in favour of using 
-IPSec. In some circumstances, IPSec is considered difficult to employ. RFC6506 
-reintroduces OSPF level security. 
+Built in security was a feature of OSPFv2 but it was removed in OSPFv3 in favour of 
+using IPSec. In some circumstances, IPSec is considered difficult to employ. 
+RFC6506 reintroduces OSPF level security through the use of an Authentication 
+Trailer. 
 
 This RFC could be implemented to add Security to Autoconfigured networks. It would 
 be possible to provide CPE that comes with a randomly generated key similar to the 
 randomly generated Wireless PSKs that currently come with wireless access points.
 
 \section{Realization}
-It would be nice to see this kind of system deployed in the home. 
-Requires ISPs to start using IPv6.
-Outside my control. 
-Note: Andrews and Arnold.
+As IPv6 becomes more common place, and IPv4 is slowly phased out, this project can 
+actually be used in the home. For home users to actively switch to IPv6 there needs 
+to be some features that they can't get from IPv4 - I think that this project 
+implements one of those features.
+
+Unfortunately though it doesn't stop at home users, ISPs also need to be on
+board.  Currently in the UK there is only a very small number of ISPs who
+provide IPv6 addresses to their customers. SixXS list just 7 UK ISPs, the only
+one on the list I have heard is Andrews \& Arnolds.
+
+Of course these problems are outside of my control, hopefully with time, the
+large ISPs will be able to overcome the inertia of switching to IPv6.
  
 \pagebreak
 
