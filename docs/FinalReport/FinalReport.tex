@@ -1007,24 +1007,59 @@ Gotta love that task management system
 \todo{A critical evaluation}
 
 \section{What Went Well?}
-In general I felt that project was successfull. 
+In general I felt that project was successful. Although it was difficult, I
+managed to complete my implementation only very slightly behind schedule. I
+feel that the software I have developed is functional, robust and maintainable.
+Hopefully after code review it will be accepted as part of Quagga.
 
-\begin{itemize}
-\item Wrote loads of C
-\item Ended up with something that seems to work.
-\item Somewhere round here talk about how Distributed algorithms require a
-  different type of though to understand. They often seem far too little work
-  has been done locally\ldots
-\end{itemize}
+The program that I have produced meets the goals that I originally set; 
+
+I like that I got an opportunity to work in a language, and therefore style of
+programming, that I had had little experience using before this project.  I
+feel that because of this I have learnt a lot about how to develop programs in
+a procedural style rather than an object oriented one. My skills in writing C
+code have improved hugely thanks to this project. I am much more confident in
+my understanding of pointers and \texttt{struct}s, and in turn, the low level
+operation of a computer.  
+
+I also feel much more confident now about working on large projects. Prior to
+this project I had looked at the code bases of open source projects and felt
+intimidated by the size and style of the code base. I remember feeling unsure
+about where the code for these applications even started from. Having completed
+this project, I have come to realise that the individual blocks and statements
+that make up the large projects, are exactly the same as those that I am very
+familiar with in my own work - there isn't often anything that when taken in
+isolation, I am totally unable to understand.
+
+The final aspect that I feel went well in this project is that I discovered a
+huge amount of information about the software projects that exist to support
+networking. Not only did I learn about the Quagga project, but I also learnt
+about many other projects. I read about and used the competing routing daemon
+implementations Bird and XORP\@. I read about Cisco's proprietary implementations of
+these protocols too. And I also made use of many other pieces of network
+software: I made heavy use of \texttt{iproute2}, the package that has
+superseded \texttt{ifconfig} as the de facto way to control TCP/IP networking
+in Linux; I also experimented with \texttt{radvd} the Router Advertisement
+Daemon; and also played with WIDE-DHCPv6. 
 
 \section{What Could Have Gone Better?}
+In general the project went well, perfection however is rarely obtainable, and
+there were things that if I was to do this project again, I might have done
+differently. 
 
-\begin{itemize}
-\item Not much really :p
-\item Could have spoken more to Jarri
-\item More feedback from community??
-\end{itemize}
+Firstly, I didn't properly dig into the project until later than I would have
+liked.  This was partially due to having a very high workload from my other
+courses at the end of Semester One - given the chance I would go back in time
+and choose less coursework intensive optional modules. The other factor was a
+lack of confidence about jumping in at the deep end. With the experience of
+working on a project like this I now know that one of the best ways of learning
+how a piece of software works is just to try to add a feature to it.
 
+I also feel that I could have become more involved in the discussion about the
+drafts, again I think I was held back by a lack of experience and confidence,
+having never been involved with the Internet Engineering Task Force or any
+other international standards body before. 
+ 
 \chapter{Conclusions and Future Work}
 \todo{Conclusions and future work}
 
@@ -1054,7 +1089,7 @@ there is a large amount of work that could be based on what I have produced.
 
 \subsection{DHCPv6-PD}
 Ideally an implementation of OSPFv3 Prefix Assignment should be able to handle
-aggregated prefixes DHCPv6-PD. I decided fairly early on in the project that
+aggregated prefixes DHCPv6-PD\@. I decided fairly early on in the project that
 this would be beyond the scope of the project. 
 
 There are two ways that I would suggest implementing this functionality. The
