@@ -30,6 +30,8 @@ DIY
 
 Hack: Copy Hnet into the lua path folder ;)
 
+./bird -d -c bird6.conf.elsa 
+
 Problems
 ========
 
