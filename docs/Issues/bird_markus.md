@@ -27,3 +27,7 @@ back by uncommenting a line of code.
 
 Is also implemented incorrectly. The length field should be for the value part
 of the tlv, not the whole thing.
+
+Once that issue is fixed, it turns out that Assigned prefixes relied on this
+brokenness to work at all. The if id is a weird header entry. Need to modify
+this to allow interop.
