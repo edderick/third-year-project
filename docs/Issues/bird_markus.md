@@ -7,8 +7,11 @@ use of the term "External-LSA" here refers to the built in LSA type, rather it
 refers to the fact that the code handling the LSA is external to the core of
 bird. 
 
-Being very inexperienced in using lua (and in using Bird) I have so far been
-unable to run this code. 
+Being very inexperienced in using lua (and in using Bird) I found it incredibly
+challenging to get this up and running. 
+
+After battling away with luarocks, State machine compiler, and autoconf (plus
+weird bonus scripts for it) - I eventually managed to force it to work for me.
 
 OpenWRT Convenience Build 
 =========================
@@ -16,7 +19,16 @@ OpenWRT Convenience Build
 There exists a build for OpenWRT. I think that this might be the best way to
 get Markus' code up and running.
 
+I couldn't get it running. Building OpenWRT isn't too hard, getting it running
+under Netkit was possible but only in a failsafe mode that meant that I
+couldn't use bird.
+
+DIY
+===
+
 ./configure --enable-ipv6 --with-lua-includes=/usr/include/lua5.1 --with-lua-libraries=/usr/lib/i386-linux-gnu/ --with-lua-suffix=5.1
+
+Hack: Copy Hnet into the lua path folder ;)
 
 Problems
 ========
