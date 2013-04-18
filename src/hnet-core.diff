@@ -1,0 +1,42 @@
+diff --git a/elsa_pa.lua b/elsa_pa.lua
+index a707898..90aac57 100644
+--- a/elsa_pa.lua
++++ b/elsa_pa.lua
+@@ -40,10 +40,10 @@ module(..., package.seeall)
+ 
+ -- LSA type used for storing the auto-configuration LSA
+ -- Benjamin
+---AC_TYPE=0xBFF0
++AC_TYPE=0xBFF0
+ 
+ -- 0xAC0F Jari
+-AC_TYPE=0xAC0F
++--AC_TYPE=0xAC0F
+ 
+ FORCE_SKV_AC_CHECK_INTERVAL=60
+ 
+diff --git a/ospfcodec.lua b/ospfcodec.lua
+index 578d130..44e3b83 100644
+--- a/ospfcodec.lua
++++ b/ospfcodec.lua
+@@ -62,7 +62,9 @@ function ac_tlv:try_decode(cur)
+    if not o then return o, err end
+ 
+    local header_length = self.header_length
+-   local body_length = o.length - header_length
++   local body_length = o.length
++
++   if self.tlv_type == AC_TLV_ASP then body_length = body_length - 4 end
+ 
+    -- then make sure there's also enough space left for the body
+    if not cursor_has_left(cur, body_length) 
+@@ -99,7 +101,8 @@ end
+ function ac_tlv:do_encode(o)
+    -- must be a subclass which has tlv_type set!
+    self:a(self.tlv_type, 'self.tlv_type not set')
+-   o.length = #o.body + self.header_length -- include the ac_tlv length
++   o.length = #o.body -- include the ac_tlv length
++   if self.tlv_type == AC_TLV_ASP then o.length = o.length + 4 end 
+    local npad = (4 - o.length % 4) % 4
+    local padding = string.rep(_null, npad)
+    local t = {abstract_data.do_encode(self, o), o.body, padding}
