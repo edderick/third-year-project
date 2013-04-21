@@ -858,23 +858,32 @@ tests gave me confidence that my code did what I intended it to do, however, it
 didn't ensure that my intentions were correct. 
 
 As I was using C I was unable to make use of a unit testing framework such as
-JUnit. I also felt basing my code on external libraries tended to go against
+JUnit. I also felt basing my code on external libraries would go against
 the ethos of the Quagga.
 
 I created my unit tests by creating a ``mock'' environment in which to run my
-code. This mock environment consists of \texttt{struct}s that are filled in as though
-the application has been running successfully.  I then executed the algorithms
-inside this environment. After running the algorithm, I checked to make sure
-that the actual outcome was the same as the expected outcome. If the state that
-the model was in at the end of the test was the same as expected then the test
-was said to have passed, otherwise it was said to have failed. 
+code. This mock environment consists of \texttt{struct}s that are filled in as
+though the application has been running successfully.  I then executed the
+algorithms inside this environment. After running the algorithm, I checked to
+make sure that the actual outcome was the same as the expected outcome. If the
+state that the model was in at the end of the test was the same as expected
+then the test was said to have passed, otherwise it was said to have failed. 
+
+My test cases are specified as \texttt{structs} containing the parameters of
+the system, this includes the number of interfaces and a set of LSAs that
+existed in the system. The expected values were specified in a similar way,
+including a list of parameters that were expected to be equal to those in the
+final state, such as number of interfaces. This was followed by a set of
+conditions that should hold after execution, this included Prefixes that had to
+be used, prefixes that shouldn't be used and whether or not a prefix was being
+deprecated. 
 
 \section{Netkit} 
 \todo{REALLY LET TIM KNOW HOW GOOD IT IS!}
-Netkit is a package that allows developers to easily test network
-software and configuration. By using User Mode Linux (UML)
-\nomenclature{UML}{User Mode Linux} the user can run several virtual hosts on
-their desktop pc. 
+Netkit is a package that allows developers to easily test network software and
+configuration. By using User Mode Linux (UML) \nomenclature{UML}{User Mode
+Linux} the user can run several Virtual Machines (VMs)
+\nomenclature{VM}{Virtual Machine} on their desktop pc. 
 
 Netkit presents the user with an \texttt{xterm} virtual terminal for each
 virtual host they are running. The virtual hosts act as though they are real
@@ -968,13 +977,81 @@ OSPFv3, I felt it was safe to assume that Vanilla Bird would be compatible with
 Vanilla Quagga. 
 
 \subsection{Ben's Implementation}
-Ben's implementation was written in C, I found it very easy to install onto my
-Netkit testbed. 
+Ben Paterson's implementation was written in C, I found it very easy to install onto my
+Netkit testbed - it required nothing more than cloning the Git repository and
+then compiling the fork of bird on one of the netkit VMs. 
+
+\todo{Is there a way of being more precise with the documents}
+Ben's implementation conforms to the Autoconfiguration draft well. It was
+during this testing phase that I realised that I had misread the draft; The
+router Hardware fingerprint is defined as 32 bytes, I had managed to read this
+instead as 32 bits. I modified my implementation to correct this, also adding
+support for unaligned TLVs, once I had done so, I found that my implementation
+worked correctly with this part of the draft.
+
+However, this implementation doesn't implement correct the Prefix Assignment
+draft. I am not sure whether this is because the implementation predates the
+version of the draft I have been working from, or whether there was a
+misunderstanding of the draft. The implementation defined a fourth TLV type
+that doesn't exist in th Prefix Assignment draft. This TLV contains information
+about an interface, and is then followed be a series of Assigned Prefix TLVs
+minus any interface information. 
+
+Ben's implementation also has an interesting algorithm for assigning prefixes:
+It begins by picking a prefix from the address range at random, it then checks
+that this prefix hasn't already been used. If it does conflict then it picks
+another at random. To ensure that this process of randomly picking doesn't
+continue forever, after a certain number of attempts the algorithm falls back
+to picking the addresses sequentially. 
 
 \subsection{Markus' Implementation}
-Markus' implementation was written in lua, haven't actually got it running yet.
-Hopefully using his OpenWRT convenience feed will be easier. 
+Markus Stenberg's implementation takes a more unusual approach to extending
+Bird. A fork of Bird has been created called Bird-Ext-LSA\@. This is not to be
+be confused with the External LSAs that already exist within OSPFv3 for
+advertising routes that have been learned about in some other manner, instead,
+it offers a mechanism that allows LSAs to be processed by an external
+(separate) program. 
 
+This package is complimented by hnet-core (Homenet Core), a project that makes
+use of Bird-Ext-LSA to implement, among other things, the autoconfiguration
+drafts\@. hnet-core is written in the scripting language lua, and I struggled a
+lot to get it up and running. First of all I had problems creating the right
+environment to run the scripts; there are quite a few dependencies that need to
+be obtained. \texttt{Luarocks} was very helpful for getting these dependencies
+installed. Eventually I managed to make all but one of the unit tests pass
+within my Netkit testbed.
+
+Once I had this version of Bird up and running, I found that it wasn't
+compatible with my implementation straight out the box. To enable compatibility
+with the private implementation created by the author of the draft (Jari Arrko),
+a different LSA Type number was used - this confused me at first, but once I
+realised it was this issue it was simple to fix. The other compatibility issue
+that I faced was that this implementation had interpreted the TLVs length to
+include the TLV header. This is actually mentioned explicitly in the draft to
+be not true. I corrected the code so that I could continue my testing, this was
+not easy firstly thanks to my inexperience with Lua, and secondly because of
+the way that it has been implemented to include some data in the headers that
+it should not have.  
+
+After all this was fixed, there seemed to be a good level of compatibility,
+with prefixes from one finding there way into the other.
+
+\section{Future Testing}
+To increase the confidence in my code to the level that is required of a
+commercial product, it would be wise to undergo further testing. The first
+method of testing is to use a commercial network protocol compliance
+verification suite, such as IxANVL or Spirent, to ensure that the protocol
+conforms correctly to the specification. This is currently not possible for my
+project as the protocol that I have implemented is too recent to be included in
+these suites. I was unable to find any open source libraries for testing OSPFv3
+that could be easily extended to test autoconfiguration. (There is a library
+created by GutHub user Jesnault that can be used to test OSPFv2 however).
+
+Moving beyond this, some level of user testing would be idea before releasing
+this code publicly, and integrating it into Quagga. Typically, code undergoes
+closed Alpha testing by a small number of developers, and then Beta testing
+where it is used by members of the public, but with no guarantees of actually
+working.
 
 \chapter{Project Management}
 \todo{If I have too many words, This can be pulled into appendix?}
@@ -1102,7 +1179,7 @@ since it doesn't couple Quagga to any other projects. It would however be
 likely to require a lot more work to achieve.
 
 \subsection{Source Based Routing}
-\todo{Thinking of doing a prototype/proof of concept}
+\todo{Draw attention to the fact that I have actually done this}
 In the future it may become more common for households to have more than one
 broadband connection. Having a cable connection, with a ADSL line for backup is
 a scenario that may become common in the home of the future. 
@@ -1115,14 +1192,38 @@ correct ISP.
 
 Source Based routing is a possible solution to this. Source based routing works
 by forwarding traffic based on the source address of the packet, as well as its
-destination address. This can be implemented in POSIX by making use of
-\texttt{iproute2}'s ability to have multiple route tables, one for each
-distinct prefix.  Rules are then added to the routing policy database to select
-which routing table to use based on the source address.
+destination address. 
 
-Quagga currently doesn't offer any control over the routing policy database.
-This functionality could possibly be replicated as a proof of concept by using
-the command \texttt{ip rule} using a scripting language.
+I implemented a basic proof of concept as an extension to my main code. The
+branched version of the code that I produced isn't compatible with the vanilla
+autoconfiguration implementation. It is based loosely on drafts by Fred Baker,
+a former IETF chair. These drafts specify a set of replacement LSAs for some of
+the standard OSPFv3 LSA types, these LSAs are based on Type Length Values
+(TLVs) similar to those used in the autoconfiguration draft, rather than the
+more rigid specification of standard OSPFv3. Due to the complexity of these
+drafts, I decided that within the project not to conform strictly to the
+draft.
+
+My implementation worked by exploiting the Linux Kernel's ability to have
+multiple routing tables. A routing table is created for each source address
+range that will be routed. The systems policy table is then used to select
+which routing table to use based on the source address.  
+
+Quagga's Zebra daemon by default ships with the ability to manipulate any
+routing table. I extended the Zebra protocol's message for adding entires to
+the routing table to include the source address, and then chose the routing
+table based on a hash of the source address.  Unfortunately Quagga doesn't
+currently offer any functionality for manipulating the Policy table. To
+overcome this I made use of \texttt{iproute2}'s \texttt{ip -6 rule} command,
+which I called from a bash shell script, invoked using the \texttt{system}
+function. 
+
+This proof of concept shows that Quagga can be extended to implement source
+based routing. It is however nowhere nearly a complete solution - firstly it
+will not be interoperable with any other implementations as it doesn't conform
+to the draft, and secondly the use of the \texttt{system} system call is
+neither secure, elegant nor portable. 
+
 
 \subsection{Multi-hop Service discovery}
 Service discovery has become very popular in modern networks. It's major use
@@ -1164,7 +1265,7 @@ implements one of those features.
 Unfortunately though it doesn't stop at home users, ISPs also need to be on
 board.  Currently in the UK there is only a very small number of ISPs who
 provide IPv6 addresses to their customers. SixXS list just 7 UK ISPs, the only
-one on the list I have heard is Andrews \& Arnolds.
+one on the list I have heard is Andrews \& Arnold.
 
 Of course these problems are outside of my control, hopefully with time, the
 large ISPs will be able to overcome the inertia of switching to IPv6.
