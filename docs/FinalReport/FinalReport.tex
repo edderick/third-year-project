@@ -172,11 +172,12 @@ Host Configuration Protocol}.
 
 A single item of Customer Premises Equipment (CPE) \nomenclature{CPE}{Customer
 Premises Equipment} is usually supplied to the customer. These devices are
-referred to by many names, commonly as a ``Router''.  This device provides
-the modem for connecting to the internet, an Ethernet switch with around four
-ports, and a wireless access point (802.11) that tends to be bridged to the
-wired network to provide just one subnet. A diagram of a typical home network
-can be seen in Appendix~\ref{typical_homenet_present}.
+referred to by many names\footnote{Names include Super Hub, HomeHub and
+WirelessBox}, commonly as a ``Router''.  This device provides the modem for
+connecting to the internet, an Ethernet switch with around four ports, and a
+wireless access point (802.11) that tends to be bridged to the wired network to
+provide just one subnet. A diagram of a typical home network can be seen in
+Appendix~\ref{typical_homenet_present}.
 
 \section{Campus and Enterprise Networks}
 Larger networks like the ones found on University Campuses and larger
@@ -326,7 +327,7 @@ becoming Request for Comments (RFC) \nomenclature{RFC}{Request for Comments}
 which are the technical documents that specify how the internet works. The most
 notable RFCs are placed on a Standards Track, and if they are successful will
 become recognised as a proposed standard. Eventually proposed standards may
-become Internet standard and are seen as the highest form of standard the IETF
+become Internet standards and are seen as the highest form of standard the IETF
 produces. 
 
 \section{OSPFv3 Autoconfiguration}
@@ -386,14 +387,22 @@ LSAs.
 
 \section{Books}
 \todo{List the books}
-There were a few books that were relevant to this project. In general the books
-were useful for clarifying things that were not very clear from the RFCs. They
-were also useful for reinforcing my general understanding of the protocol, as
-they gave a similar level overview, written from a slightly different angle. 
+There were a few books that were relevant to this project:
+\begin{itemize}
+    \item OSPF: Anatomy of an Internet Routing Protocol
+    \item OSPF: Complete Implementation
+    \item OSPF and IS-IS
+\end{itemize}
+
+In general the books were useful for clarifying things that were not very clear
+from the RFCs. They were also useful for reinforcing my general understanding
+of the protocol, as they gave a similar level overview, written from a slightly
+different angle. 
 
 Unfortunately the books did not cover much OSPFv3 because it is a relatively
-recent development, and there was no mention at all of more recent drafts (such
-as the autoconfig draft) because they are very much on the cutting edge.
+recent development, and there was predictably no mention at all of more recent
+drafts (such as the autoconfig draft) because they are very much on the cutting
+edge.
 
 \chapter{Analysis}
 \todo{An analysis and specification of the solution to the problem}
@@ -411,12 +420,12 @@ a good candidate for the Router ID as they are both locally unique 32 bit
 identifiers. This solution would be likely to provide a unique ID that does not
 require configuring by the user.
  
-However, as we head forward into a world dominated by IPv6, we are likely to
-see the use of IPv4 addresses diminishing. IPv6 addresses are not such a good
-candidate for Router ID for many reasons. Firstly they are not 32 bits, so it
-would be difficult to create an identifier known to be unique from this value.
-Secondly an interface is likely to have many IPv6 Addresses. Of these addresses
-the only address it is guaranteed to have is a link local address, which is not
+However, as we head forward into a world dominated by IPv6, the use of IPv4
+addresses will diminish. IPv6 addresses are not such a good candidate for
+Router ID for many reasons. Firstly they are not 32 bits, so it would be
+difficult to create an identifier known to be unique from this value.  Secondly
+an interface is likely to have many IPv6 Addresses. Of these addresses the only
+address it is guaranteed to have is a link local address, which is not
 guaranteed to be unique across the whole network. 
 
 \subsection{DHCPv6-PD}
@@ -725,8 +734,8 @@ aggregated prefix from another source is received, the ULA is deprecated.
 Qaugga is written in C89, following the GNU coding standards. These rules help
 to improve the portability of the code, meaning that if there is a C compiler,
 and the operating system is POSIX compliant, then Quagga is likely to compile
-for it.  Quagga does not support Microsoft Windows (or WinDoze as the GNU coding
-standards would put it). 
+for it.  Quagga does not support Microsoft Windows\footnote{Or WinDoze as the GNU coding
+standards would put it}.
 
 At first I found some of the stylistic guidelines of the GNU coding standards
 unusual, and difficult to read. Placing a space between function calls and the
@@ -1262,7 +1271,6 @@ will not be interoperable with any other implementations as it does not conform
 to the draft, and secondly the use of the \texttt{system} system call is
 neither secure, elegant nor portable. 
 
-
 \subsection{Multi-hop Service discovery}
 Service discovery has become very popular in modern networks. Its major use
 cases include finding media streaming severs and printers on a home network. At
@@ -1356,6 +1364,30 @@ network.
 This diagram shows the typical topology of a corporate network. For the sake of reducing complexity, Layer 2 switches have not been shown.
 
 \end{landscape}
+
+\chapter{Packets}
+Images created with http://interactive.blockdiag.com/packetdiag/
+\section{TLV}
+\begin{center}
+	\includegraphics[width=\linewidth]{../Diagrams/Packets/tlv.png}
+\end{center}
+
+\section{Router Hardware Fingerprint TLV}
+\begin{center}
+	\includegraphics[width=\linewidth]{../Diagrams/Packets/rhwfp_tlv.png}
+\end{center}
+
+\section{Aggregated Prefix TLV}
+\begin{center}
+	\includegraphics[width=\linewidth]{../Diagrams/Packets/aggregated_prefix_tlv.png}
+\end{center}
+
+\section{Assigned Prefix TLV}
+\begin{center}
+	\includegraphics[width=\linewidth]{../Diagrams/Packets/assigned_prefix_tlv.png}
+\end{center}
+
+
 
 
 \end{document}
