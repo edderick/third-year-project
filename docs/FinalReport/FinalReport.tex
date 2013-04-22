@@ -73,8 +73,10 @@ published by the IETF\@\nomenclature{IETF}{Internet Engineering Task Force}.
 \tableofcontents
 \clearpage
 
-\chapter{Acknowledgements}
+\chapter*{Acknowledgements}
 \todo{Write as prose}
+I would like to thank the following people for all their help, support and
+influence during this project:
 \begin{itemize}
 \item Tim Chown - Offered support as project supervisor
 \item David Lamparter - Responded to my queries about how Quagga works
@@ -87,32 +89,39 @@ published by the IETF\@\nomenclature{IETF}{Internet Engineering Task Force}.
 \chapter{Introduction}
 \todo{A clear statement of the problem and goals of the project.}
 The title of my project is ``Implementing Zero Configuration OSPFv3''. During
-the project, I have modified an open source implementation of OSPFv3, to comply
-with two recently published internet drafts. The changes allow routed networks
-to be set up without the need for manual configuration.
+the project, I have modified an open source implementation of the OSPFv3
+routing protocol, to comply with two recently published, and very topical,
+internet drafts. The changes allow routed networks to be set up without the
+need for manual configuration.
 
 \section{The Problem}
 As computing becomes more and more ubiquitous the complexity of an average home
 network will increase. Not only will the number of devices rise, but with the
-advent of sensor networks and home automation, the number of types and
+advent of sensor networks and home automation, the quantity of types and
 topologies of these networks will grow. To ensure these more complex networks
-run smoothly, networks must be separated into multiple subnets.
+run smoothly, they should be separated into multiple subnets.
 
 Unfortunately, the vast majority of home networks do not have a professional
-System Administrator around to configure and maintain them. This means ideally
-a network shouldn't require any configuration to work.
+System Administrator, or other sufficiently computer literate person, around to
+configure and maintain them. This means ideally a network shouldn't require any
+manual configuration to work.
 
-A less relevant problem is \nomenclature{IPv4}{Internet Protocol Version 4}
-address space exhaustion. 
+A less relevant, but equally serious problem that is addressed in this project
+is IPv4 \nomenclature{IPv4}{Internet Protocol Version 4} address space
+exhaustion. 
 
 \section{The Goals}
 This project set out to meet many goals, over the course of the project, the
-goals transformed slightly as my understanding of the problem improved. The
-goals for the project were:
-\todo{Update the goals}
+goals transformed slightly as my understanding of the problem improved. 
+
+\subsection{Project Goals}
+The goals for the project are:
+
 \begin{itemize}
 \item Allow multiple subnets in the home; allow hosts to communicate from one
   subnet to another.
+\item Distribute IPv6 subnet prefixes across a home network in an efficient
+	manner. 
 \item Require no configuration: The user should not need to enter any settings,
   they should simply plug in the router, and it should work.
 \item Produce something of value for the community. The code I produce should
@@ -121,39 +130,51 @@ goals for the project were:
 \item Discover any ambiguities in the drafts.
 \end{itemize}
 
+\todo{Personal goals?}
+\subsection{Personal Goals}
+I also had a set of personal goals that I aimed to achieve over the course of
+the project:
+\begin{itemize}
+	\item Develop a good understanding of the OSPF routing protocol.
+	\item Improve my understanding of the process of the creation of internet
+		standards.
+	\item Obtain the ability to implement network protocols.
+	\item Increase my programming ability (Mainly C or C++).
+	\item Learn about new tools and techniques.
+\end{itemize}
+
 \todo{Emphasise bleeding edge}
 
 \chapter{Background}
 \todo{Is this section a big waffle?}
-To enable me to explain my project properly, I first need to explain concepts
-that it relies on.
+To enable me to explain my project properly, I first need to explain some of
+the concepts that it is based on.
 
 \section{Home Networks}
-Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office
-Home Office} networks all tend to follow the same patterns. A single ISP
-provides a connection to the internet using the phone line or television cable.
-The ISP will typically provide a single IPv4 address (/32), usually this is an
-unstable (dynamic) allocation although a static IP is often offered as a
-premium service. 
+Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office Home
+Office} networks tend to follow the same pattern. A single ISP provides a
+connection to the internet using the phone line or television cable.  The ISP
+will typically provide a single IPv4 address (/32), usually this is an unstable
+(dynamic) allocation - a static IP is often offered as a premium service. 
 
 To allow multiple hosts on the network, Network Address Translation (NAT)
-\nomenclature{NAT}{Network Address Translation} is usually employed. With
-NAT, the router rewrites the address of the packets from the globally
-allocated IP address to a local address often in the subnet 192.168.1.0/24.
-The port number is often used to multiplex between the different hosts on the
-network. To allow applications like Skype to function Universal Plug and Play
+\nomenclature{NAT}{Network Address Translation} is usually employed. With NAT,
+the router rewrites the address of the packets from the globally allocated IP
+address to a local address often in the subnet 192.168.1.0/24.  Ports number
+are often used to multiplex between the different hosts and applications on the
+network. To allow programs like Skype to function, Universal Plug and Play
 (UPnP) \nomenclature{UPnP}{Universal Plug and Play}, a technology that allow
-automatic port mapping on a network, is often used. IP addresses are
-delegated to the hosts of the local network using the Dynamic Host
-Configuration Protocol (DHCP) \nomenclature{DHCP}{Dynamic Host Configuration
-Protocol}. 
+automatic port mapping on a network, is often used. IP addresses are assigned
+to the hosts using the Dynamic Host Configuration Protocol
+(DHCP)\nomenclature{DHCP}{Dynamic Host Configuration Protocol}. 
 
-The solution is usually provided as a single item of Customer Premises
-Equipment (CPE) \nomenclature{CPE}{Customer Premises Equipment}, these devices
-are referred to by many names, most commonly as a ``Router''.  This device
-provides the modem for connecting to the internet, an Ethernet switch with
-around 4 ports, and a wireless access point (802.11x) that is usually bridged
-to the wired network to provide just one subnet. 
+A single item of Customer Premises Equipment (CPE) \nomenclature{CPE}{Customer
+Premises Equipment} is usually provided to the customer. These devices are
+referred to by many names, most commonly as a ``Router''.  This device provides
+the modem for connecting to the internet, an Ethernet switch with around 4
+ports, and a wireless access point (802.11) that is usually bridged to the
+wired network to provide just one subnet. A diagram of a typical home network
+can be seen in Appendix \ref{typical_homenet_present}.
 
 \section{Campus and Enterprise Networks}
 Larger networks like the ones found on University Campuses and Larger
@@ -183,10 +204,16 @@ households are not able to obtain.
 \section{Future Networks}
 In the future users will want more from their home networks. We are likely to
 see a dramatic increase in the number of devices in the average home, ranging
-from more laptops and tablets, to more sensors and home automation devices.
-As these types of traffic may be heterogeneous, it would be beneficial to split
-the network up into multiple subnets to ensure the best performance from each
-network. 
+from more laptops and tablets, to more sensors and home automation devices.  A
+home network with this quantity and heterogeneity of traffic is likely to
+experience slow downs and other issued. These problems arise for two reasons:
+Firstly networks such as sensor networks run very slowly, where as Gigabit
+Ethernet networks run very quickly - this difference in speed can result in
+both networks running even slower. The other issue is the vast amounts of
+Multicast and Broadcast traffic that will build up on networks with many
+devices performing functions such as service discovery.  It would be beneficial
+to split the network up into multiple subnets to ensure the best performance
+from each network. 
 
 Guest networks are already an option provided by many high end wireless access
 points. By using Virtual Access Points (VAPs) \nomenclature{VAP}{Virtual Access
@@ -1282,9 +1309,42 @@ large ISPs will be able to overcome the inertia of switching to IPv6.
 \addcontentsline{toc}{chapter}{Bibliography}
 
 \appendix 
-%\appendixpage
+\appendixpage
 
-\chapter{Appendices}
-Appendices providing detailed technical references
+\begin{landscape}
+\chapter{Typical Home Networks}
+\section{Present}
+\label{typical_homenet_present}
+\begin{center}
+	\includegraphics[width=0.75\linewidth]{../Diagrams/Network/TypicalHomenet.png}
+\end{center}
+This diagram shows a typical home network in the present day. The hardware
+inside the box labeled ``Homehub'' is typically provided to customers as one
+plug in and play device. It is commonly referred to as a router, although this
+is slightly misleading as they perform many other tasks that routing.
+
+As can be seen from the diagram, the box provides the house with wired and
+wireless connections to the LAN and the internet. The WLAN is typically bridged
+with the LAN to give create a single subnet.
+
+\section{Future}
+\label{typical_homenet_future}
+\begin{center}
+	\includegraphics[width=0.9\linewidth]{../Diagrams/Network/FutureHomenet.png}
+\end{center}
+This diagram shows a hypothetical future home network. The network includes a
+guest wireless network, a secured wireless network, a wired network, a network
+for appliances, a network for a home surveillance system and a wireless sensor
+network.
+
+\chapter{Typical Corporate Network}
+\label{typical_coporatenet}
+\begin{center}
+	\includegraphics[width=0.5\linewidth]{../Diagrams/Network/CorporateNetwork.png}
+\end{center}
+This diagram shows the typical topology of a corporate network. For the sake of reducing complexity, Layer 2 switches have not been shown
+
+\end{landscape}
+
 
 \end{document}
