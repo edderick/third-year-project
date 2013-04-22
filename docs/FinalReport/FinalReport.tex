@@ -90,7 +90,7 @@ influence during this project:
 \todo{A clear statement of the problem and goals of the project.}
 The title of my project is ``Implementing Zero Configuration OSPFv3''. During
 the project, I have modified an open source implementation of the OSPFv3
-routing protocol, to comply with two recently published, and very topical,
+routing protocol to comply with two recently published, and very topical,
 internet drafts. The changes allow routed networks to be set up without the
 need for manual configuration.
 
@@ -98,21 +98,22 @@ need for manual configuration.
 As computing becomes more and more ubiquitous the complexity of an average home
 network will increase. Not only will the number of devices rise, but with the
 advent of sensor networks and home automation, the quantity of types and
-topologies of these networks will grow. To ensure these more complex networks
-run smoothly, they should be separated into multiple subnets.
+topologies present will grow. To ensure these more complex networks run
+smoothly, they should be separated into multiple subnets. Routing is required
+to allow communication between these subnets. 
 
 Unfortunately, the vast majority of home networks do not have a professional
 System Administrator, or other sufficiently computer literate person, around to
-configure and maintain them. This means ideally a network shouldn't require any
+configure and maintain them. This means ideally a network should not require any
 manual configuration to work.
 
-A less relevant, but equally serious problem that is addressed in this project
-is IPv4 \nomenclature{IPv4}{Internet Protocol Version 4} address space
-exhaustion. 
+A less relevant, but equally, if not more serious issue that is addressed in
+this project is IPv4 \nomenclature{IPv4}{Internet Protocol Version 4} address
+space exhaustion. 
 
 \section{The Goals}
-This project set out to meet many goals, over the course of the project, the
-goals transformed slightly as my understanding of the problem improved. 
+This project set out to meet many goals, over the course of the project, as my
+understanding of the problem improved, the goals have transformed slightly.
 
 \subsection{Project Goals}
 The goals for the project are:
@@ -147,8 +148,8 @@ the project:
 
 \chapter{Background}
 \todo{Is this section a big waffle?}
-To enable me to explain my project properly, I first need to explain some of
-the concepts that it is based on.
+To enable me to explain my project in detail, I first need to explain the
+concepts that it is based on.
 
 \section{Home Networks}
 Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office Home
@@ -159,40 +160,41 @@ will typically provide a single IPv4 address (/32), usually this is an unstable
 
 To allow multiple hosts on the network, Network Address Translation (NAT)
 \nomenclature{NAT}{Network Address Translation} is usually employed. With NAT,
-the router rewrites the address of the packets from the globally allocated IP
-address to a local address often in the subnet 192.168.1.0/24.  Ports number
-are often used to multiplex between the different hosts and applications on the
-network. To allow programs like Skype to function, Universal Plug and Play
-(UPnP) \nomenclature{UPnP}{Universal Plug and Play}, a technology that allow
-automatic port mapping on a network, is often used. IP addresses are assigned
-to the hosts using the Dynamic Host Configuration Protocol
-(DHCP)\nomenclature{DHCP}{Dynamic Host Configuration Protocol}. 
+the router rewrites the address of the packets from the global IP address to a
+local IP address. The address range 192.168.1.0/24 is often used for these
+local IP addresses. Ports number are often used to multiplex between the
+different hosts and applications on the network. To allow programs like Skype
+to function, Universal Plug and Play (UPnP) \nomenclature{UPnP}{Universal Plug
+and Play}, a technology that allow automatic port mapping on a network, is
+frequently deployed. Local IP addresses are assigned to the hosts by the router
+using the Dynamic Host Configuration Protocol (DHCP)\nomenclature{DHCP}{Dynamic
+Host Configuration Protocol}. 
 
 A single item of Customer Premises Equipment (CPE) \nomenclature{CPE}{Customer
-Premises Equipment} is usually provided to the customer. These devices are
-referred to by many names, most commonly as a ``Router''.  This device provides
-the modem for connecting to the internet, an Ethernet switch with around 4
-ports, and a wireless access point (802.11) that is usually bridged to the
+Premises Equipment} is usually supplied to the customer. These devices are
+referred to by many names, commonly as a ``Router''.  This device provides
+the modem for connecting to the internet, an Ethernet switch with around four
+ports, and a wireless access point (802.11) that tends to be bridged to the
 wired network to provide just one subnet. A diagram of a typical home network
-can be seen in Appendix \ref{typical_homenet_present}.
+can be seen in Appendix~\ref{typical_homenet_present}.
 
 \section{Campus and Enterprise Networks}
-Larger networks like the ones found on University Campuses and Larger
-Businesses tend to employ many of the more advanced features of networking.
-They are often split into many subnets depending on the physical locations,
+Larger networks like the ones found on University Campuses and larger
+businesses tend to employ many of the more advanced features of networking.
+They are often split into multiple subnets separating the physical locations,
 work groups and expected use of the hosts. 
 
-Many organisations were able to obtain large chunks of IPv4 address space, the
-University of Southampton was able to obtain a /16 (152.78.0.0) giving them
-around 65000 addresses to play with. Having this many addresses allows each
-machine on the network to be globally addressable - people's initial reaction
-to this is often that it would be insecure, but a good firewall is far more
-effective protection than NAT\@. Even with this many addresses, the University
-still struggles. This is due at part to address space wastage, the now
-deprecated ISS wireless service still takes up a large proportion of the
-address space.
+In the early days of the internet, many organisations were able to obtain large
+chunks of IPv4 address space - MIT famously has the control of a /8 address
+range. The University of Southampton was able to obtain a /16 (152.78.0.0)
+giving them around 65000 addresses to play with. Having this many addresses
+allows each machine on the network to be globally addressable - at first this
+may seem to be insecure, but a good firewall is far more effective protection
+than NAT\@. Even with this many addresses, the University still struggles. This
+is due at part to address space wastage, the now deprecated ISS wireless
+service still takes up a large proportion of the address space.
 
-Although it is not yet a common sight, the networks run by ECS are dual stack,
+Although it is not yet common place, the networks run by ECS are dual stack,
 meaning the machines are allocated both IPv4 and IPv6 addresses. This
 demonstrates than IPv6 is mature enough to be deployed in large networks.
 
@@ -259,7 +261,7 @@ to assign multiple subnets on their network.
 \section{Routing}
 For packets of data to find their way around networks, they require
 routing. The routing we are concerned with is Layer 3 routing. When an IP
-packet is sent, it's address is compared with those stored in the kernel's
+packet is sent, its address is compared with those stored in the kernel's
 routing table, and then transmitted using the appropriate interface. Networks
 contain many computers whose sole purpose is to forward network traffic, the
 computers are known as routers. 
@@ -380,7 +382,7 @@ were useful for clarifying things that were not very clear from the RFCs. They
 were also useful for reinforcing my general understanding of the protocol, as
 they gave a similar level overview, written from a slightly different angle. 
 
-Unfortunately the books didn't cover much OSPFv3 because it is a relatively
+Unfortunately the books did not cover much OSPFv3 because it is a relatively
 recent development, and there was no mention at all of more recent drafts (such
 as the autoconfig draft) because they are very much on the cutting edge.
 
@@ -397,7 +399,7 @@ solutions, it is necessary to produce implementations of each solution.
 A possible solution to the Router ID assignment problem would be simply to use
 the local IPv4 Address of the routers first interface. IPv4 Addresses seem like
 a good candidate for the Router ID as they are both locally unique 32 bit
-identifiers. This solution would be likely to provide a unique ID that doesn't
+identifiers. This solution would be likely to provide a unique ID that does not
 require configuring by the user.
  
 However, as we head forward into a world dominated by IPv6, we are likely to
@@ -426,15 +428,15 @@ requires, while the other side is left without enough address space.
 \subsection{Manual Configuration}
 It would also be possible to just accept the fact that as networks become more
 complex, they will require more configuration. In a current home network, many
-end users don't have any understanding of how the system they have in place
-works, and wouldn't want to touch the configuration anyway. Home users may end
+end users do not have any understanding of how the system they have in place
+works, and would not want to touch the configuration anyway. Home users may end
 up with a better experience if a trained engineer were to set up their home
 network for them. This would lead to more jobs, but it is a slightly defeatist
-attitude, and isn't strictly true. 
+attitude, and is not strictly true. 
 
 \subsection{Other Routing Protocols}
 Of course any other routing protocol is a candidate for this kind of solution.
-OSPF was chosen as it as good convergence rates and doesn't suffer from many
+OSPF was chosen as it as good convergence rates and does not suffer from many
 problems due to misconfiguration of the network - such as plugging two
 interfaces into the same link.
 
@@ -514,11 +516,11 @@ programs.
 \subsection{Quagga}
 Quagga is a more heavyweight package, it is a fork of a now defunct GNU project
 called Zebra. Quagga aims to be compatible with a wide variety of platforms,
-and doesn't make much use of external libraries. There are currently no public
+and does not make much use of external libraries. There are currently no public
 implementations of autoconfig OSPFv3.
 
 \subsection{XORP}
-XORP is another heavy implementation. It is written in C++, there aren't any
+XORP is another heavy implementation. It is written in C++, there are not any
 publicly available versions of Autconfig OSPFv3. It seems that the activity
 surrounding XORP is in decline. 
 
@@ -527,7 +529,7 @@ I chose to base by project on Quagga. Firstly I found that after subscribing to
 all three developer mailing lists, Quagga seemed to be the most active project.
 Secondly I liked the clear separation between the code for OSPFv2 and OSPFv3
 that Quagga offered, since my project would only be concerned with IPV6.
-Finally I felt that Quagga was a good choice as there weren't any existing
+Finally I felt that Quagga was a good choice as there were not any existing
 implementations, so my contributions would be more useful to the community.
 
 \chapter{Design}
@@ -537,7 +539,7 @@ implementations, so my contributions would be more useful to the community.
 \section{Simplifications}
 To allow OSPFv3 to function without requiring any configuration, a number of
 simplifications must be made to how it runs. These simplifications restrict
-some of the fine tuning required by large enterprise networks, but shouldn't
+some of the fine tuning required by large enterprise networks, but should not
 severely reduce the functionality offered to home users. 
 
 \subsection{Operation on One Area}
@@ -638,7 +640,7 @@ stored. This value is passed \texttt{rand\_r} function call, which modifies it t
 maintain the state of the random sequence.
 
 I found one of the harder parts of the project was cleanly shutting down OSPF,
-changing it's router ID, and then bringing it back up again. 
+changing its router ID, and then bringing it back up again. 
 
 \subsection{Router ID Conflict Resolution}
 As the Router IDs are assigned randomly, there is a chance that there could be
@@ -658,8 +660,8 @@ with the numerically lower Link-Local Address must generate a new Router ID\@.
 To detect collisions that occur for routers that are not directly connected,
 all apparent Self Originated AC-LSAs are inspected to ensure that they are
 truly Self originated LSAs. This is done by checking that the Router Hardware
-Fingerprints match. If they don't then the router with the lower Router
-Hardware Fingerprint must change it's Router ID. 
+Fingerprints match. If they do not then the router with the lower Router
+Hardware Fingerprint must change its Router ID. 
 
 \subsection{Prefix Assignment}
 When a router notices a change in the current set of AC-LSAs in the LSDB, the
@@ -714,7 +716,7 @@ aggregated prefix from another source is received, the ULA is deprecated.
 Qaugga is written in C89, following the GNU coding standards. These rules help
 to improve the portability of the code, meaning that if there is a C compiler,
 and the operating system is POSIX compliant, then Quagga is likely to compile
-for it.  Quagga doesn't support Microsoft Windows (or WinDoze as the GNU coding
+for it.  Quagga does not support Microsoft Windows (or WinDoze as the GNU coding
 standards would put it). 
 
 At first I found some of the stylistic guidelines of the GNU coding standards
@@ -735,12 +737,12 @@ algorithms to all of the implemented protocols.
 One of the library items that I made quite heavy use of was "Thread". Threads 
 are a similar concept to operating system threads. They are made up of pointers 
 to functions that will be called either upon some event, or after some amount of 
-time has passed. I don't fully understand this module, but I believed that it is 
+time has passed. I do not fully understand this module, but I believed that it is 
 purely an application level construct. The program only ever executes as one 
 process, so only one thing is actually being executed at any given time. 
 Although this does mean that the multicore architecture of modern CPUs 
 \nomenclature{CPU}{Central Processing Unit} is not exploited, this does mean 
-that as I developer I don't have to worry about making my program thread safe.
+that as I developer I do not have to worry about making my program thread safe.
 
 ``Linklist'' was another useful element of the library. It implements a linked
 list data structure - a series of nodes that have pointers to the next and the
@@ -751,7 +753,7 @@ can be used in a similarly way to Java's enhanced \texttt{for} loop, although it
 variables to hold pointers to the current node and the next node. One major
 draw back of ``Linklist'' is that because of limitations of C, the data is
 stored as a typeless pointer, and therefore is not type safe. As long as the
-developer is careful, however, this shouldn't be an issue. 
+developer is careful, however, this should not be an issue. 
 
 Another library component is Prefix. It represents an IPv4 or IPv6 address, and
 offers an array of functions that can be performed on them. One of the most
@@ -768,7 +770,7 @@ The other interesting thing in the library is MD5
 a cryptographic hash of  the data it is provided with. For the generation of 
 ULAs, is is recommended that a SHA-1 
 \nomenclature{SHA-1}{Secure Hash Algorithm 1}, a similar but more secure 
-cryptographic hash is used. As I didn't have a SHA-1 implementation available to
+cryptographic hash is used. As I did not have a SHA-1 implementation available to
 me, I felt that MD5 would be a suitable substitute. 
 
 Being written in C, Quagga is not object oriented. The layout of the code 
@@ -819,7 +821,7 @@ Advertisement Daemon} to send out RAs. I felt that coupling Quagga to another
 piece of software would be undesirable. My reasoning for this is that firstly,
 one cannot be sure that the package will always the most popular choice.
 Secondly, if the API for \texttt{radvd} changes, then Quagga would also need to be
-changed. And finally there don't seem to be any clean ways of interfacing with
+changed. And finally there do not seem to be any clean ways of interfacing with
 \texttt{radvd}, the daemon must be halted, configuration files updated and then the
 daemon is restarted.
 
@@ -882,7 +884,7 @@ state, producing incorrect results.
 I created unit tests to ensure that the code did the things that I had intended
 it to do, my unit tests focused heavily on the edge cases. Creating these unit
 tests gave me confidence that my code did what I intended it to do, however, it
-didn't ensure that my intentions were correct. 
+did not ensure that my intentions were correct. 
 
 As I was using C I was unable to make use of a unit testing framework such as
 JUnit. I also felt basing my code on external libraries would go against
@@ -902,7 +904,7 @@ existed in the system. The expected values were specified in a similar way,
 including a list of parameters that were expected to be equal to those in the
 final state, such as number of interfaces. This was followed by a set of
 conditions that should hold after execution, this included Prefixes that had to
-be used, prefixes that shouldn't be used and whether or not a prefix was being
+be used, prefixes that should not be used and whether or not a prefix was being
 deprecated. 
 
 \section{Netkit} 
@@ -926,7 +928,7 @@ I found that Netkit provided me with an indispensable testing environment.
 Having up seven or so terminal windows on a single computer, is much more
 convenient than having seven separate devices that must be configured
 separately. Netkit has a serious advantage over using \texttt{ssh} or
-\texttt{telnet} - as it isn't dependent on network connectivity, you are free
+\texttt{telnet} - as it is not dependent on network connectivity, you are free
 to make any change to the network without the fear of losing your remote
 connection.   
 
@@ -945,7 +947,7 @@ configuring networks to actually work was quite difficult. The trivial things
 that one is unlikely to study in great detail often turned out to be the issue
 when I was having problems getting things working - an example is setting
 \texttt{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6 traffic to
-be forwarded. Its the kind of thing that theoretically,  doesn't need learning,
+be forwarded. Its the kind of thing that theoretically,  does not need learning,
 but in practice, it is very important if you want your router to work as a
 router. Netkit was very useful in helping me make this jump. 
 
@@ -1016,18 +1018,18 @@ instead as 32 bits. I modified my implementation to correct this, also adding
 support for unaligned TLVs, once I had done so, I found that my implementation
 worked correctly with this part of the draft.
 
-However, this implementation doesn't implement correct the Prefix Assignment
+However, this implementation does not implement correct the Prefix Assignment
 draft. I am not sure whether this is because the implementation predates the
 version of the draft I have been working from, or whether there was a
 misunderstanding of the draft. The implementation defined a fourth TLV type
-that doesn't exist in th Prefix Assignment draft. This TLV contains information
+that does not exist in th Prefix Assignment draft. This TLV contains information
 about an interface, and is then followed be a series of Assigned Prefix TLVs
 minus any interface information. 
 
 Ben's implementation also has an interesting algorithm for assigning prefixes:
 It begins by picking a prefix from the address range at random, it then checks
-that this prefix hasn't already been used. If it does conflict then it picks
-another at random. To ensure that this process of randomly picking doesn't
+that this prefix has not already been used. If it does conflict then it picks
+another at random. To ensure that this process of randomly picking does not
 continue forever, after a certain number of attempts the algorithm falls back
 to picking the addresses sequentially. 
 
@@ -1048,7 +1050,7 @@ be obtained. \texttt{Luarocks} was very helpful for getting these dependencies
 installed. Eventually I managed to make all but one of the unit tests pass
 within my Netkit testbed.
 
-Once I had this version of Bird up and running, I found that it wasn't
+Once I had this version of Bird up and running, I found that it was not
 compatible with my implementation straight out the box. To enable compatibility
 with the private implementation created by the author of the draft (Jari Arrko),
 a different LSA Type number was used - this confused me at first, but once I
@@ -1091,12 +1093,12 @@ The most exciting part of this document!
 A personal goal for my project was to make use of lots of new tools. During the
 project, I did end up using a wide variety of tools. A lot of the tools I had
 used before, but using them for a more substantial piece of work meant that I
-found I had to use features that I didn't know existed before.
+found I had to use features that I did not know existed before.
 
 \subsection{Git}
 You need a version control system!
 
-GitHub is really good. And I'm pretty sure they put a lot of effort into backup.
+GitHub is really good. And I am pretty sure they put a lot of effort into backup.
 
 \subsection{Trello}
 Gotta love that task management system
@@ -1132,7 +1134,7 @@ intimidated by the size and style of the code base. I remember feeling unsure
 about where the code for these applications even started from. Having completed
 this project, I have come to realise that the individual blocks and statements
 that make up the large projects, are exactly the same as those that I am very
-familiar with in my own work - there isn't often anything that when taken in
+familiar with in my own work - there is not often anything that when taken in
 isolation, I am totally unable to understand.
 
 The final aspect that I feel went well in this project is that I discovered a
@@ -1151,7 +1153,7 @@ In general the project went well, perfection however is rarely obtainable, and
 there were things that if I was to do this project again, I might have done
 differently. 
 
-Firstly, I didn't properly dig into the project until later than I would have
+Firstly, I did not properly dig into the project until later than I would have
 liked.  This was partially due to having a very high workload from my other
 courses at the end of Semester One - given the chance I would go back in time
 and choose less coursework intensive optional modules. The other factor was a
@@ -1202,7 +1204,7 @@ a way to hook into the PD message functionality. The other would be to add
 functionality to Quagga itself to handle the DHCPv6-PD messages. 
 
 I feel that adding this functionality to Quagga would be the better solution
-since it doesn't couple Quagga to any other projects. It would however be
+since it does not couple Quagga to any other projects. It would however be
 likely to require a lot more work to achieve.
 
 \subsection{Source Based Routing}
@@ -1222,7 +1224,7 @@ by forwarding traffic based on the source address of the packet, as well as its
 destination address. 
 
 I implemented a basic proof of concept as an extension to my main code. The
-branched version of the code that I produced isn't compatible with the vanilla
+branched version of the code that I produced is not compatible with the vanilla
 autoconfiguration implementation. It is based loosely on drafts by Fred Baker,
 a former IETF chair. These drafts specify a set of replacement LSAs for some of
 the standard OSPFv3 LSA types, these LSAs are based on Type Length Values
@@ -1239,7 +1241,7 @@ which routing table to use based on the source address.
 Quagga's Zebra daemon by default ships with the ability to manipulate any
 routing table. I extended the Zebra protocol's message for adding entires to
 the routing table to include the source address, and then chose the routing
-table based on a hash of the source address.  Unfortunately Quagga doesn't
+table based on a hash of the source address.  Unfortunately Quagga does not
 currently offer any functionality for manipulating the Policy table. To
 overcome this I made use of \texttt{iproute2}'s \texttt{ip -6 rule} command,
 which I called from a bash shell script, invoked using the \texttt{system}
@@ -1247,13 +1249,13 @@ function.
 
 This proof of concept shows that Quagga can be extended to implement source
 based routing. It is however nowhere nearly a complete solution - firstly it
-will not be interoperable with any other implementations as it doesn't conform
+will not be interoperable with any other implementations as it does not conform
 to the draft, and secondly the use of the \texttt{system} system call is
 neither secure, elegant nor portable. 
 
 
 \subsection{Multi-hop Service discovery}
-Service discovery has become very popular in modern networks. It's major use
+Service discovery has become very popular in modern networks. Its major use
 cases include finding media streaming severs and printers on a home network. At
 present, a device must be connected to the same subnet as a service for it to
 be able to discover it as the service discovery messages are not forwarded by
@@ -1286,10 +1288,10 @@ randomly generated Wireless PSKs that currently come with wireless access points
 \section{Realization}
 As IPv6 becomes more common place, and IPv4 is slowly phased out, this project can 
 actually be used in the home. For home users to actively switch to IPv6 there needs 
-to be some features that they can't get from IPv4 - I think that this project 
+to be some features that they cannot get from IPv4 - I think that this project 
 implements one of those features.
 
-Unfortunately though it doesn't stop at home users, ISPs also need to be on
+Unfortunately though it does not stop at home users, ISPs also need to be on
 board.  Currently in the UK there is only a very small number of ISPs who
 provide IPv6 addresses to their customers. SixXS list just 7 UK ISPs, the only
 one on the list I have heard is Andrews \& Arnold.
