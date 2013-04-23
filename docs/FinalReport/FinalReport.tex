@@ -1106,10 +1106,6 @@ working.
 \chapter{Project Management}
 \todo{If I have too many words, This can be pulled into appendix?}
 
-\section{Gantt Charts}
-\todo{Gant chart from the progress report \& a new one}
-The most exciting part of this document!
-
 \section{Tools}
 A personal goal for my project was to make use of lots of new tools. During the
 project, I did end up using a wide variety of tools. A lot of the tools I had
@@ -1117,18 +1113,110 @@ used before, but using them for a more substantial piece of work meant that I
 found I had to use features that I did not know existed before.
 
 \subsection{Git}
-You need a version control system!
+I have chosen to use Git as my version control system. This choice was
+partially because Quagga uses Git, however there are many other good reasons for
+using Git, or any other Distributed Version Control System (DVCS).
 
-GitHub is really good. And I am pretty sure they put a lot of effort into backup.
+\nomenclature{DVCS}{Distributed Version Control System} Firstly, version control
+is essential to a software project as it enables you to keep track of changes
+over time and revert to old versions if necessary. Distributed version control
+is superior to traditional centralised version control system such as subversion
+(SVN) as it allows work to be done without internet connectivity and speeds up
+commit time (encouraging more frequent commits). 
+
+I kept the source code for my project in a public Github repository\footnote{My
+project's Github can be found here at
+\url{https://github.com/edderick/quagga\_zOSPF}}. This allowed me to work in
+many different locations and not have to worry about synchronising files
+manually. Although I did make regular backups of my project, I firmly believe
+that Github is an incredibly safe place to store my code. 
 
 \subsection{Trello}
-Gotta love that task management system
+During my project, I made use of Trello, a web based, kanban style task
+management system\footnote{My Trello can be found at
+\url{https://trello.com/board/50b53fc0ec17d1c75f003c17}}.
+Trello provides cards than can be placed into lists and then moved around
+between them. The lists can have titles such as ``Thinking'', ``Doing'' and
+``Done''. Trello was very useful for tracking what tasks I had done, and what
+tasks I still needed to do. 
 
 \subsection{\LaTeX}
-\LaTeX 
+I chose to produce all of the documentation associated with this project using
+\LaTeX. I made this choice because \LaTeX is a powerful tool that allows me to
+focus on writing my report rather than typesetting. It also tends to be more
+robust for longer documents than WYSIWYG editors such as Microsoft Word. I also
+made use of tools and packages to help me produce the report. (e.g. TexCount
+and BibTeX)
 
 \section{Risk Assessment}
-\todo{Either copy from Progress Report or create a table}
+Throughout my project there were many risks, I ensured that I took necessary
+precautions to limit the damage caused by these risks.
+
+When using the power supplies, there was a risk that I could get an electric
+shock. I took the power supplies to be PAT tested, as the power supplied are
+double insulated (i.e.\@ no single failure can result in a shock), a quick visual
+inspection by a trained member of staff reassured me that they would be safe to
+use.
+
+Around 01/12/2012, ECS had a fairly major network outage due to a hardware
+failure. I was unable to do other coursework because I needed to use the
+software within ECS\@. Although I was fortunate enough to avoid any network
+outages, my use of DVCS meant that it would not have been an issue.
+
+Fire or some other unforeseeable event could have damaged to my data, in 2005 the old
+Mountbatten building burned to the ground. To ensure that, if something like
+this happens, I would not have been affected, I shall made frequent backups of
+my work, and stored it within Github which is hosted on remote servers.
+Although this risk had a very low likelihood, its severity was high.
+
+As my project involves using specialist hardware, there was a possibility that
+the hardware could break. Fortunately the Alix2d3s did not cease to function
+during the project. However, it turned out that they were not as important to
+the project as I had initially thought since I did most of my testing and
+development using Netkit.
+
+I could have misjudged the difficulty of the project and been unable to complete
+the project on schedule. Fortunately this was not an issue. The iterative
+approach that I took to the project enabled me to actually implement a proof of
+concept of an extension.  
+
+\pagebreak
+\begin{landscape} 
+
+\section{Gantt Charts}
+\subsection{Interim Gantt Chart}
+This Gantt chart shows how I has spent my time, and estimated that I would
+spend the remainder of my time at the point of submitting my Progress Report
+back in December. 
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../Gantt/GanttPart1.png}
+\end{center}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../Gantt/GanttPart2.png}
+\end{center}
+
+\pagebreak
+
+\subsection{Final Gantt Chart}
+This Gantt chart shows how I had actually progressed in my project.
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../Gantt/FinalGanttPt1.png}
+\end{center}
+
+\begin{center}
+  \includegraphics[width=\linewidth]{../Gantt/FinalGanttPt2.png}
+\end{center}
+
+\end{landscape}
+
+\pagebreak
+
+\subsection{Explanation of Gantt Charts}
+The two Gantt charts I have produced have a few diferences. 
+
 
 \chapter{Evaluation}
 \todo{A critical evaluation}
