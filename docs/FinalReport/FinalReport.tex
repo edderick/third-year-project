@@ -43,6 +43,8 @@
 \usepackage{pdflscape}
 \usepackage{cite}
 
+\hypersetup{colorlinks=false, pdfborder={0 0 0}, }
+
 % Not totally sure
 \usepackage{fancyhdr} 
 \pagestyle{fancy} 
@@ -55,7 +57,6 @@
 \setcounter{tocdepth}{3}
 
 \def\nomlabel#1{\textbf{#1}\hfil}
-
 
 \begin{document}
 
@@ -131,7 +132,6 @@ The goals for the project are:
 \item Discover any ambiguities in the drafts.
 \end{itemize}
 
-\todo{Personal goals?}
 \subsection{Personal Goals}
 I also had a set of personal goals that I aimed to achieve over the course of
 the project:
@@ -143,8 +143,6 @@ the project:
 	\item Increase my programming ability (Mainly C or C++).
 	\item Learn about new tools and techniques.
 \end{itemize}
-
-\todo{Emphasise bleeding edge}
 
 \chapter{Background}
 \todo{Is this section a big waffle?}
@@ -232,7 +230,6 @@ having full access to the local network. To facilitate this, hard coded local
 IPv4 addresses are usually used, with the advent of IPv6 and globally valid
 addresses, a mechanism to assign IP addresses and route traffic is required. 
 
-\todo{Elaborate}
 The Internet Engineering Task Force's (IETF) Homenet working group
 \cite{homenet} are working on the architecture of the home network of the
 future. Their work mainly focuses on addressing, routing, topology and security
@@ -331,19 +328,22 @@ become Internet standards and are seen as the highest form of standard the IETF
 produces. 
 
 \section{OSPFv3 Autoconfiguration}
-This draft describes how OSPF for IPv6 can be extended to run without requiring
-configuration. The draft begins by enforcing some default values specified in
-the original OSPF RFCs, and restricting a few features of OSPF such as
-allowing only the backbone area to be used. It then goes on to specify a
-mechanism for generating Router IDs and ensuring that there are no conflicts
-across the network. This is achieved by the introduction of a new Link State
-Advertisement (LSA) \nomenclature{LSA}{Link State Advertisement} type.
+\todo{Mention new releases during the project}
+This draft\cite{draft-ietf-ospf-ospfv3-autoconfig-02} describes how OSPF for
+IPv6 can be extended to run without requiring configuration. The draft begins
+by enforcing some default values specified in the original OSPF RFCs, and
+restricting a few features of OSPF such as allowing only the backbone area to
+be used. It then goes on to specify a mechanism for generating Router IDs and
+ensuring that there are no conflicts across the network. This is achieved by
+the introduction of a new Link State Advertisement (LSA)
+\nomenclature{LSA}{Link State Advertisement} type. 
 
 \section{OSPFv3 Prefix Assignment}
-Building on the work of the Autoconfiguration draft, this draft solves
-the issue of delegating IPv6 network prefixes from a larger pool of IPv6 
-prefixes. As well as offering a realistic solution to a problem, the draft 
-also demonstrates the extensibility of the Autoconfiguration draft. 
+Building on the work of the Autoconfiguration draft, this
+draft\cite{draft-arkko-homenet-prefix-assignment-03} solves the issue of
+delegating IPv6 network prefixes from a larger pool of IPv6 prefixes. As well
+as offering a realistic solution to a problem, the draft also demonstrates the
+extensibility of the Autoconfiguration draft. 
 
 A method for breaking up a short prefix delegation (possibly a /48 issued by
 ISP) into many longer (/64) prefixes is given, along with a strategy for
@@ -355,12 +355,12 @@ both articles that are relevant as background knowledge and papers that have
 been referenced from one another.
 
 \subsection{Home Networking Architecture for IPv6} 
-[draft-ietf-homenet-arch-07] puts forward a vision of future home networking. The 
-draft puts forward a complete architecture for future home networks, and goes on to 
-give a discussion of many emerging technologies. 
+This paper \cite{draft-ietf-homenet-arch-07} puts forward a vision of future
+home networking. The draft puts forward a complete architecture for future home
+networks, and goes on to give a discussion of many emerging technologies. 
 
 \subsection{OSPF Version 2}
-I studied [RFC2328] in depth to understand how the OSPF Protocol works. The 
+I studied RFC2328\cite{RFC2328} in depth to understand how the OSPF Protocol works. The 
 memo is surprisingly easy to read, and offers a complete discussion of how the 
 OSPF protocol is designed to build routing tables for IPv4. 
 
@@ -368,30 +368,43 @@ Although the document contains many details that are irrelevant to this project,
 including a long discussion on areas, and details of the SPF algorithms
 
 \subsection{OSPF for IPv6}
-[RFC5340] defines OSPFv3. The RFC builds on RFC2328, explaining the differences
+RFC5340 defines OSPFv3\cite{RFC5340}. The RFC builds on RFC2328, giving the
+read a full undestanding of OSPFv3 by explaining the differences
 between OSPFv2 and OSPFv3. 
 
 \subsection{Autoconfiguration of Routers Using a Link State Routing Protocol}
-[draft-dimitri-zOSPF] - An old draft that had similar aims to the OSPFv3 
+This document \cite{draft-dimitri-zospf-00} is an old draft that had similar aims to the OSPFv3 
 Autoconfiguration draft. This draft focuses on allowing autoconfiguration for both 
 IPv4 and IPv6 rather than just IPv6; this made it a more complex and restrictive 
 solution. 
 
 \subsection{The OSPF Opaque LSA Option}
-RFC5250 introduces the opaque LSA\@. An opaque LSA is a generic type of LSA
+RFC5250\cite{RFC5250} introduces the opaque LSA\@. An opaque LSA is a generic type of LSA
 that can be used to transmit application specific data. The concept is similar
 to that used in the autoconfiguration draft, but it does not make use of
 Type-Length-Values (TLVs) \nomenclature{TLV}{Type-Length-Value}. I found this
 draft useful mostly because of its brief discussion about the  reachability of
 LSAs.
 
+\subsection{Additional Reading}
+While learning about this area of networking, there were also a few documents
+that were either referenced from the more relevent drafts or defined a concept
+that had been mentioned. The list of these documents that I read includes:
+
+\begin{itemize} 
+  \item {\bf RFC 5838} - OSPFv3-AF (Address Families) 
+  \item {\bf RFC 6506} - OSPFv3-AUTH-TRAILER 
+  \item {\bf RFC 3630} (4230 \& 5786) - Traffic Engineering Extensions for OSPF 
+  \item {\bf RFC 4862} - Stateless address autoconfiguration (SLAAC for IPv6) 
+\end{itemize}
+
+
 \section{Books}
-\todo{List the books}
 There were a few books that were relevant to this project:
 \begin{itemize}
-    \item OSPF: Anatomy of an Internet Routing Protocol
-    \item OSPF: Complete Implementation
-    \item OSPF and IS-IS
+  \item OSPF: Anatomy of an Internet Routing Protocol \cite{OSPFAIRP}
+  \item OSPF: Complete Implementation \cite{OSPFCI}
+  \item OSPF and IS-IS \cite{OSPFvsISIS}
 \end{itemize}
 
 In general the books were useful for clarifying things that were not very clear
@@ -462,7 +475,8 @@ interfaces into the same link.
 \todo{Show that I understand fully how OSPF works.} 
 Open Shortest Path First (OSPF) as previously mentioned is a link-state routing
 protocol. A complete image of the network is built up by flooding Link State
-Advertisements (LSA) across the network. 
+Advertisements (LSA) across the network. The algorithms used to build the
+routing table from the link state are described in Appendix~\ref{dijkstra}.
 
 A variety of different message types exist in OSPF, including Hello messages,
 sent out periodically to discover new adjacencies. Database Descriptions, Link
@@ -470,7 +484,7 @@ State Requests, Link State Updates and Link State Acknowledgments, all of which
 have fairly self descriptive names.
 
 The routers store the LSAs that they know about in their Link State Database
-(LSDB) \nomenclature{LSDB}{Link State Database}.  To identify which router
+(LSDB)\nomenclature{LSDB}{Link State Database}.  To identify which router
 originated an LSA, each router is given a unique Router ID.
 
 \subsection{Links State Advertisements}
@@ -512,10 +526,6 @@ can be ignored.
 
 \subsection{Differences between OSPFv2 and OSPFv3}
 The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6. 
-
-\todo{Add some stuff about Dijkstra's to the appendix}
-For a discussion of how the Shortest Path First calculations are done. See
-Appendix X. 
 
 \section{Implementation Candidates}
 There are plenty of implementations of OSPFv3 to choose from. Although there
@@ -1522,6 +1532,115 @@ Images created with http://interactive.blockdiag.com/packetdiag/
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubPunchCard.png}
 \end{center}
 
+\chapter{Shortest Path First Calculations}
+\label{dijkstra}
 
+\todo{Give a quick overview of how Dijkstra's works}
+
+\chapter{Alix2d3}
+As the project progressed it became clear that they Alix2d3s were not as useful
+as was originaly believed, thanks to discovery of the briliant software package
+Netkit. I did however undertake testing on the Alix2d3s. If someone wished to
+repeat my experimentation, the following guides would be helpful. 
+
+\section{Installation Guide}
+
+ This guide\cite{germanGuide} offered a comprehensive list of steps that need to
+ be taken to install Ubuntu Linux on a PC Engines alix2d3\cite{alix2d3}.  The article is
+ written in German but using Google translate I was able to follow it as it is
+ mainly a list of shell commands.
+
+ The process begins with installing the compact flash card as a device on an
+ existing Ubuntu desktop PC\@. Next the card is partitioned using \texttt{fdisk},
+ the card is then formatted as ext2 (a Linux file system type) using
+ \texttt{mk2fs}. The card is then mounted in the file system, using
+ \texttt{mount} and a small installation of Linux is copied to the card using
+ \texttt{debootstrap} to provide a base system.
+
+ Several settings and devices are linked to the flash cards mount point and
+ \texttt{chroot} is used to simulate booting into the new install. The required
+ configuration files are edited (e.g.\@ network interface settings) and essential
+ software packages (such as \texttt{Vim}, \texttt{SSH}, \texttt{sudo}, and
+ \texttt{APT}) are installed. A boot loader such as \texttt{GRUB} is also
+ installed and configured.
+
+ Next, the flash card is safely removed, and  inserted into the alix2d3. The
+ alix2d3 is then powered on. Using a USB to Null Model cable connecting a PC to
+ the alix2d3's serial port, a terminal connection can be established using {\bf
+ cu}. I had a few problems using this device (\texttt{ttyUSB0}) but I was able to
+ fix this problem using \texttt{chown}. This terminal connection can be used to
+ aid the boot process and ensure that there are no Magic ELF errors. Once the
+ alix2d3 is up and running it is possible to disconnect the serial cable and
+ access it over \texttt{SSH} alone.
+
+ \section{Quagga Installation Guide}
+
+ \subsection{Normal Installation}
+This is a procedure that has  turned out to be far more difficult that anticipated.
+
+First of all, need to ensure that all the dependencies are present. The easiest
+way I have found to do this is to use:
+
+sudo apt-get build-dep quagga
+
+This should fetch all the packages that quagga depends on. I see no reason to
+build these from source, since I shall not be modifying them.
+
+It seems that a package called libtool is also needed to ensure installation works.
+Not certain this is needed.
+
+\ libreadline also seems to be an issue (mainly with vtysh):
+
+\texttt{sudo apt-get install lib32readline6}
+
+Next it should be possible to run \texttt{\@./bootstrap}. As far as I know this
+produces (among other things) the configure script.
+
+Next run the configure script. This [wiki][wiki] suggests that it is best to
+move the folders using:
+
+\texttt{sudo \@./configure --sysconfdir=/usr/local/quagga --localstatedir=/usr/local/quagga}
+
+The configure script will prompt you to create a user called quagga. Do this by:
+
+sudo adduser quagga
+sudo mkdir /usr/local/quagga
+sudo chown quagga:quagga /usr/local/quagga
+
+It is now time to run make. See the crosscompiling document for more
+information about this. Previously I had issues with zebra making, to fix this
+manually editing the Makefile in \@./zebra by adding -lcap to LIBS\@. This doesn't
+seem to be a problem with the latest source.
+
+Run sudo make install. This should install everything, and the daemons
+should have installed themselves to /usr/local/sbin.
+
+Now a little bit of configuration is required. \texttt{cd /usr/local/quagga}.
+Either make a real config file for the daemon, or just create a file containing ``password test''.
+
+
+You should now be able to run sudo ospf6d. If you can't, try ldconfig.
+
+
+[wiki]: http://wiki.nil.com/Installing\_and\_running\_Quagga
+
+\subsection{Cross Compilation}
+
+Since Alix2d3s are very slow, a build of Quagga can be incredibly slow. The make parts
+alone can take around 15 minutes. (I actually found that XORP had an even slower
+compile time, in the order of hours) 
+
+To over come this issue it is possible to compile the source code on a much
+faster machine (e.g.\@ desktop pc) and copy it across. 
+
+Since modern machines use a 64bit architecture rather than 32bit like the
+Alix2d3s, the compiler must be set up correctly. Adding the cflag ``-m32'' should
+suffice, however to be on the safe side, ``-m32 -march=i386'' can be used. 
+
+This should be done by appending '--with-clfags=``-m32 -march=i386i''' to \@./configure.
+
+I initially had problems with this compilation. I resolved the issues by going
+back to basics and trying to compile a simple helloworld program for the Alix.
+Turns out I was missing ``gcc-multilib''. This can be installed with apt.
 
 \end{document}
