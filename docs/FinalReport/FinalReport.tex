@@ -84,7 +84,7 @@ influence during this project:
 \item Jari Arkko - Wrote the drafts that I was implementing
 \item Markus Stenberg \& Benjamin Paterson - Provided implementations against which 
       to interop test
-\item Freinds \& Family for proof reading this document.
+\item Friends \& Family for proof reading this document.
 \end{itemize}
 
 \chapter{Introduction}
@@ -785,10 +785,11 @@ ULAs are similar in concept to IPv4 Private addresses\footnote{Although it is
 not recommended to use NAT with IPv6} (e.g. 192.168.1.0). 
 
 The ULA prefix generation algorithm is defined in RFC4193 (Section
-3.2)\cite{rfc4193}, and aims to be as unique as possible; it is based on a hash
-of a portion of a combination of the current network time (in Network Time
+3.2)\cite{rfc4193}. It attempts to generate a unique /48 prefix, based on a
+hash of a portion of a combination of the current network time (in Network Time
 Protocol (NTP) \nomenclature{NTP}{Network Time Protocol} format), and an
-interface's 64-bit MAC address (EUI-64). The algorithm generates a /48 prefix. 
+interface's 64-bit MAC address (EUI-64).\nomenclature{EUI-64}{Extended Unique
+Identifier}
 
 Once a ULA prefix has been generated it is advertised like any other aggregated
 prefix. If a router with a higher Router ID becomes reachable, or an aggregated
@@ -796,85 +797,91 @@ prefix from another source is received, the prefix is deprecated after 120
 seconds. 
 
 \section{Quagga}
-Quagga is written in C89, following the GNU coding standards. These rules help
-to improve the portability of the code, meaning that if there is a C compiler,
-and the operating system is POSIX compliant, then Quagga is likely to compile
-for it.  Quagga does not support Microsoft Windows\footnote{Or WinDoze as the
-GNU coding standards would put it}.
+Quagga is written in C89, following the GNU coding
+standards\cite{gnucodestandards}. These rules help to improve the portability
+of the code, meaning that if there is a C compiler, and the operating system is
+Unix-like, then Quagga is likely to compile for it.  Quagga does not
+support Microsoft Windows\footnote{Or WinDoze as the GNU coding standards would
+put it}.
 
+\subsection{Style}
 At first I found some of the stylistic guidelines of the GNU coding standards
-unusual, and difficult to read. Placing a space between function calls and the
-opening parenthesis of their parameter list, declaring the return type of a
-function on a separate line to the name of the function, and placing the
-opening curly brace of a block on a new line all seemed strange to me at first.
-I am ashamed to admit that when I first opened one of Quagga's source files, it
-took me a long hard stare to realise that I was looking at a function
-declaration. Fortunately as time went on, reading, and writing, this formatting
-became second nature to me. 
+unusual and difficult to read, the following contributed to this:
+\begin{itemize} 
+  \item Space between function a call and its parameter list's opening parenthesis.
+  \item Return type declaration on the line above the name of the function.  
+  \item Opening curly brace of a block on a new line.
+\end{itemize}
 
-Quagga tends to avoid relying on any external libraries. There is a ``lib''
-folder in the source code repository that contains a collection of non-protocol 
-specific code. This library provides commonly used data structures and 
-algorithms to all of the implemented protocols. 
+When I first opened one of Quagga's source files, it took me a short while to
+realise that I was looking at a function declaration. Fortunately as time went
+on, reading and writing this formatting became second nature to me. 
 
-One of the library items that I made quite heavy use of was "Thread". Threads 
-are a similar concept to operating system threads. They are made up of pointers 
-to functions that will be called either upon some event, or after some amount of 
-time has passed. I do not fully understand this module, but I believed that it is 
-purely an application level construct. The program only ever executes as one 
-process, so only one thing is actually being executed at any given time. 
-Although this does mean that the multicore architecture of modern CPUs 
-\nomenclature{CPU}{Central Processing Unit} is not exploited, this does mean 
-that as I developer I do not have to worry about making my program thread safe.
+Being written in C89, Quagga is not object oriented. The structure of the code
+however, does resemble object oriented programming. \texttt{struct}s are used
+extensively to represent the different ``objects'' in the program, many
+functions operate on these \texttt{struct}s, in a similar way methods that
+act on the objects they belong to.
 
-``Linklist'' was another useful element of the library. It implements a linked
-list data structure - a series of nodes that have pointers to the next and the
-previous node in the list. Many of the data structures that I required in my
-program were variable length lists, and ``linklist'' worked well for this.
-``Linklist'' also offers a macro called ``\texttt{ALL\_LIST\_ELEMENTS}'' that
-can be used in a similarly way to Java's enhanced \texttt{for} loop, although it requires
-variables to hold pointers to the current node and the next node. One major
-draw back of ``Linklist'' is that because of limitations of C, the data is
-stored as a typeless pointer, and therefore is not type safe. As long as the
-developer is careful, however, this should not be an issue. 
+I found that working on a large and complex program was difficult at times,
+determening the correct level of abstraction for each function was tricky.  I
+felt I had to work around the lack of inheritance and polymorphism to write
+clean code. 
 
+When writing in a low level language like C, especially when the program will
+have very long up times, ensuring that it is free from memory leaks is
+important. If memory that is allocated using the \texttt{malloc} system call is
+not deallocated using \texttt{free} then it will become unusable. This unusable
+memory will build up, eventually the program will crash as the operating system
+is unable to allocate it more memory.
+ 
+\todo{Cite the Hacking Guide?}
+
+\subsection{Quagga's Library}
+Quagga tends to avoid relying on external libraries. There is a ``lib'' folder
+in the source code repository that contains non-protocol specific code. This
+library provides commonly used data structures and algorithms to the protocol
+implementations. 
+
+\subsubsection{Thread}
+\todo{Do all these names need quoting\dots Really?}
+I made heavy use of the Thread library item. Threads are a similar to
+operating system threads. They consist of pointers to functions that will be
+called upon some event, or after a set time. These threads are an application
+level construct. The program  executes as one process, only one thing is
+being executed at any given time. Although this means the multicore
+architecture of modern CPUs \nomenclature{CPU}{Central Processing Unit} is not
+exploited, it simplifies development, removing the need to worry about thread
+safety.
+
+\subsubsection{LinkList}
+Linklist was another useful element of the library. It implements a doubly
+linked list -- a series of nodes with pointers to the next and previous node in
+the list. Many of the data structures that I required in my program were
+variable length lists, and Linklist worked well for this. Linklist also offers
+a macro \texttt{ALL\_LIST\_ELEMENTS} that can be used like to Java's enhanced
+\texttt{for} loop\footnote{Variables to hold pointers to the current and next
+node make it look messy though.}. Linklist's main drawback is that due to
+limitations of C, the data is referenced by a typeless pointer, and therefore
+is not type safe. If the developer is careful this should not be an issue. 
+
+\subsubsection{Prefix}
 Another library component is Prefix. It represents an IPv4 or IPv6 address, and
-offers an array of functions that can be performed on them. One of the most
-useful features is the ability to convert back and forth between C strings
-(\texttt{char *}) and \texttt{in6\_addrs} (the representation used in POSIX
-kernels). This is useful for both user interface code and debugging messages.
-There were also macros available for testing whether two IP addresses were the
-same - the \texttt{memcmp} function is used by these macros. I extending prefix
-to include a function that determined whether or not a given prefix contained
-another prefix. 
+offers an array of functions to perform on them. One of the most
+useful features is the ability to convert between C strings
+(\texttt{char *}) and \texttt{in6\_addrs} (the representation used in Unix-like
+kernels). This is useful for user interface and debugging messages.
+There are also macros available for testing whether two IP addresses were the
+same -- the \texttt{memcmp} function is used by these macros. I extended Prefix
+to include a function that determined whether or not a given Prefix contained
+another Prefix.
 
-The other interesting thing in the library is MD5 
-\nomenclature{MD5}{Message-Digest Algorithm 5}. As its name suggests it creates 
-a cryptographic hash of  the data it is provided with. For the generation of 
-ULAs, is is recommended that a SHA-1 
-\nomenclature{SHA-1}{Secure Hash Algorithm 1}, a similar but more secure 
-cryptographic hash is used. As I did not have a SHA-1 implementation available to
-me, I felt that MD5 would be a suitable substitute. 
-
-Being written in C, Quagga is not object oriented. The layout of the code 
-however, is influenced by object oriented programming. \texttt{struct}s are used 
-extensively to represent the different "objects" in the program, many of the 
-functions operate on these \texttt{struct}s, in a similar way to how methods act on the 
-objects they belong to.
-
-I found that writing such a large and complex program was quite difficult at 
-times, I felt that getting the correct level of abstraction across the different 
-functions was quite tricky. The lack of inheritance and polymorphism was also 
-something I felt I had to work around to write clean code. 
-
-Another thing that I found tricky when writing C code, especially C code that
-is expected to have very long up times, is ensuring that it is free from memory
-leaks.  If memory that is allocated using the \texttt{malloc} system call is
-not deallocated using free then it will become unusable. Eventually this
-unusable memory can build up so much that the program cannot obtain any more
-memory from the operating system, and the program will crash.
-
-\todo{Cite the Hacking Guide and the GNU coding standards.}
+\subsubsection{MD5}
+The other interesting thing in the library is MD5
+\nomenclature{MD5}{Message-Digest Algorithm 5}, which generates cryptographic
+hashes. For the generation of ULAs, SHA-1 \nomenclature{SHA-1}{Secure Hash
+Algorithm 1}, a similar but more secure hash, is recommended. As I did not have
+a SHA-1 implementation, MD5 made an acceptable substitute for the time being. 
 
 \subsection{vtysh}
 \todo{Maybe I have lied in other parts of the document - 
