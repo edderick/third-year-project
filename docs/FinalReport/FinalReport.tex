@@ -316,38 +316,43 @@ with this kind of routing protocol.  The most widely used EGP today is Border
 Gateway Protocol (BGP) \nomenclature{BGP}{Border Gateway Protocol}.
 
 \chapter{Literature Review} 
-\todo{Could go on forever. Need to be concise. Don't waste words.}
-
-The project was based mainly on two closely related drafts, both written by the
-same authors. If these drafts are approved by the IETF they will end up
-becoming Request for Comments (RFC) \nomenclature{RFC}{Request for Comments}
-which are the technical documents that specify how the internet works. The most
-notable RFCs are placed on a Standards Track, and if they are successful will
-become recognised as a proposed standard. Eventually proposed standards may
-become Internet standards and are seen as the highest form of standard the IETF
-produces. 
+The project was based on two closely related internet drafts, they were both
+published very recently, and have the same authors. If these drafts are
+approved by the IETF they will end up becoming Request for Comments
+(RFC)\nomenclature{RFC}{Request for Comments}, the technical documents that
+specify how the internet works. As RFCs these documents will be placed on the
+standards track and will be labeled as ``Proposed Standards''. If they are
+successful in meeting certain criteria, they may eventually become ``Internet
+Standards''\cite{rfc6410}.
 
 \section{OSPFv3 Autoconfiguration}
-\todo{Mention new releases during the project}
 This draft\cite{draft-ietf-ospf-ospfv3-autoconfig-02} describes how OSPF for
 IPv6 can be extended to run without requiring configuration. The draft begins
-by enforcing some default values specified in the original OSPF RFCs, and
-restricting a few features of OSPF such as allowing only the backbone area to
-be used. It then goes on to specify a mechanism for generating Router IDs and
-ensuring that there are no conflicts across the network. This is achieved by
-the introduction of a new Link State Advertisement (LSA)
-\nomenclature{LSA}{Link State Advertisement} type. 
+by enforcing some default values, and restricting a few features - such as
+allowing only the backbone area to be used. It then specifies a mechanism for
+generating Router IDs and ensuring that there are no conflicts across the
+network. This is achieved by the introduction of a new Link State Advertisement
+(LSA) \nomenclature{LSA}{Link State Advertisement} type. 
+
+The most recent release of this document was on 15th April 2013. Although this
+was towards the end of my project, the changes were only minor and I was able
+to incorporate them into my implementation.
 
 \section{OSPFv3 Prefix Assignment}
 Building on the work of the Autoconfiguration draft, this
 draft\cite{draft-arkko-homenet-prefix-assignment-03} solves the issue of
-delegating IPv6 network prefixes from a larger pool of IPv6 prefixes. As well
+delegating IPv6 network prefixes from a larger pool of IPv6 addresses. As well
 as offering a realistic solution to a problem, the draft also demonstrates the
 extensibility of the Autoconfiguration draft. 
 
-A method for breaking up a short prefix delegation (possibly a /48 issued by
-ISP) into many longer (/64) prefixes is given, along with a strategy for
-avoiding conflicts in the assignment across the network.
+A method for breaking up a short prefix delegation into many network prefixes
+is given, along with a strategy for avoiding conflicts in the assignment across
+the network. Typically an ISP will allocate a customer a /48 IPv6 prefix to
+cover their whole home, each network in their home then requires a /64 IPv6
+prefix.
+
+An update to this document was publish on 23rd October 2013, it expired on 26th
+April 2013, although it is likely a refresh will be released around this time.
 
 \section{Other Important Drafts}
 There are several other documents that are relevant to this project. These are
@@ -355,47 +360,57 @@ both articles that are relevant as background knowledge and papers that have
 been referenced from one another.
 
 \subsection{Home Networking Architecture for IPv6} 
-This paper \cite{draft-ietf-homenet-arch-07} puts forward a vision of future
-home networking. The draft puts forward a complete architecture for future home
-networks, and goes on to give a discussion of many emerging technologies. 
+This paper\cite{draft-ietf-homenet-arch-07} puts forward a vision of future
+home networking. A complete architecture for future home
+networks is proposed, along with a discussion of many emerging technologies. 
 
 \subsection{OSPF Version 2}
-I studied RFC2328\cite{RFC2328} in depth to understand how the OSPF Protocol works. The 
-memo is surprisingly easy to read, and offers a complete discussion of how the 
-OSPF protocol is designed to build routing tables for IPv4. 
+I studied RFC2328\cite{RFC2328} in depth to understand how the OSPF Protocol
+works. The memo is surprisingly easy to read, and offers a complete discussion
+of the data structures and algorithms the OSPF protocol employs to build
+routing tables for IPv4. 
 
 Although the document contains many details that are irrelevant to this project, 
-including a long discussion on areas, and details of the SPF algorithms
+including a long discussion on areas, and details of the SPF algorithms I found
+the understanding I gained through studying it invaluable to my project.
 
 \subsection{OSPF for IPv6}
 RFC5340 defines OSPFv3\cite{RFC5340}. The RFC builds on RFC2328, giving the
-read a full undestanding of OSPFv3 by explaining the differences
-between OSPFv2 and OSPFv3. 
+reader a clear understanding of OSPFv3 by explaining the differences between
+OSPFv2 and OSPFv3. 
 
-\subsection{Autoconfiguration of Routers Using a Link State Routing Protocol}
-This document \cite{draft-dimitri-zospf-00} is an old draft that had similar aims to the OSPFv3 
-Autoconfiguration draft. This draft focuses on allowing autoconfiguration for both 
-IPv4 and IPv6 rather than just IPv6; this made it a more complex and restrictive 
-solution. 
+\subsection{Zeroconfiguration OSPF}
+This document\cite{draft-dimitri-zospf-00} is an old draft that had similar
+aims to the OSPFv3 Autoconfiguration draft. This draft focuses on allowing
+autoconfiguration for both IPv4 and IPv6 rather than just IPv6; this made it a
+more complex and restrictive solution. 
 
 \subsection{The OSPF Opaque LSA Option}
 RFC5250\cite{RFC5250} introduces the opaque LSA\@. An opaque LSA is a generic type of LSA
 that can be used to transmit application specific data. The concept is similar
 to that used in the autoconfiguration draft, but it does not make use of
 Type-Length-Values (TLVs) \nomenclature{TLV}{Type-Length-Value}. I found this
-draft useful mostly because of its brief discussion about the  reachability of
+draft useful mostly because of its brief discussion about the reachability of
 LSAs.
 
 \subsection{Additional Reading}
-While learning about this area of networking, there were also a few documents
-that were either referenced from the more relevent drafts or defined a concept
-that had been mentioned. The list of these documents that I read includes:
+While learning about this area of networking, there were many other documents
+that were either referenced from the more relevant drafts or defined a concept
+that had been mentioned. This list includes:
 
 \begin{itemize} 
-  \item {\bf RFC 5838} - OSPFv3-AF (Address Families) 
-  \item {\bf RFC 6506} - OSPFv3-AUTH-TRAILER 
-  \item {\bf RFC 3630} (4230 \& 5786) - Traffic Engineering Extensions for OSPF 
-  \item {\bf RFC 4862} - Stateless address autoconfiguration (SLAAC for IPv6) 
+  \item {\bf RFC 5838} Support of Address Families in OSPFv3 
+	\\ Extensions to allow different kinds of address to be used with OSPFv3.
+  
+	\item {\bf RFC 6506} Supporting Authentication Trailer for OSPFv3 
+	\\ Adds a level of security back into OSPFv3.
+
+	\item {\bf RFC 3630} (Updated by 4230 \& 5786) Traffic Engineering Extensions for OSPF
+	\\ Extra set of LSAs to pass information useful for traffic shaping etc.\@
+  
+\item {\bf RFC 4862} IPv6 Stateless Address Autoconfiguration (SLAAC)
+	\\ Explains how an IPv6 networks can be established using NDP.\@
+
 \end{itemize}
 
 
@@ -1437,210 +1452,12 @@ large ISPs will be able to overcome the inertia of switching to IPv6.
 \addcontentsline{toc}{chapter}{Nomenclature}
 \pagebreak
 
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{FinalReport}{}
 \bibliographystyle{unsrt}
-\addcontentsline{toc}{chapter}{Bibliography}
 
-\appendix 
-%\appendixpage
-
-\begin{landscape}
-\chapter{Typical Home Networks}
-\section{Present}
-\label{typical_homenet_present}
-\begin{center}
-	\includegraphics[width=0.75\linewidth]{../Diagrams/Network/TypicalHomenet.png}
-\end{center}
-This diagram shows a typical home network in the present day. The hardware
-inside the box labeled ``Homehub'' is typically provided to customers as one
-plug in and play device. It is commonly referred to as a router, although this
-is slightly misleading as they perform many other tasks that routing.
-
-As can be seen from the diagram, the box provides the house with wired and
-wireless connections to the LAN and the internet. The WLAN is typically bridged
-with the LAN to give create a single subnet.
-
-\section{Future}
-\label{typical_homenet_future}
-\begin{center}
-	\includegraphics[width=0.9\linewidth]{../Diagrams/Network/FutureHomenet.png}
-\end{center}
-This diagram shows a hypothetical future home network. The network includes a
-guest wireless network, a secured wireless network, a wired network, a network
-for appliances, a network for a home surveillance system and a wireless sensor
-network.
-
-\chapter{Typical Corporate Network}
-\label{typical_corporate_net}
-\begin{center}
-	\includegraphics[width=0.75\linewidth]{../Diagrams/Network/CorporateNetwork.png}
-\end{center}
-This diagram shows the typical topology of a corporate network. For the sake of reducing complexity, Layer 2 switches have not been shown.
-
-\end{landscape}
-
-\chapter{Packets}
-Images created with http://interactive.blockdiag.com/packetdiag/
-
-\section{Auto Configuration LSA}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Packets/ac_lsa.png}
-\end{center}
-
-\section{TLV}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Packets/tlv.png}
-\end{center}
-
-\section{Router Hardware Fingerprint TLV}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Packets/rhwfp_tlv.png}
-\end{center}
-
-\section{Aggregated Prefix TLV}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Packets/aggregated_prefix_tlv.png}
-\end{center}
-
-\section{Assigned Prefix TLV}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Packets/assigned_prefix_tlv.png}
-\end{center}
-
-\chapter{Netkit Test Networks}
-
-\section{Simple Network}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Network/SimpleNetkit.png}
-\end{center}
-
-\section{Main Network}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Network/MainNetkit.png}
-\end{center}
-
-\chapter{Github Stats}
-\label{GithubStats}
-
-\section{Github Commit Graph}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubCommitGraph.png}
-\end{center}
-
-\section{Github Punchcard}
-\begin{center}
-	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubPunchCard.png}
-\end{center}
-
-\chapter{Shortest Path First Calculations}
-\label{dijkstra}
-
-\todo{Give a quick overview of how Dijkstra's works}
-
-\chapter{Alix2d3}
-As the project progressed it became clear that they Alix2d3s were not as useful
-as was originaly believed, thanks to discovery of the briliant software package
-Netkit. I did however undertake testing on the Alix2d3s. If someone wished to
-repeat my experimentation, the following guides would be helpful. 
-
-\section{Installation Guide}
-
- This guide\cite{germanGuide} offered a comprehensive list of steps that need to
- be taken to install Ubuntu Linux on a PC Engines alix2d3\cite{alix2d3}.  The article is
- written in German but using Google translate I was able to follow it as it is
- mainly a list of shell commands.
-
- The process begins with installing the compact flash card as a device on an
- existing Ubuntu desktop PC\@. Next the card is partitioned using \texttt{fdisk},
- the card is then formatted as ext2 (a Linux file system type) using
- \texttt{mk2fs}. The card is then mounted in the file system, using
- \texttt{mount} and a small installation of Linux is copied to the card using
- \texttt{debootstrap} to provide a base system.
-
- Several settings and devices are linked to the flash cards mount point and
- \texttt{chroot} is used to simulate booting into the new install. The required
- configuration files are edited (e.g.\@ network interface settings) and essential
- software packages (such as \texttt{Vim}, \texttt{SSH}, \texttt{sudo}, and
- \texttt{APT}) are installed. A boot loader such as \texttt{GRUB} is also
- installed and configured.
-
- Next, the flash card is safely removed, and  inserted into the alix2d3. The
- alix2d3 is then powered on. Using a USB to Null Model cable connecting a PC to
- the alix2d3's serial port, a terminal connection can be established using {\bf
- cu}. I had a few problems using this device (\texttt{ttyUSB0}) but I was able to
- fix this problem using \texttt{chown}. This terminal connection can be used to
- aid the boot process and ensure that there are no Magic ELF errors. Once the
- alix2d3 is up and running it is possible to disconnect the serial cable and
- access it over \texttt{SSH} alone.
-
- \section{Quagga Installation Guide}
-
- \subsection{Normal Installation}
-This is a procedure that has  turned out to be far more difficult that anticipated.
-
-First of all, need to ensure that all the dependencies are present. The easiest
-way I have found to do this is to use:
-
-sudo apt-get build-dep quagga
-
-This should fetch all the packages that quagga depends on. I see no reason to
-build these from source, since I shall not be modifying them.
-
-It seems that a package called libtool is also needed to ensure installation works.
-Not certain this is needed.
-
-\ libreadline also seems to be an issue (mainly with vtysh):
-
-\texttt{sudo apt-get install lib32readline6}
-
-Next it should be possible to run \texttt{\@./bootstrap}. As far as I know this
-produces (among other things) the configure script.
-
-Next run the configure script. This [wiki][wiki] suggests that it is best to
-move the folders using:
-
-\texttt{sudo \@./configure --sysconfdir=/usr/local/quagga --localstatedir=/usr/local/quagga}
-
-The configure script will prompt you to create a user called quagga. Do this by:
-
-sudo adduser quagga
-sudo mkdir /usr/local/quagga
-sudo chown quagga:quagga /usr/local/quagga
-
-It is now time to run make. See the crosscompiling document for more
-information about this. Previously I had issues with zebra making, to fix this
-manually editing the Makefile in \@./zebra by adding -lcap to LIBS\@. This doesn't
-seem to be a problem with the latest source.
-
-Run sudo make install. This should install everything, and the daemons
-should have installed themselves to /usr/local/sbin.
-
-Now a little bit of configuration is required. \texttt{cd /usr/local/quagga}.
-Either make a real config file for the daemon, or just create a file containing ``password test''.
-
-
-You should now be able to run sudo ospf6d. If you can't, try ldconfig.
-
-
-[wiki]: http://wiki.nil.com/Installing\_and\_running\_Quagga
-
-\subsection{Cross Compilation}
-
-Since Alix2d3s are very slow, a build of Quagga can be incredibly slow. The make parts
-alone can take around 15 minutes. (I actually found that XORP had an even slower
-compile time, in the order of hours) 
-
-To over come this issue it is possible to compile the source code on a much
-faster machine (e.g.\@ desktop pc) and copy it across. 
-
-Since modern machines use a 64bit architecture rather than 32bit like the
-Alix2d3s, the compiler must be set up correctly. Adding the cflag ``-m32'' should
-suffice, however to be on the safe side, ``-m32 -march=i386'' can be used. 
-
-This should be done by appending '--with-clfags=``-m32 -march=i386i''' to \@./configure.
-
-I initially had problems with this compilation. I resolved the issues by going
-back to basics and trying to compile a simple helloworld program for the Alix.
-Turns out I was missing ``gcc-multilib''. This can be installed with apt.
+\input{./Appendix.tex}
 
 \end{document}

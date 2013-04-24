@@ -10,6 +10,10 @@ all:
 	pdflatex $(TEXFILE)
 	chmod a+r $(FILE).pdf
 
+quick:
+	pdflatex $(TEXFILE)
+	chmod a+r $(FILE).pdf
+
 pdf:	all
 	
 
