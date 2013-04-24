@@ -727,59 +727,80 @@ Router Hardware Fingerprint must change its Router ID.
 
 \subsection{Prefix Assignment}
 When a router notices a change in the current set of AC-LSAs in the LSDB, the
-prefix assignment algorithm is scheduled to run. 
+prefix assignment algorithm is scheduled to run. Scheduling uses Quagga's built
+in thread library and has the benefits of allowing the code to finish whatever
+it was doing and the algorithm is only run once if several things schedule it
+in close succession.
 
-During the prefix assignment algorithm, all aggregated prefix - interface pairs
-are examined. If there is not already an assignment, and the router has the
-highest Router ID of all active neighbours on that link, then it must make a
-prefix assignment from this aggregated prefix. 
+The algorithm examines all aggregated prefix interface pairs. If
+there is not already an assignment for the pair, and the router has the
+highest Router ID of all active neighbours on that link, then a
+prefix is assigned to the interface from the aggregated prefix. 
 
 There is no prescribed method in the draft for making an assignment in the
-draft, beyond the fact that the prefix assigned must not already be an
-assignment. My implementation has been written so it is easy to change the
-method used for picking a new prefix for the assignment. 
+draft, beyond the fact that the prefix assigned must not be in use. I wrote my
+implementation to ensure it is easy to change the method used for picking a new
+prefix for the assignment. 
 
-The current method I currently use is to simply step through the prefixes in
-numerical order, this method has the disadvantage of being likely to collide
-with a prefix allocated by another router in the network concurrently allocating
-prefixes.  However this can be an advantage during the testing phase as it
-makes these cases more common, and as such handling these cases will undergo
-greater testing. The other advantage is that this algorithm is guaranteed to
-either halt, or produce an error once the address space has been exhausted. 
-
-Another method, used by one of the bird implementations is to allocate at
-random for a fixed number of tries, then if that failed to fall back to
-sequential allocation. 
-
-\todo{This may well be the place to start talking about RADVD}
+The method I chose is to step through the prefixes in numerical order, the
+disadvantage is a fairly high likelihood of collision with a router elsewhere
+in the network. This was advantageous during the testing phase as it makes
+these cases more common, leading to easier testing. The other advantage is that
+this algorithm is guaranteed to either find a free address, or produce an error
+if the address space has been exhausted. 
 
 \subsection{Prefix Conflict Resolution}
-\todo{Review the code to see how many places do this}
-Prefix conflicts are dealt with at many different levels in the algorithm. 
+Prefix collisions occur when either two routers have used the same prefix for
+different networks, or when two routers have assigned different prefixes to the
+same network. The prefix assignment algorithm is designed so that these
+collisions are resolved during assignment. Routers will only accept the prefix
+assignment made by the router with the highest RID of the assigning routers. If
+a router detects that one of its own assignments is no longer valid, it will
+deprecate it and make a new assignment. 
 
-\subsection{ULA Generation}
-\todo{Check the time}
-If a there are no aggregated prefixes in the routing domain after a specified
-amount of time (120 second?) then the router with the highest Router ID must
-generate a Unique Local Address (ULA) \nomenclature{ULA}{Unique Local Address}
-to allow local connectivity. ULAs are similar in concept to an IPv4 Private
-address (e.g. 192.168.1.0) although are generally not used with NAT\@. 
+\subsection{Making an Assignment}
+The prefix assignment draft specified that a hysteresis period of 20 seconds
+before an assignment is committed to. The draft does not explain exactly what
+is meant by this. My implementation uses a list to indicate that a prefix is
+pending, so that if it needs to be deleted it can be deleted immediately. After
+the 20 seconds is up, the prefix is removed from the pending list and Router
+Advertisements (RA) are emitted containing the prefix.
+ 
+\subsection{Deprecating an Assignment}
+When the prefix assignment is run, all existing prefix assignments are first
+marked invalid. As the algorithm runs, the prefixes that are found to be valid
+are marked as such. If by the end of the algorithm a prefix is still marked
+invalid, deprecation is scheduled. 
 
-The ULA generation algorithm is defined in [AN RFC], and aims to be as unique
-as possible. The ULA is based on a hash of a portion of a combination of the 
-current network time (in Network Time Protocol (NTP) \nomenclature{NTP}{Network 
-Time Protocol} format), and an interface's 64bit MAC address. 
+If after 240 seconds has passed, the state of the prefix has not changed, the
+prefix is deleted from the interfaces list of assigned prefixes and an RA is
+broadcast with the lifetime set to zero. 
 
-Once a ULA has been generated it is advertised as though it were a normal
-aggregated prefix. If a router with a higher Router ID becomes reachable, or an
-aggregated prefix from another source is received, the ULA is deprecated. 
+\subsection{ULA Prefix Generation}
+If a there are no aggregated prefixes in the routing domain after 20 seconds,
+the router with the highest Router ID must generate a Unique Local Address
+(ULA)\nomenclature{ULA}{Unique Local Address} prefix\footnote{In the defining
+RFC these are referred to as Global IDs.} to facilitate local connectivity.
+ULAs are similar in concept to IPv4 Private addresses\footnote{Although it is
+not recommended to use NAT with IPv6} (e.g. 192.168.1.0). 
+
+The ULA prefix generation algorithm is defined in RFC4193 (Section
+3.2)\cite{rfc4193}, and aims to be as unique as possible; it is based on a hash
+of a portion of a combination of the current network time (in Network Time
+Protocol (NTP) \nomenclature{NTP}{Network Time Protocol} format), and an
+interface's 64-bit MAC address (EUI-64). The algorithm generates a /48 prefix. 
+
+Once a ULA prefix has been generated it is advertised like any other aggregated
+prefix. If a router with a higher Router ID becomes reachable, or an aggregated
+prefix from another source is received, the prefix is deprecated after 120
+seconds. 
 
 \section{Quagga}
-Qaugga is written in C89, following the GNU coding standards. These rules help
+Quagga is written in C89, following the GNU coding standards. These rules help
 to improve the portability of the code, meaning that if there is a C compiler,
 and the operating system is POSIX compliant, then Quagga is likely to compile
-for it.  Quagga does not support Microsoft Windows\footnote{Or WinDoze as the GNU coding
-standards would put it}.
+for it.  Quagga does not support Microsoft Windows\footnote{Or WinDoze as the
+GNU coding standards would put it}.
 
 At first I found some of the stylistic guidelines of the GNU coding standards
 unusual, and difficult to read. Placing a space between function calls and the
