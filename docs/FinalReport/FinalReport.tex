@@ -489,7 +489,7 @@ protocol. An image of the whole network is built up by flooding Link State
 Advertisements (LSA) across the network. The algorithms used to build the
 routing table from this link state are described in Appendix~\ref{dijkstra}.
 
-Several different message types exist in OSPF. These include Hello,
+Several different message types exist in OSPF\@. These include Hello,
 sent out periodically to discover new adjacencies, Database Descriptions, Link
 State Requests, Link State Updates and Link State Acknowledgments, all of which
 have fairly self descriptive names.
@@ -505,7 +505,7 @@ flooding scope. Each LSA contains some information about the network. An
  
 The two most important LSA types are the Router LSA and the Network LSA\@.
 Together they can be used to build up a complete picture of the areas that the
-router belongs to. Appendix~\ref{LSA-HEADEER} shows the structure of
+router belongs to. Appendix~\ref{LSA-HEADER} shows the structure of
 an LSA header. 
 
 \subsubsection{Router LSA}
@@ -539,7 +539,7 @@ LSA types can be ignored.
 The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6. 
 
 \section{Implementation Candidates}
-Below is a list of Open source implementations of OSPF. There are also
+Below is a list of Open source implementations of OSPFv3\@. There are also
 commercial implementations\footnote{Most notably the one provided by Cisco with
 their routers.}, these have not been considered as they are closed source. 
 
@@ -552,8 +552,8 @@ in C as a separate branch. The other, extended bird to allow LSAs to be
 processed by external programs, and then used Lua to implement the draft.
 
 \subsection{Quagga}
-Quagga\cite{QuaggaHome} is a more heavyweight package, it is a fork of a now
-defunct GNU project called Zebra. Quagga is written in C, and aims to be
+Quagga\cite{QuaggaHome} is a more heavyweight package, it is a fork of now
+defunct GNU project Zebra. Quagga is written in C, and aims to be
 compatible with many platforms so does not rely on many external libraries.
 There are no public implementations of autoconfig OSPFv3.
 
@@ -570,32 +570,44 @@ Finally Quagga is a good choice as there were no existing implementations, so
 my contributions would be more useful to the community.
 
 \chapter{Specification}
-\todo{MoSCoW specification of the project}
-To help guide my projects implementation and allow a thorough evaluation, I
-came up with the following MoSCoW style Specification.
+\todo{I am finding it difficult to know what to put in this section.}
+To help direct my projects implementation and allow a thorough evaluation, I
+came up with the following specification based on the drafts I am implementing.
 
-\section{Must Have}
+\section{Functional Requirements}
+\subsection{Necessary}
+\begin{itemize}
+    \item Should allow routing daemons to run without manual configuration
+    \item Should efficiently distribute IPv6 Prefixes across the network
+\end{itemize}
+\subsection{Optional}
+\begin{itemize}
+    \item Should be interoperable with existing implementations of the drafts
+    \item Should generate a ULA if one is required
+\end{itemize}
 
-\section{Should Have}
-
-\section{Could Have}
-
-\section{Won't Have}
-
+\subsection{Non Functional Requirements}
+\subsection{Necessary}
+\begin{itemize}
+    \item 
+\end{itemize}
+\subsection{Optional}
+\begin{itemize}
+    \item 
+\end{itemize}
 
 \chapter{Design}
 \todo{A detailed design}
-\todo{This document needs more UML}
 
 \section{Simplifications}
-To allow OSPFv3 to function without requiring any configuration, a number of
-simplifications must be made to how it runs. These simplifications restrict
-some of the fine tuning required by large enterprise networks, but should not
-severely reduce the functionality offered to home users. 
+To allow OSPFv3 to function without configuration, a number of simplifications
+must be made to how it runs. These simplifications restrict some of the fine
+tuning required by large enterprise networks, but should not remove functions
+exploited by home users. 
 
 \subsection{Operation on One Area}
 As the networks that are being configured are unlikely to be very large, there
-are no real benefits gained from using areas. In autoconfiguration OSPF, all
+is no benefit gained by using areas. In Autoconfig OSPFv3, all
 interfaces on all routers will be part of Area 0.0.0.0, the backbone area.
 
 Removing multiple areas also reduces the complexity in other aspects. Various
@@ -603,48 +615,51 @@ summary LSA types are no longer needed, and the flooding scope of area now
 covers the whole network.
 
 \subsection{Default Values}
-The draft specifies that various default values are used. These default values
-are mainly values that were proposed as optional defaults in the original RFCs,
-and are now specified as obligatory defaults for Autoconfig OSPF\@. 
+The draft specifies the use of default values. These are mainly values that were
+optional in the original RFCs, and are now obligatory defaults for Autoconfig
+OSPFv3\@. 
 
-Firstly, with the exception of those that clearly should not run OSPF, such as
-those that are manually configured, or those connected directly to an ISP, all
-interfaces should be autoconfigured as the correct type. Most OSPFv3
-implementations already do this. 
+Firstly, with the exception of those that clearly should not run OSPF, (e.g.\@
+manually configured, or connected directly to an ISP), all interfaces
+should be automatically configured as the correct type. Most implementations
+already do this. 
 
-Secondly, a default \texttt{HelloInterval} of 10 seconds is used, and a default
-\texttt{RouterDeadInterval} of 40 seconds is used. There is also an optional
-reduction of the router inactivity time from that of
+Secondly, defaults \texttt{HelloInterval} of 10 seconds, and
+\texttt{RouterDeadInterval} of 40 seconds should be used. There is also an
+optional reduction of the router inactivity time from
 \texttt{RouterDeadInterval} down to a minimum of \texttt{HelloInterval} + 1
 seconds. 
 
 Finally, with regard to OSPFv3 Address Families, all interfaces should use the
-default value of 0 as their Interface Instance ID\@. This values specifies that
-the interface uses unicast IPv6.  
+default value of 0 as their Interface Instance ID\@, to indicate that the
+interface uses unicast IPv6.  
 
 \section{New LSA Type}
-\todo{Stick a diagram in the Appendix}
-The OSPFv3 Autoconfiguration draft specifies a new LSA type to ensure that
+The OSPFv3 Autoconfig draft specifies a new LSA type to ensure that
 there are no conflicts in Router ID across the network. This new LSA is known
-as an Auto Configuration LSA and currently uses an experimental Type value. The
-value will eventually be assigned by IANA\@. 
+as an Auto Configuration LSA and currently uses an experimental Type value. A
+value will be assigned by IANA when the draft is upgraded to an RFC. 
 
-The AC-LSA is designed to be extensible, the aim is to allow other bits of
-information to be passed around in these packets. 
+The AC-LSA is designed to be extensible, the aim is to allow more information
+to be contained in these LSAs. The structure of an AC-LSA can be seen in
+Appendix~\ref{AC-LSA} 
 
 \subsection{TLVs}
-\todo{Confirm that length is in bytes}
-The payload of the AC-LSA is a set of Type-Length-Value (TLV). Each TLV
-defines the type, or meaning, of the data; the length that it occupies in
-BYTES(?); and then the data itself. 
+The payload of the AC-LSA is a set of Type-Length-Values (TLV). Each TLV
+contains: 
+\begin{itemize}
+    \item The type, or meaning, of the data.
+    \item The length of the value in bytes.
+    \item The data itself.
+  \end{itemize}
+
+Diagrams of the TLVs' structures can be been in Appendix~\ref{TLV}
 
 \subsubsection{Router-Hardware-Fingerprint TLV}
-The Router-Hardware-Fingerprint (RHWFP) TLV is specified in the
-Autoconfiguration draft. Its value is an identifier that should be unique for
-its originating router across the whole network. 
-
-RHWFP TLVs are used to ensure that there are no conflicts in the Router ID
-across the network.
+The Router-Hardware-Fingerprint (RHWFP) TLV, specified in the Autoconfig draft,
+contains a unique identifier for its originating router that is valid across
+the whole network. The RHWFP TLV is used to ensure that the network is free
+from Router ID conflicts.
 
 \subsubsection{Aggregated Prefix TLV}
 The Aggregated Prefix TLV is defined in the Prefix Assignment draft, it
@@ -652,67 +667,63 @@ represents a short IPv6 prefix delegation that can be used to assign prefixes
 to the different subnets. 
 
 An aggregated prefix should have a length of less than or equal to /64.
-Typically an ISP is expected to provide a /48.
-
-Aggregated prefixes have many possible sources, the main two being DHCPv6-PD and
-manual configuration. 
+Typically an ISP will provide a /48. Aggregated prefixes have many possible
+sources, the main two are DHCPv6-PD and manual configuration. 
 
 \subsubsection{Assigned Prefix TLV}
-The Assigned Prefix TLV is also defined int the Prefix Assignment draft. A
+The Assigned Prefix TLV is also defined in the Prefix Assignment draft. A
 router adds an Assigned Prefix TLV to its AC-LSA when it makes an assignment
-from an Aggregated prefix.  
-
-Each assignment is made to just one interface on the network, conflicts are
-resolved if they occur, and is exactly /64 as this is the length used by SLAAC.
+from an Aggregated prefix. Each assignment is made to one interface, and is a
+/64 as this is the length used by SLAAC\@. Conflicts are resolved automatically
+if they occur. 
 
 \chapter{Implementation}
 \todo{The implementation}
 
 \section{Core Algorithms}
 \todo{This stuff might fit better into the previous section}
-There are many algorithms used in autconfig OSPFv3 to ensure that the network
+There are several algorithms used in Autoconfig OSPFv3 to ensure that the network
 is configured correctly.
 
 \subsection{Router Hardware Fingerprint Generation}
-The Router Hardware Fingerprint is a value that is based on some properties of
-the router that has a high probability of being unique on the network. 
+The Router Hardware Fingerprint is a value that is based on properties of
+the router that has a high probability of being unique across the network. 
 
-In my implementation I chose to use a sum of the MAC \nomenclature{MAC
-Address}{Media Access Control Address} addresses of the attached interfaces.
-Although, the MAC addresses are not guaranteed to be unique as manufacturers
-could cut corners - if they are not, there are likely to be bigger problems
-anyway.
+In my implementation I chose to use a concatenation of hashes of the MAC
+\nomenclature{MAC Address}{Media Access Control Address} addresses of the
+attached interfaces. Although, the MAC addresses are not guaranteed to be
+unique as manufacturers could cut corners - if they are not, we face much
+bigger problems on the lower layers.
 
 \subsection{Router ID Generation}
-According to autoconfig OSPF, the Router ID should be a pseudo-random number,
-based on the Router Hardware Fingerprint. As the router will need to reassign
-its Router ID to a new number if there is a conflict, a seed value must be
-stored. This value is passed \texttt{rand\_r} function call, which modifies it to
-maintain the state of the random sequence.
+Autoconfig OSPFv3 says the Router ID should be a pseudo-random number, based on
+the Router Hardware Fingerprint. As the router will need to reassign its Router
+ID a new value if there is a conflict, a seed value must be stored. This value
+is passed by reference to the \texttt{rand\_r} function call, which modifies it
+to maintain the state of the random sequence.
 
-I found one of the harder parts of the project was cleanly shutting down OSPF,
-changing its router ID, and then bringing it back up again. 
+I found one difficult part of the project was cleanly shutting down OSPFv3,
+changing the Router ID, and then bringing it back up again. 
 
 \subsection{Router ID Conflict Resolution}
-As the Router IDs are assigned randomly, there is a chance that there could be
-a collision, where two routers on the network assign themselves the same Router
-ID\@.  This means that a mechanism for resolving this conflicts is needed. 
+As the Router IDs are random, there is a possibility of
+a collision - two routers on the network assign themselves the same Router
+ID\@. To prevent things going awry a mechanism for resolving this conflicts is needed. 
 
-The drafts specifies two separate mechanisms for detecting, and resolving,
+The drafts specifies two mechanisms for detecting, and resolving,
 conflicts. 
 
 \subsubsection{Local Collisions}
 A local collision, one where there is an adjacency between the conflicting
 routers, is detected when any valid LSA is detected to have the same Router ID
 but a different Link-Local IPv6 address. To resolve this conflict, the router
-with the numerically lower Link-Local Address must generate a new Router ID\@. 
+with the numerically lower Link-Local Address generates a new Router ID\@. 
 
 \subsubsection{Network-Wide Collisions}
 To detect collisions that occur for routers that are not directly connected,
-all apparent Self Originated AC-LSAs are inspected to ensure that they are
-truly Self originated LSAs. This is done by checking that the Router Hardware
-Fingerprints match. If they do not then the router with the lower Router
-Hardware Fingerprint must change its Router ID. 
+all apparent Self Originated AC-LSAs are inspected to ensure that the Router
+Hardware Fingerprints match. If they do not then the router with the lower
+Router Hardware Fingerprint must change its Router ID.
 
 \subsection{Prefix Assignment}
 When a router notices a change in the current set of AC-LSAs in the LSDB, the
