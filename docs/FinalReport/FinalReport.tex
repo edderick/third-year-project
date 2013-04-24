@@ -476,35 +476,37 @@ This would lead to more jobs, but would be inconvenient and expensive for end
 users.
 
 \subsection{Other Routing Protocols}
-Other routing protocols make good candidates for this kind of solution.  OSPF
+Other routing protocols make good candidates for this kind of solution. OSPF
 was chosen as it as an IETF standard with good convergence rates and does not
 suffer from many problems due to misconfiguration of the network - such as
-plugging two interfaces into the same link.
+plugging two interfaces into the same link. No matter what routing protocol is
+chosen as the eventual standard in home networks, this project will certainly
+be an influence to its design.
 
 \section{How OSPF works}
-\todo{Show that I understand fully how OSPF works.} 
-Open Shortest Path First (OSPF) as previously mentioned is a link-state routing
-protocol. A complete image of the network is built up by flooding Link State
+Open Shortest Path First (OSPF) is a link-state routing
+protocol. An image of the whole network is built up by flooding Link State
 Advertisements (LSA) across the network. The algorithms used to build the
-routing table from the link state are described in Appendix~\ref{dijkstra}.
+routing table from this link state are described in Appendix~\ref{dijkstra}.
 
-A variety of different message types exist in OSPF, including Hello messages,
-sent out periodically to discover new adjacencies. Database Descriptions, Link
+Several different message types exist in OSPF. These include Hello,
+sent out periodically to discover new adjacencies, Database Descriptions, Link
 State Requests, Link State Updates and Link State Acknowledgments, all of which
 have fairly self descriptive names.
 
 The routers store the LSAs that they know about in their Link State Database
-(LSDB)\nomenclature{LSDB}{Link State Database}.  To identify which router
+(LSDB)\nomenclature{LSDB}{Link State Database}. To identify which router
 originated an LSA, each router is given a unique Router ID.
 
 \subsection{Links State Advertisements}
-There are Several different LSA types in OSPF\@. Each LSA is originated by
+There are many different LSA types in OSPF\@. Each LSA is originated by
 a router on the network and forwarded on by other routers depending on its
-flooding scope. Each LSA contains some information about the network. 
+flooding scope. Each LSA contains some information about the network. An 
  
 The two most important LSA types are the Router LSA and the Network LSA\@.
 Together they can be used to build up a complete picture of the areas that the
-router belongs to. 
+router belongs to. Appendix~\ref{LSA-HEADEER} shows the structure of
+an LSA header. 
 
 \subsubsection{Router LSA}
 The Router LSA is originated by each router and is flooded to the whole area.
@@ -514,67 +516,63 @@ the router, the types of these interfaces, and the metrics associated with
 using these interfaces. 
 
 \subsubsection{Network LSA}
-Network LSAs are originated by just one router for each subnet, they are
-flooded to a single area. The router that must originate this LSA is called the
-Designated Router (DR) \nomenclature{DR}{Designated Router}, and is elected
-by following the steps of the Designated router Election algorithm. The Backup
-Designated Router (BDR) \nomenclature{BDR}{Backup Designated Router} is
-elected in a similar way, and must be prepared to start emitting a Network LSA
-if the DR becomes unreachable. 
+Network LSAs are originated for each subnet, they are flooded to a single area.
+The only router that should originate this LSA is the Designated Router (DR)
+\nomenclature{DR}{Designated Router}, and is elected with the DR Election
+algorithm. The Backup Designated Router (BDR) \nomenclature{BDR}{Backup
+Designated Router} is elected in a similar way, and must be prepared to start
+emitting a Network LSA if the DR becomes unreachable. 
 
 The Network LSA contains a list of routers that are connected to that subnet.
 There are no weights associated with these connections as they are covered by
 the Router LSAs. 
 
 \subsubsection{Other LSAs}
-There are also several other LSA types that are defined by various different
-drafts.  Many of these LSA types are irrelevant in this project as they are
-concerned with networks that consist of many areas, or networks that are
-concerned with details outside of the current Autonomous System (AS). Since
-OSPFv3 Autoconfig dictates that only one area shall be used, these LSA types
-can be ignored.   
+There are also other LSA types that are defined.  Many of these LSA types are
+irrelevant in this project as they are concerned with networks that consist of
+many areas, or interactions that occur outside of the current Autonomous System
+(AS). Since OSPFv3 Autoconfig dictates that only one area shall be used, these
+LSA types can be ignored.   
 
 \subsection{Differences between OSPFv2 and OSPFv3}
+\todo{This looks to be incomplete}
 The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6. 
 
 \section{Implementation Candidates}
-There are plenty of implementations of OSPFv3 to choose from. Although there
-are propriety commercial implementations available, such as the one provided by
-Cisco routers, I have only considered Open Source packages as these are
-available for me to extend.
+Below is a list of Open source implementations of OSPF. There are also
+commercial implementations\footnote{Most notably the one provided by Cisco with
+their routers.}, these have not been considered as they are closed source. 
 
 \subsection{Bird}
-Bird is a fairly lightweight suite of routing protocols. It is written in C. 
+Bird\cite{BirdHome} is a lightweight suite of routing protocols, written
+in C. 
 
-There are already two implementations of Autoconfiguration OSPFv3. The first
-was written in C as a branch of Bird. The other, written in lua, was created by
-using an extension to bird that allows LSAs to be processed by external
-programs.
+Bird has two implementations of Autoconfiguration OSPFv3. The first was written
+in C as a separate branch. The other, extended bird to allow LSAs to be
+processed by external programs, and then used Lua to implement the draft.
 
 \subsection{Quagga}
-Quagga is a more heavyweight package, it is a fork of a now defunct GNU project
-called Zebra. Quagga aims to be compatible with a wide variety of platforms,
-and does not make much use of external libraries. There are currently no public
-implementations of autoconfig OSPFv3.
+Quagga\cite{QuaggaHome} is a more heavyweight package, it is a fork of a now
+defunct GNU project called Zebra. Quagga is written in C, and aims to be
+compatible with many platforms so does not rely on many external libraries.
+There are no public implementations of autoconfig OSPFv3.
 
 \subsection{XORP}
-XORP is another heavy implementation. It is written in C++, there are not any
-publicly available versions of Autconfig OSPFv3. It seems that the activity
-surrounding XORP is in decline. 
+XORP\cite{XORPHome} is another heavy implementation. It is written in C++,
+there are not any public Autconfig OSPFv3 implementations. The activity
+surrounding XORP is low. 
 
 \section{Chosen Implementation}
-I chose to base by project on Quagga. Firstly I found that after subscribing to
-all three developer mailing lists, Quagga seemed to be the most active project.
-Secondly I liked the clear separation between the code for OSPFv2 and OSPFv3
-that Quagga offered, since my project would only be concerned with IPV6.
-Finally I felt that Quagga was a good choice as there were not any existing
-implementations, so my contributions would be more useful to the community.
-
+I chose to base by project on Quagga. I found that after subscribing to all
+three developer mailing lists, Quagga seemed to be the most active project.  I
+also liked the clear separation between OSPFv2 and OSPFv3 that Quagga offered.
+Finally Quagga is a good choice as there were no existing implementations, so
+my contributions would be more useful to the community.
 
 \chapter{Specification}
 \todo{MoSCoW specification of the project}
 To help guide my projects implementation and allow a thorough evaluation, I
-came up with the folowing MoSCoW style Specification.
+came up with the following MoSCoW style Specification.
 
 \section{Must Have}
 
