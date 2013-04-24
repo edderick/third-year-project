@@ -346,13 +346,12 @@ as offering a realistic solution to a problem, the draft also demonstrates the
 extensibility of the Autoconfiguration draft. 
 
 A method for breaking up a short prefix delegation into many network prefixes
-is given, along with a strategy for avoiding conflicts in the assignment across
-the network. Typically an ISP will allocate a customer a /48 IPv6 prefix to
-cover their whole home, each network in their home then requires a /64 IPv6
-prefix.
+is given, along with a strategy for avoiding conflicts across the network.
+Typically an ISP will allocate a customer a /48 IPv6 prefix to cover their
+whole home, each network in their home then requires a /64 IPv6 prefix.
 
-An update to this document was publish on 23rd October 2013, it expired on 26th
-April 2013, although it is likely a refresh will be released around this time.
+An update to this document was published on 23rd October 2013, it expired on
+26th April 2013, although it is likely a refresh will be released soon.
 
 \section{Other Important Drafts}
 There are several other documents that are relevant to this project. These are
@@ -361,39 +360,39 @@ been referenced from one another.
 
 \subsection{Home Networking Architecture for IPv6} 
 This paper\cite{draft-ietf-homenet-arch-07} puts forward a vision of future
-home networking. A complete architecture for future home
-networks is proposed, along with a discussion of many emerging technologies. 
+home networking. An architecture for future home networks is proposed, along
+with a discussion of emerging technologies. 
 
 \subsection{OSPF Version 2}
-I studied RFC2328\cite{RFC2328} in depth to understand how the OSPF Protocol
-works. The memo is surprisingly easy to read, and offers a complete discussion
-of the data structures and algorithms the OSPF protocol employs to build
-routing tables for IPv4. 
+I studied RFC2328\cite{RFC2328} in depth to understand the OSPF Protocol. The
+memo is surprisingly easy to read, and offers a complete discussion of the data
+structures and algorithms the OSPF protocol employs to build routing tables for
+IPv4. 
 
 Although the document contains many details that are irrelevant to this project, 
-including a long discussion on areas, and details of the SPF algorithms I found
+including a long discussion on areas, and details of the SPF algorithms, I found
 the understanding I gained through studying it invaluable to my project.
 
 \subsection{OSPF for IPv6}
-RFC5340 defines OSPFv3\cite{RFC5340}. The RFC builds on RFC2328, giving the
+RFC5340 defines OSPFv3\cite{RFC5340}; it builds on RFC2328, to give the
 reader a clear understanding of OSPFv3 by explaining the differences between
-OSPFv2 and OSPFv3. 
+from OSPFv2. 
 
 \subsection{Zeroconfiguration OSPF}
 This document\cite{draft-dimitri-zospf-00} is an old draft that had similar
 aims to the OSPFv3 Autoconfiguration draft. This draft focuses on allowing
-autoconfiguration for both IPv4 and IPv6 rather than just IPv6; this made it a
-more complex and restrictive solution. 
+autoconfiguration for both IPv4 and IPv6, this made it a more complex and
+restrictive solution. 
 
 \subsection{The OSPF Opaque LSA Option}
-RFC5250\cite{RFC5250} introduces the opaque LSA\@. An opaque LSA is a generic type of LSA
-that can be used to transmit application specific data. The concept is similar
-to that used in the autoconfiguration draft, but it does not make use of
-Type-Length-Values (TLVs) \nomenclature{TLV}{Type-Length-Value}. I found this
-draft useful mostly because of its brief discussion about the reachability of
-LSAs.
+RFC5250\cite{RFC5250} introduces the opaque LSA\@. An opaque LSA is a generic
+LSA type that can be used to transmit application specific data. The concept is
+similar to that used in the autoconfiguration draft, but it does not make use
+of Type-Length-Values (TLVs)\nomenclature{TLV}{Type-Length-Value}. I found the
+discussion about the reachability of LSAs useful.
 
 \subsection{Additional Reading}
+\todo{Should I cite these?}
 While learning about this area of networking, there were many other documents
 that were either referenced from the more relevant drafts or defined a concept
 that had been mentioned. This list includes:
@@ -413,7 +412,6 @@ that had been mentioned. This list includes:
 
 \end{itemize}
 
-
 \section{Books}
 There were a few books that were relevant to this project:
 \begin{itemize}
@@ -422,69 +420,66 @@ There were a few books that were relevant to this project:
   \item OSPF and IS-IS \cite{OSPFvsISIS}
 \end{itemize}
 
-In general the books were useful for clarifying things that were not very clear
-from the RFCs. They were also useful for reinforcing my general understanding
-of the protocol, as they gave a similar level overview, written from a slightly
-different angle. 
+These books were useful for clarifying things that were not clear from the
+RFCs. They were also useful for reinforcing my general understanding of the
+protocol, as they gave good overviews, written from different angles. 
 
-Unfortunately the books did not cover much OSPFv3 because it is a relatively
-recent development, and there was predictably no mention at all of more recent
-drafts (such as the autoconfig draft) because they are very much on the cutting
-edge.
+Unfortunately the books did not cover OSPFv3 extensively because it is a
+relatively recent development. There was no mention at all of more recent
+drafts since they are very much on the cutting edge.
 
 \chapter{Analysis}
 \todo{An analysis and specification of the solution to the problem}
 
 \section{Alternatives}
-There are also other approaches that could be used to solved the same problems
-as these drafts. The different approaches all have their own pros and cons, but
-to get a full understanding of the problems that occur with each of the
-solutions, it is necessary to produce implementations of each solution.
+There are also other approaches that can be used to solved the problems
+addressed by these drafts. The different solutions all have their merits - to
+get a real understanding of the problems with an approach, it is necessary to
+attempt to implement it.
 
 \subsection{IPv4 Address as Router ID}
-A possible solution to the Router ID assignment problem would be simply to use
+One possible solution to the Router ID assignment problem would be simply to use
 the local IPv4 Address of the routers first interface. IPv4 Addresses seem like
 a good candidate for the Router ID as they are both locally unique 32 bit
 identifiers. This solution would be likely to provide a unique ID that does not
 require configuring by the user.
  
-However, as we head forward into a world dominated by IPv6, the use of IPv4
-addresses will diminish. IPv6 addresses are not such a good candidate for
-Router ID for many reasons. Firstly they are not 32 bits, so it would be
-difficult to create an identifier known to be unique from this value.  Secondly
-an interface is likely to have many IPv6 Addresses. Of these addresses the only
-address it is guaranteed to have is a link local address, which is not
-guaranteed to be unique across the whole network. 
+However, as we enter a world dominated by IPv6, the use of IPv4 addresses will
+diminish. IPv6 addresses are a poor candidate for Router IDs for many reasons.
+Firstly as they are larger than 32 bits, it would be difficult to create an identifier
+certain to be unique from them. Secondly an interface is likely to have
+many IPv6 Addresses. Of these addresses the only address it is guaranteed to
+have is a link-local address, which does not have to be unique across the
+network. 
 
 \subsection{DHCPv6-PD}
-\todo{Add a description of the actual DHCPv6-PD packet} 
-DHCP for IPv6 Prefix Delegation (DHCvP6-PD) \nomenclature{DHCPv6-PD}{DHCP for
+\todo{Add a diagram of the actual DHCPv6-PD packet} 
+DHCP for IPv6 Prefix Delegation (DHCvP6-PD)\nomenclature{DHCPv6-PD}{DHCP for
 IPv6 Prefix Delegation}, is a method for handing a prefix from one router to
-another. It is then at the discretion of the receiving router how it wishes to
-hand out the prefixes contained in the prefix of the PD message. 
+another. The receiving router decides how it wishes to hand out the prefixes
+contained in the prefix of the PD message. 
 
 One solution to the prefix assignment issue would be to simply use a
-hierarchical system. Each router splits up the prefix received from an upstream
-router and delegates an equal size prefix to each of the downstream routers
-connected to it. A positive side of this approach is that it is very simple.
-The negative is that if the network is unbalanced, it is possible that one side
-of the network could end up being delegated a far larger address space than it
-requires, while the other side is left without enough address space.  
+hierarchical system. Each router splits the prefix received from an upstream
+router and delegates an equal size prefix to each downstream router. A positive
+side of this approach is that it is very simple.  The negative is that if the
+network is unbalanced, one side of the network would be delegated a far larger
+address space than it requires, while the other side is starved of prefixes.  
 
 \subsection{Manual Configuration}
-It would also be possible to just accept the fact that as networks become more
-complex, they will require more configuration. In a current home network, many
-end users do not have any understanding of how the system they have in place
-works, and would not want to touch the configuration anyway. Home users may end
-up with a better experience if a trained engineer were to set up their home
-network for them. This would lead to more jobs, but it is a slightly defeatist
-attitude, and is not strictly true. 
+Another option is to accept that as networks become more complex, they will
+require more configuration. In a current home network, most end users do not
+understand how their network works, and have no desire to touch the
+configuration anyway. Home users may end up with a better experience if a
+trained engineer was sent by their ISP to set up their home network for them.
+This would lead to more jobs, but would be inconvenient and expensive for end
+users.
 
 \subsection{Other Routing Protocols}
-Of course any other routing protocol is a candidate for this kind of solution.
-OSPF was chosen as it as good convergence rates and does not suffer from many
-problems due to misconfiguration of the network - such as plugging two
-interfaces into the same link.
+Other routing protocols make good candidates for this kind of solution.  OSPF
+was chosen as it as an IETF standard with good convergence rates and does not
+suffer from many problems due to misconfiguration of the network - such as
+plugging two interfaces into the same link.
 
 \section{How OSPF works}
 \todo{Show that I understand fully how OSPF works.} 
@@ -574,6 +569,7 @@ Secondly I liked the clear separation between the code for OSPFv2 and OSPFv3
 that Quagga offered, since my project would only be concerned with IPV6.
 Finally I felt that Quagga was a good choice as there were not any existing
 implementations, so my contributions would be more useful to the community.
+
 
 \chapter{Specification}
 \todo{MoSCoW specification of the project}
