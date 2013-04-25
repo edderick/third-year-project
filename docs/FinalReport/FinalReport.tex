@@ -1010,84 +1010,84 @@ the state of the mock environment is consistent with the expected value, the
 test passes, otherwise it fails. 
 
 \section{Netkit} 
-Netkit is a package that allows developers to easily test network software and
+Netkit is a tool that allows developers to easily test network software and
 configuration. Netkit uses User Mode Linux (UML) \nomenclature{UML}{User Mode
-Linux} to run several Virtual Machines (VMs) \nomenclature{VM}{Virtual Machine}
-on a desktop pc. 
+Linux} to run many Virtual Machines (VMs) \nomenclature{VM}{Virtual Machine}
+on a single desktop PC. 
 
-Netkit presents the user with an \texttt{xterm} window for each VM. The virtual hosts act much like real machines. They have
-virtual interfaces, that appear to the VM as real interfaces. Netkit allows
-these virtual interfaces to be joined together through collision domains
--- setting two interfaces to the same collision domain is like plugging two
-hosts into the same network switch. Netkit also provides a special type of
-collision domain called a ``tap''; this can be used to share the host computer's
-network connectivity with the Netkit network.
+Netkit presents the user with an \texttt{xterm} window for each VM\@. These VMS
+behave like normal linux computers. They have virtual interfaces, that act much
+like real interfaces. Netkit allows these virtual interfaces to be joined
+together through collision domains -- setting two interfaces to the same
+collision domain is like plugging two hosts into the same network switch.
+Netkit also provides a special type of collision domain called a ``tap''; this
+can be used to share the host computer's network connectivity with the Netkit
+network.
 
-Netkit provided me with an indispensable testing environment.  Having up seven
-or so terminal windows on a single computer, is far more convenient than having
-seven separate devices that must be configured separately. Netkit has a huge
-advantage over using \texttt{ssh} or \texttt{telnet} -- it is not dependent on
-network connectivity, so you are free to make changes to the network without
-losing your remote connection.   
+Netkit provided me with an indispensable testing environment. I was able to run
+an instance of Quagga on each virtual machine, and control them through
+\texttt{vtysh}. Having seven terminal windows on a single computer is far more
+convenient than having seven separate devices that must be configured
+separately. Netkit has a huge advantage over using \texttt{ssh} or
+\texttt{telnet} -- it is not dependent on network connectivity, so you are free
+to make changes to the network without losing your remote connection.
 
-Compiling the code from within Netkit was also much faster than it was
-compiling it on the Alix2d3s, the difference was between several hours on the
-Alix2d3s and several minutes in Netkit. This was because rather than using a
-500MHz AMD Geode\footnote{A low power System-on-chip designed for the embedded market
-in around 2002}, Netkit was able to make use of my desktop PC's 3.3GHz 
-Intel i5 2500k\footnote{A mid/high end desktop processor from 2011} for
-compiling. 
+Compiling the code from within Netkit is also much faster than on the Alix2d3s,
+the difference was between several hours on the Alix2d3s and several minutes in
+Netkit. This was because rather than using a 500MHz AMD Geode\footnote{A low
+power System-on-chip designed for the embedded market in around 2002}, Netkit
+used my desktop PC's 3.3GHz Intel i5 2500k\footnote{A mid/high end desktop
+processor from 2011} for compiling. 
 
 I found Netkit to be a great tool for understanding how networks work.
-Translating my knowledge of networks to an ability to configure real networks
-was tough. Trivial things often turn out to be the issue -- an example is
-setting \texttt{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6
+Translating my knowledge of network theory to an ability to configure real
+networks was tough. Trivial things often turn out to be the issue -- an example
+is setting \path{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6
 traffic to be forwarded. It is not an important piece of theory, but if it is
-not done, routing will not work. Netkit was incredibly useful in helping me
-make this jump. 
+not done, routing will not work. 
 
 \todo{Stick a screen shot in the appendix :)}
 \todo{Also probably want a diagram of my main test lab}
 \todo{On top of that maybe add a ``Manual'' for Netkit to the Appendix} 
 
 \section{radvdump}
-\texttt{radvdump} is a tool that can be used to show the contents of any
-router advertisements that are received. It is designed to be used with
+\texttt{radvdump} is a tool that shows the contents of all
+received router advertisements. It is designed to be used with
 \texttt{radvd} and outputs the contents of a RA in the style of a
 \texttt{radvd} configuration file. 
 
-I made use of this tool to ensure that Quagga was successfully sending RAs and
-that they had the contents that I expected them to have. 
+I used \texttt{radvdump} to ensure that Quagga was successfully sending RAs and
+the contents were as expected. 
 
 \todo{Add an example of one of these to the appendix}
 
 \section{Tunnel Broker}
 \todo{Add a more detailed description of how a tunnel is set up and works in the Appendix.}
 Using Hurricane Electric's (HE) Tunnel broker service, I was able to give my
-network global connectivity. With an HE tunnel, you are 
-provided with a single /64 IPv6 prefix, and it is possible to request a larger
-/48 allocation. The tunnel is set up at their end so that any traffic
-that is destined to your subnet is routed to the endpoint that you specified.  
+network global connectivity. An HE tunnel,
+provides you with a single /64 IPv6 prefix. It is possible to request a larger
+/48 allocation. The tunnel is configured at their end to route any traffic
+that is destined to your prefix, to the endpoint that you specified.  
 
-\todo{Maybe Apendix would like to have the route table entries to do this?}
-By configuring a static route, forwarding all traffic for the allocated /48
+\todo{Maybe Appendix would like to have the route table entries to do this?}
+By configuring a static route forwarding all traffic for the allocated /48
 prefix into the Netkit network, then setting up Quagga within the Netkit
-network to use the allocated prefix as its aggregated prefix, I was able to
+network, using the allocated prefix as its aggregated prefix, I was able to
 make the IPv6 addresses globally reachable. Using a remote server
-(\texttt{uglogin}) I was then able to ping the virtual devices from a remote
-server, demonstrating that the devices had global addressability.
+(\texttt{uglogin}) I was able to ping the virtual devices, demonstrating that
+the devices had global addressability.
 
 \section{Alix2d3}
-Although I was relatively confident that testing my code using Netkit was
+Although I was confident that testing my code using Netkit was
 sufficient to show it working correctly, I ran my code on two Alix2d3 devices.
 This offered me more tangible proof that my code functions correctly. It also
-allowed me to do things that home users are likely to do, like plugging the
-routers together in strange and arbitrary configurations.
+allowed me to do things that home users are likely to do, such as plugging the
+routers together in arbitrary configurations.
 
 Testing on the Alix2d3s was much more difficult and time consuming that testing
-with Netkit, so I avoided doing this bulk of the testing this way. I employed a
-more black box approach, plugging the devices in and checking that everything
-seemed to be working. 
+with Netkit, so I avoided doing the bulk of the testing this way. I employed a
+black box testing approach, plugging the devices together and checking that
+everything seemed to be working. 
 
 \section{Interoperability}
 One of the goals of my project was to verify that the implementations produced
@@ -1095,84 +1095,77 @@ by other developers was compatible with the code that I produced.
 
 Both of the implementations I tested against were based on Bird. As Bird and
 Quagga both implement the same specifications for OSPFv3, I felt it was safe to
-assume that Vanilla Bird would be compatible with Vanilla Quagga. 
+assume that the unmodified versions Bird and Quagga would be compatible. 
 
 \subsection{Ben's Implementation}
 Ben Paterson's implementation was written in C, I found it very easy to install onto my
 Netkit testbed -- it required nothing more than cloning the Git repository and
-then compiling the fork of bird on one of the netkit VMs. 
+then compiling the fork of Bird on one of the netkit VMs. 
 
-\todo{Is there a way of being more precise with the documents}
-Ben's implementation conforms to the Autoconfiguration draft well. It was
-during this testing phase that I realised that I had misread the draft; The
-router Hardware fingerprint is defined as 32 bytes, I had managed to read this
-instead as 32 bits. I modified my implementation to correct this, also adding
-support for unaligned TLVs, once I had done so, I found that my implementation
-worked correctly with this part of the draft.
+Ben's implementation correctly implements the Autoconfig draft. However, I
+discovered that my implementation was wrong: The router Hardware fingerprint is
+defined as 32 bytes, I had used as 32 bits. I modified my implementation to
+correct this, also adding support for padded TLVs. After making the appropriate
+changes to my implementation, the two worked well together for this draft.
 
-However, this implementation does not implement correct the Prefix Assignment
-draft. I am not sure whether this is because the implementation predates the
-version of the draft I have been working from, or whether there was a
-misunderstanding of the draft. The implementation defined a fourth TLV type
-that does not exist in th Prefix Assignment draft. This TLV contains information
-about an interface, and is then followed be a series of Assigned Prefix TLVs
-minus any interface information. 
+Unfortunately, this implementation does not correctly implement the Prefix
+Assignment draft. A fourth TLV type not present in the Prefix Assignment draft
+is used. This TLV contains information about an interface, and is then followed
+by a series of Assigned Prefix TLVs minus any interface information. 
 
-Ben's implementation also has an interesting algorithm for assigning prefixes:
+Ben's implementation uses an interesting algorithm for assigning prefixes:
 It begins by picking a prefix from the address range at random, it then checks
-that this prefix has not already been used. If it does conflict then it picks
-another at random. To ensure that this process of randomly picking does not
-continue forever, after a certain number of attempts the algorithm falls back
-to picking the addresses sequentially. 
+that this prefix has not already been used. If it conflicts then it picks
+another at random. To ensure that this random process does not continue
+indefinitely, after a certain number of attempts, the algorithm falls back to
+picking the addresses sequentially. 
 
 \subsection{Markus' Implementation}
-Markus Stenberg's implementation takes a more unusual approach to extending
-Bird. A fork of Bird has been created called Bird-Ext-LSA\@. This is not to be
-be confused with the External LSAs that already exist within OSPFv3 for
-advertising routes that have been learned about in some other manner, instead,
-it offers a mechanism that allows LSAs to be processed by an external
-(separate) program. 
+Markus Stenberg's implementation takes an unusual approach to extending Bird. A
+fork of Bird has been created called Bird-Ext-LSA\@\footnote{Not to be confused
+with External LSAs in OSPFv3 that carry information from other protocols.},
+which offers a mechanism that allows LSAs to be processed by an separate
+program. 
 
-This package is complimented by hnet-core (Homenet Core), a project that makes
-use of Bird-Ext-LSA to implement, among other things, the autoconfiguration
-drafts\@. hnet-core is written in the scripting language lua, and I struggled a
-lot to get it up and running. First of all I had problems creating the right
-environment to run the scripts; there are quite a few dependencies that need to
-be obtained. \texttt{Luarocks} was very helpful for getting these dependencies
-installed. Eventually I managed to make all but one of the unit tests pass
-within my Netkit testbed.
+Bird-Ext-LSA is complimented by hnet-core (Homenet Core), a project that makes
+use of Bird-Ext-LSA to implement, among other things, the Autoconfig drafts\@.
+hnet-core is written in the scripting language lua. Running this code was a
+challenge -- I had problems creating the right environment; the code has  many
+dependencies. \texttt{Luarocks} helped install some of these. I did eventually
+get the code running on my Netkit testbed.
 
-Once I had this version of Bird up and running, I found that it was not
-compatible with my implementation straight out the box. To enable compatibility
-with the private implementation created by the author of the draft (Jari Arrko),
-a different LSA Type number was used -- this confused me at first, but once I
-realised it was this issue it was simple to fix. The other compatibility issue
-that I faced was that this implementation had interpreted the TLVs length to
-include the TLV header. This is actually mentioned explicitly in the draft to
-be not true. I corrected the code so that I could continue my testing, this was
-not easy firstly thanks to my inexperience with Lua, and secondly because of
-the way that it has been implemented to include some data in the headers that
-it should not have.  
+Once I had the code running, I found it was incompatible with my implementation
+without alteration. To enable compatibility with a version created by the
+draft's author (Jari Arrko), a different AC-LSA Type number was used -- this
+confused me at first, but once spotted it was simple to fix.
+
+The other compatibility issue was that this implementation interpreted the TLVs
+length to include the TLV header.The draft explicitly states that the length is
+of the value alone, so I corrected the code, to allow myself to continue
+testing. The implementation relied on the interface ID being appended to the
+TLV header rather than being part of the value, so the changes were harder than
+they should have been.
 
 After all this was fixed, there seemed to be a good level of compatibility,
-with prefixes from one finding there way into the other.
+with prefixes from one finding their way into the other.
 
 \section{Future Testing}
-To increase the confidence in my code to the level that is required of a
-commercial product, it would be wise to undergo further testing. The first
-method of testing is to use a commercial network protocol compliance
-verification suite, such as IxANVL or Spirent, to ensure that the protocol
-conforms correctly to the specification. This is currently not possible for my
-project as the protocol that I have implemented is too recent to be included in
-these suites. I was unable to find any open source libraries for testing OSPFv3
-that could be easily extended to test autoconfiguration. (There is a library
-created by GutHub user Jesnault that can be used to test OSPFv2 however).
+To increase the confidence in my code to the level expected of a
+commercial product, it would be wise to undergo further testing. 
 
-Moving beyond this, some level of user testing would be idea before releasing
-this code publicly, and integrating it into Quagga. Typically, code undergoes
-closed Alpha testing by a small number of developers, and then Beta testing
-where it is used by members of the public, but with no guarantees of actually
-working.
+One method of testing is to use a commercial network protocol compliance
+verification suite, such as IxANVL or Spirent. These ensure that the protocol
+conforms to the specification. This is currently not possible for my project as
+the implemented protocol is not yet included in these suites.  Although there
+is an open source library for testing OSPFv2, I was unable to find any open
+source libraries for testing OSPFv3 that could be easily extended to test
+autoconfiguration. 
+
+Moving beyond this, some level of user testing should be undertaken before
+publicly releasing this code, and integrating it into Quagga. Typically, code
+undergoes closed Alpha testing by a small number of developers. Followed by
+Beta testing, where it is released to the public, but without guarantees of
+correct functionality.
 
 \chapter{Project Management}
 \todo{If I have too many words, This can be pulled into appendix?}
