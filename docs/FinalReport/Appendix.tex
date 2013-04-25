@@ -201,3 +201,18 @@ This should be done by appending '--with-clfags=``-m32 -march=i386i''' to \@./co
 I initially had problems with this compilation. I resolved the issues by going
 back to basics and trying to compile a simple helloworld program for the Alix.
 Turns out I was missing ``gcc-multilib''. This can be installed with apt.
+
+\chapter{vtysh}
+\label{vtysh}
+
+Commands are added using DEFUN and install.
+
+I added the commands:
+\begin{itemize}
+  \item show ipv6 ospf6 prefix aggregated
+  \item show ipv6 ospf6 prefix allocated 
+  \item show ipv6 ospf6 prefix assigned X
+
+  \item enable $>$ configure terminal $>$ ipv6 allocate-prefix X:X::X:X/M
+  \item enable $>$ configure terminal $>$ no ipv6 allocate-prefix X:X::X:X/M
+\end{itemize}
