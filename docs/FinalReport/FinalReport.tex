@@ -492,10 +492,10 @@ chosen as the eventual standard in home networks, this project will certainly
 be an influence to its design.
 
 \section{How OSPF works}
-Open Shortest Path First (OSPF) is a link-state routing
-protocol. An image of the whole network is built up by flooding Link State
-Advertisements (LSA) across the network. The algorithms used to build the
-routing table from this link state are described in Appendix~\ref{dijkstra}.
+Open Shortest Path First (OSPF) is a link-state routing protocol. An image of
+the whole network is built up by flooding Link State Advertisements (LSA)
+across the network. Dijkstra's algorithm is used to build up routing table from
+the LSAs.
 
 Several different message types exist in OSPF\@. These include:
 \begin{itemize}
@@ -945,94 +945,90 @@ this functionality to the routing protocol implementations.
 
 \section{Endians}
 An ongoing issue in my project was the storage of integers.
-\ x86 architecture, found in modern desktop processors is little endian.
+\ x86 architecture, found in modern desktop processors, is little endian.
 This means a value represented as multiple bytes, is stored with the least
 significant (lowest in value) byte first. On the contrast
 when transmitting data using the IP protocol, network byte order
 is defined as big endian -- the most significant bytes are transmitted
 first. 
 
-I found this to be a source of confusion when I neglected to convert from one
-to the other, and then spent a long time debugging before working out what was
-going wrong. Fortunately for all the standard sized data types there are
-functions to convert the endian. \texttt{htons} converts host shorts (unsigned
-16 bit integers) to network shorts; \texttt{ntohs} does the opposite.
-\texttt{htonl} and \texttt{ntohl} work on longs (unsigned 32 bit integers). 
+I found had to be careful to convert to the correct endian. I spent a long time
+debugging problems that arose from getting endians wrong. Fortunately for all
+the standard sized data types there are functions to convert the endian.
+\texttt{htons} converts host shorts (unsigned 16 bit integers) to network
+shorts; \texttt{ntohs} does the opposite.  \texttt{htonl} and \texttt{ntohl}
+work on longs (unsigned 32 bit integers). 
 
 The positive of having different endians on the network and the development
-architecure is that it makes you think about the endians. If the development
-platform used the same endians as the network then it would be very easy to
-forget about endians altogether. It would then cause serious problems when
-the software is ported to a platform that uses different endians to the
-network.
+architecture is that ensures endians are considered. If the development platform
+used the same endians as the network then it would be very easy to forget about
+endians altogether. It would then cause serious problems when the software is
+ported to a platform that uses different endians to the network.
     
 \chapter{Testing}
 \todo{Testing strategy and results}
-To ensure that my code worked as I believed that it did, it needed to be
+To ensure that my code worked as I intended it to, it needed to be
 tested. 
 
 \section{Assertions}
-To ensure that my code failed early and completely if something was wrong, I
+To ensure that my code failed early if something was wrong, I systematically
 peppered my code with assertions. Assertions are statements that insist that
-something is true -- If the assertion is incorrect, the program will halt,
-otherwise execution continues as normal.
+their predicate is true -- If the assertion is correct, execution continues as
+normal, otherwise the program will halt.
 
-I added assertions in my code to check for circumstances that should under no
+Assertions in my code check for circumstances that should under no
 circumstances occur. This ensures that the code never executes in an invalid
 state, producing incorrect results. 
 
 \section{Unit Testing}
 \todo{Generate some kind of unit test report}
-I created unit tests to ensure that the code did the things that I had intended
-it to do, my unit tests focused heavily on the edge cases. Creating these unit
-tests gave me confidence that my code did what I intended it to do, however, it
-did not ensure that my intentions were correct. 
+I created unit tests to ensure that my code behavioured as expected, my unit
+tests focused heavily on the edge cases. Creating unit tests gave me confidence
+that my code did what I intended it to do, however, it did not ensure that my
+intentions were correct.
 
-As I was using C I was unable to make use of a unit testing framework such as
-JUnit. I also felt basing my code on external libraries would go against
-the ethos of the Quagga.
+Although there are unit testing frameworks available for C, I decided against
+using them.  I felt using external libraries  would go against the ethos of
+Quagga, and my testing strategy did not fit the design of most popular
+libraries. 
 
-I created my unit tests by creating a ``mock'' environment in which to run my
-code. This mock environment consists of \texttt{struct}s that are filled in as
-though the application has been running successfully.  I then executed the
-algorithms inside this environment. After running the algorithm, I checked to
-make sure that the actual outcome was the same as the expected outcome. If the
-state that the model was in at the end of the test was the same as expected
-then the test was said to have passed, otherwise it was said to have failed. 
-
-My test cases are specified as \texttt{structs} containing the parameters of
+\todo{I think this would be a good place to crack out some diagrams}
+\subsection{Test Cases}
+Test cases are specified by \texttt{struct}s containing the parameters of
 the system, this includes the number of interfaces and a set of LSAs that
-existed in the system. The expected values were specified in a similar way,
-including a list of parameters that were expected to be equal to those in the
-final state, such as number of interfaces. This was followed by a set of
-conditions that should hold after execution, this included Prefixes that had to
-be used, prefixes that should not be used and whether or not a prefix was being
-deprecated. 
+existed in the system. 
+
+The test cases are used to construct a mock environment that resembles
+Quagga during normal execution. This is done by populating the \texttt{struct}s
+Quagga uses with fake data. The prefix assignment is run for each of the test
+cases. 
+
+\subsection{Expected Values}
+Each test case has a corresponding expected value, consisting of a
+series of system parameters and conditions. Once a test case has been run, if
+the state of the mock environment is consistent with the expected value, the
+test passes, otherwise it fails. 
 
 \section{Netkit} 
-\todo{REALLY LET TIM KNOW HOW GOOD IT IS!}
 Netkit is a package that allows developers to easily test network software and
-configuration. By using User Mode Linux (UML) \nomenclature{UML}{User Mode
-Linux} the user can run several Virtual Machines (VMs)
-\nomenclature{VM}{Virtual Machine} on their desktop pc. 
+configuration. Netkit uses User Mode Linux (UML) \nomenclature{UML}{User Mode
+Linux} to run several Virtual Machines (VMs) \nomenclature{VM}{Virtual Machine}
+on a desktop pc. 
 
-Netkit presents the user with an \texttt{xterm} virtual terminal for each
-virtual host they are running. The virtual hosts act as though they are real
-machines, and can have multiple virtual interfaces, that appear to the virtual
-host as real interfaces. Netkit allows these virtual interfaces to be joined
-together by specifying their collision domains -- setting two interfaces to have
-the same collision domain has the same effect as plugging two hosts into the
-same network switch. Netkit also allows a special type of collision domain
-called a ``tap'', that can be used to share the host computers network
-connectivity with the Netkit network.
+Netkit presents the user with an \texttt{xterm} window for each VM. The virtual hosts act much like real machines. They have
+virtual interfaces, that appear to the VM as real interfaces. Netkit allows
+these virtual interfaces to be joined together through collision domains
+-- setting two interfaces to the same collision domain is like plugging two
+hosts into the same network switch. Netkit also provides a special type of
+collision domain called a ``tap''; this can be used to share the host computer's
+network connectivity with the Netkit network.
 
-I found that Netkit provided me with an indispensable testing environment.
-Having up seven or so terminal windows on a single computer, is much more
-convenient than having seven separate devices that must be configured
-separately. Netkit has a serious advantage over using \texttt{ssh} or
-\texttt{telnet} -- as it is not dependent on network connectivity, you are free
-to make any change to the network without the fear of losing your remote
-connection.   
+Netkit provided me with an indispensable testing environment.  Having up seven
+or so terminal windows on a single computer, is far more convenient than having
+seven separate devices that must be configured separately. Netkit has a huge
+advantage over using \texttt{ssh} or \texttt{telnet} -- it is not dependent on
+network connectivity, so you are free to make changes to the network without
+losing your remote connection.   
 
 Compiling the code from within Netkit was also much faster than it was
 compiling it on the Alix2d3s, the difference was between several hours on the
@@ -1042,23 +1038,20 @@ in around 2002}, Netkit was able to make use of my desktop PC's 3.3GHz
 Intel i5 2500k\footnote{A mid/high end desktop processor from 2011} for
 compiling. 
 
-I feel that Netkit is a really great tool for understanding how networks
-actually work. I found that translating my knowledge of networks from a
-reasonably practical theoretic understanding of how they should work, to
-configuring networks to actually work was quite difficult. The trivial things
-that one is unlikely to study in great detail often turned out to be the issue
-when I was having problems getting things working -- an example is setting
-\texttt{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6 traffic to
-be forwarded. Its the kind of thing that theoretically,  does not need learning,
-but in practice, it is very important if you want your router to work as a
-router. Netkit was very useful in helping me make this jump. 
+I found Netkit to be a great tool for understanding how networks work.
+Translating my knowledge of networks to an ability to configure real networks
+was tough. Trivial things often turn out to be the issue -- an example is
+setting \texttt{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6
+traffic to be forwarded. It is not an important piece of theory, but if it is
+not done, routing will not work. Netkit was incredibly useful in helping me
+make this jump. 
 
 \todo{Stick a screen shot in the appendix :)}
 \todo{Also probably want a diagram of my main test lab}
 \todo{On top of that maybe add a ``Manual'' for Netkit to the Appendix} 
 
 \section{radvdump}
-\texttt{radvdump} is a tool that can be used to ``dump'' the contents of any
+\texttt{radvdump} is a tool that can be used to show the contents of any
 router advertisements that are received. It is designed to be used with
 \texttt{radvd} and outputs the contents of a RA in the style of a
 \texttt{radvd} configuration file. 
@@ -1071,41 +1064,38 @@ that they had the contents that I expected them to have.
 \section{Tunnel Broker}
 \todo{Add a more detailed description of how a tunnel is set up and works in the Appendix.}
 Using Hurricane Electric's (HE) Tunnel broker service, I was able to give my
-network truly global connectivity. With an HE tunnel, you are Initially
-provided with a single /64 IPv6 prefix, but it is possible to request a larger
-allocation of /48. The tunnel is then set up at their end so that any traffic
+network global connectivity. With an HE tunnel, you are 
+provided with a single /64 IPv6 prefix, and it is possible to request a larger
+/48 allocation. The tunnel is set up at their end so that any traffic
 that is destined to your subnet is routed to the endpoint that you specified.  
 
 \todo{Maybe Apendix would like to have the route table entries to do this?}
-By configuring a static route, for the allocated /48 prefix, that forwarded all
-traffic into the Netkit network. Then setting up Quagga within the Netkit
+By configuring a static route, forwarding all traffic for the allocated /48
+prefix into the Netkit network, then setting up Quagga within the Netkit
 network to use the allocated prefix as its aggregated prefix, I was able to
-make my the IPv6 addresses globally reachable. Using a remote server
-(\texttt{uglogin}) I was then able to ping the virtual devices inside Netkit,
-demonstrating that the devices had global addressability.
+make the IPv6 addresses globally reachable. Using a remote server
+(\texttt{uglogin}) I was then able to ping the virtual devices from a remote
+server, demonstrating that the devices had global addressability.
 
 \section{Alix2d3}
 Although I was relatively confident that testing my code using Netkit was
-sufficient to show that it worked correctly, I tested my code running on two
-Alix2d3 devices. This offered me a more tangible proof that my code was
-functioning correctly. It also allowed me to do the kind of things that home users
-are likely to do, like plugging the routers together in strange and arbitrary
-configurations.
+sufficient to show it working correctly, I ran my code on two Alix2d3 devices.
+This offered me more tangible proof that my code functions correctly. It also
+allowed me to do things that home users are likely to do, like plugging the
+routers together in strange and arbitrary configurations.
 
 Testing on the Alix2d3s was much more difficult and time consuming that testing
 with Netkit, so I avoided doing this bulk of the testing this way. I employed a
-more black box approach to testing like this, plugging the devices in and
-checking that everything seemed to be working. 
+more black box approach, plugging the devices in and checking that everything
+seemed to be working. 
 
 \section{Interoperability}
-\todo{Get Markus' code working!}
 One of the goals of my project was to verify that the implementations produced
 by other developers was compatible with the code that I produced. 
 
-Both of the implementations I was testing against used Bird as their routing
-daemon suite. As Bird and Quagga both implement the same specifications for
-OSPFv3, I felt it was safe to assume that Vanilla Bird would be compatible with
-Vanilla Quagga. 
+Both of the implementations I tested against were based on Bird. As Bird and
+Quagga both implement the same specifications for OSPFv3, I felt it was safe to
+assume that Vanilla Bird would be compatible with Vanilla Quagga. 
 
 \subsection{Ben's Implementation}
 Ben Paterson's implementation was written in C, I found it very easy to install onto my
