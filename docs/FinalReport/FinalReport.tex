@@ -67,8 +67,10 @@
 As home networks become more and more complex, it is inevitable that they will
 require splitting into multiple subnets. As the average home user is unable to
 configure a router, a minimal configuration solution is required. In this
-project I produced an implementation of zero configuration OSPF based on drafts
-published by the IETF\@\nomenclature{IETF}{Internet Engineering Task Force}. 
+project I produced an implementation of the Open Shortest Path First for IPv6
+(OSPFv3) routing protocol, that requires no configurations to run in the home.
+The implementation is based mainly on two drafts published recently by the
+IETF\@\nomenclature{IETF}{Internet Engineering Task Force}. 
 \end{abstract}
 
 \tableofcontents
@@ -79,12 +81,12 @@ published by the IETF\@\nomenclature{IETF}{Internet Engineering Task Force}.
 I would like to thank the following people for all their help, support and
 influence during this project:
 \begin{itemize}
-\item Tim Chown - Offered support as project supervisor
-\item David Lamparter - Responded to my queries about how Quagga works
-\item Jari Arkko - Wrote the drafts that I was implementing
-\item Markus Stenberg \& Benjamin Paterson - Provided implementations against which 
+\item Tim Chown -- Offered support as project supervisor
+\item David Lamparter -- Responded to my queries about how Quagga works
+\item Jari Arkko -- Wrote the drafts that I was implementing
+\item Markus Stenberg \& Benjamin Paterson --- Provided implementations against which 
       to interop test
-\item Friends \& Family for proof reading this document.
+\item Friends \& Family -- Proof read this document.
 \end{itemize}
 
 \chapter{Introduction}
@@ -98,19 +100,21 @@ need for manual configuration.
 \section{The Problem}
 As computing becomes more and more ubiquitous the complexity of an average home
 network will increase. Not only will the number of devices rise, but with the
-advent of sensor networks and home automation, the quantity of types and
-topologies present will grow. To ensure these more complex networks run
-smoothly, they should be separated into multiple subnets. Routing is required
-to allow communication between these subnets. 
+advent of sensor networks and home automation, the quantity of speeds,
+types and topologies present will grow. To ensure these more complex networks
+run smoothly, they should be separated into multiple subnets. Routing is
+required to allow communication between these subnets. 
 
 Unfortunately, the vast majority of home networks do not have a professional
-System Administrator, or other sufficiently computer literate person, around to
-configure and maintain them. This means ideally a network should not require any
-manual configuration to work.
+System Administrator around to configure and maintain them. This means a
+network should require no manual configuration to work.
 
-A less relevant, but equally, if not more serious issue that is addressed in
-this project is IPv4 \nomenclature{IPv4}{Internet Protocol Version 4} address
-space exhaustion. 
+Another issue that is addressed in this project is IPv4
+\nomenclature{IPv4}{Internet Protocol Version 4} address space exhaustion. IPv6
+is the main candidate for replacing IPv4, and with its much larger address
+space solved the exhaustion problem. Home users do not want to configure IPv6
+addresses by hand, so a mechanism is needed for assigning prefixes to the
+networks in the home. 
 
 \section{The Goals}
 This project set out to meet many goals, over the course of the project, as my
@@ -150,11 +154,12 @@ To enable me to explain my project in detail, I first need to explain the
 concepts that it is based on.
 
 \section{Home Networks}
+\todo{Bring forward the part about CIDR}
 Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office Home
 Office} networks tend to follow the same pattern. A single ISP provides a
 connection to the internet using the phone line or television cable.  The ISP
-will typically provide a single IPv4 address (/32), usually this is an unstable
-(dynamic) allocation - a static IP is often offered as a premium service. 
+will typically provide a single IPv4 address (/32). Usually this is an unstable
+(dynamic) allocation -- a static IP is usually only offered as a premium service. 
 
 To allow multiple hosts on the network, Network Address Translation (NAT)
 \nomenclature{NAT}{Network Address Translation} is usually employed. With NAT,
@@ -178,7 +183,7 @@ provide just one subnet. A diagram of a typical home network can be seen in
 Appendix~\ref{typical_homenet_present}.
 
 \section{Campus and Enterprise Networks}
-Larger networks like the ones found on University Campuses and larger
+Larger networks like the ones found on University campuses and larger
 businesses tend to employ many of the more advanced features of networking.
 They are often split into multiple subnets separating the physical locations,
 work groups and expected use of the hosts. One potential corporate network
@@ -186,10 +191,10 @@ topology can be seen in Appendix~\ref{typical_corporate_net}.
 
 \todo{Is there any evidence to support this?}
 In the early days of the internet, many organisations were able to obtain large
-chunks of IPv4 address space - MIT famously has the control of a /8 address
+chunks of IPv4 address space -- MIT famously has the control of a /8 address
 range. The University of Southampton was able to obtain a /16 (152.78.0.0)
 giving them around 65000 addresses to play with. Having this many addresses
-allows each machine on the network to be globally addressable - at first this
+allows each machine on the network to be globally addressable -- at first this
 may seem to be insecure, but a good firewall is far more effective protection
 than NAT\@. Even with this many addresses, the University still struggles. This
 is due at part to address space wastage, the now deprecated ISS wireless
@@ -203,25 +208,24 @@ IPv6 is mature enough to be deployed in large networks.
 
 It should be noted however, to run a network the size of the University's,
 based on todays technology, many specialist staff are required to configure the
-network and ensure its day to day running. This is something that the vast
+network and ensure its day-to-day operation. This is something that the vast
 majority of households are not able to obtain.
 
 \section{Future Networks}
 In the future users will expect more from their home networks. We are likely to
 see a dramatic increase in the number of devices in the average home, ranging
-from more laptops, smart phones and tablets, to more sensors and home automation
-devices. A hypothetical home network of the future is depicted in
-Appendix~\ref{typical_homenet_future}.
+from more laptops, smart phones and tablets, to more sensors (e.g.\@
+temperature/humidity)  and home automation devices. A hypothetical home network
+of the future is depicted in Appendix~\ref{typical_homenet_future}.
 
 A home network with this quantity and heterogeneity of traffic is likely to
 experience slow downs and other issues. These problems arise for two reasons:
-Firstly networks such as sensor networks run very slowly, where as Gigabit
-Ethernet networks run very quickly - this difference in speed can result in
-both networks running even slower. The other issue is the vast amounts of
-multicast and broadcast traffic that will build up on networks with many
-devices performing functions such as service discovery. It would be beneficial
-to split the network up into multiple subnets to ensure the best performance
-from each network. 
+Firstly sensor networks run very slowly, where as Gigabit Ethernet networks run
+very quickly -- this difference in speed can result in both networks running
+even slower. The other issue is the vast amounts of multicast and broadcast
+traffic that will build up on networks with many devices performing functions
+such as service discovery. It would be beneficial to split the network up into
+multiple subnets to ensure the best performance from each network. 
 
 Guest networks are already an option provided by some high end wireless access
 points. By using Virtual Access Points (VAPs) \nomenclature{VAP}{Virtual Access
@@ -246,7 +250,7 @@ addresses.
 
 One solution to the IPv4 address space exhaustion problem is migration to
 IPv6; a protocol that is fundamentally similar to IPV4, but instead uses 128
-bit addresses. This gives us far more addresses to work with - in fact a total
+bit addresses. This gives us far more addresses to work with -- in fact a total
 of $3.4028237\times10^{38}$ unique addresses. With estimates for the total
 number of grains of sand on Earth being around $7.5\times10^{18}$, the number
 of stars visible from Earth falling at about $7.0\times10^{22}$, and the
@@ -265,11 +269,13 @@ Autoconfiguration}. A /48 prefix may be allocated by an ISP to allow the user
 to assign multiple subnets on their network.
 
 \section{Routing}
+\todo{Appendix might like a layer diagram}
 For packets of data to find their way between subnets, they require routing.
-The routing we are concerned with is Layer 3 routing. When an IP packet is
-sent, its address is compared with those stored in the kernel's routing table,
-and then transmitted using the appropriate interface. Networks contain many
-computers, known as routers,  whose sole purpose is to forward network traffic.
+The routing we are concerned with is Layer 3 (Network/IP Layer) routing. When
+an IP packet is sent, its address is compared with those stored in the kernel's
+routing table, and then transmitted using the appropriate interface. Networks
+contain many computers, known as routers, whose sole purpose is to forward
+network traffic.
 
 A number of different protocols exist to build up these routing tables:
 
@@ -282,7 +288,7 @@ managed by ISPs or other very large organisations.
 \subsubsection{Distance Vector}
 Distance vector routing works by having each router advertise to its neighbors
 (directly connected routers) the shortest path it knows about to each subnet.
-Although less complex that link-state routing protocols, they are often slower
+Although less complex than link-state routing protocols, they are often slower
 to converge, and experience what is know as the ``count to infinity'' problem
 whereby loops in the network topology can lead to weights increasing to
 infinity when a router goes down. 
@@ -328,11 +334,11 @@ Standards''\cite{rfc6410}.
 \section{OSPFv3 Autoconfiguration}
 This draft\cite{draft-ietf-ospf-ospfv3-autoconfig-02} describes how OSPF for
 IPv6 can be extended to run without requiring configuration. The draft begins
-by enforcing some default values, and restricting a few features - such as
+by enforcing some default values, and restricting a few features -- such as
 allowing only the backbone area to be used. It then specifies a mechanism for
 generating Router IDs and ensuring that there are no conflicts across the
 network. This is achieved by the introduction of a new Link State Advertisement
-(LSA) \nomenclature{LSA}{Link State Advertisement} type. 
+(LSA) \nomenclature{LSA}{Link State Advertisement} type -- the Autoconfiguration LSA.. 
 
 The most recent release of this document was on 15th April 2013. Although this
 was towards the end of my project, the changes were only minor and I was able
@@ -433,7 +439,7 @@ drafts since they are very much on the cutting edge.
 
 \section{Alternatives}
 There are also other approaches that can be used to solved the problems
-addressed by these drafts. The different solutions all have their merits - to
+addressed by these drafts. The different solutions all have their merits -- to
 get a real understanding of the problems with an approach, it is necessary to
 attempt to implement it.
 
@@ -462,9 +468,11 @@ contained in the prefix of the PD message.
 One solution to the prefix assignment issue would be to simply use a
 hierarchical system. Each router splits the prefix received from an upstream
 router and delegates an equal size prefix to each downstream router. A positive
-side of this approach is that it is very simple.  The negative is that if the
+side of this approach is that it is very simple. The negative is that if the
 network is unbalanced, one side of the network would be delegated a far larger
-address space than it requires, while the other side is starved of prefixes.  
+address space than it requires, while the other side is starved of prefixes.
+Without some extension there is no way of communicating address space
+requirements to upstream routers.   
 
 \subsection{Manual Configuration}
 Another option is to accept that as networks become more complex, they will
@@ -478,7 +486,7 @@ users.
 \subsection{Other Routing Protocols}
 Other routing protocols make good candidates for this kind of solution. OSPF
 was chosen as it as an IETF standard with good convergence rates and does not
-suffer from many problems due to misconfiguration of the network - such as
+suffer from many problems due to misconfiguration of the network -- such as
 plugging two interfaces into the same link. No matter what routing protocol is
 chosen as the eventual standard in home networks, this project will certainly
 be an influence to its design.
@@ -489,10 +497,14 @@ protocol. An image of the whole network is built up by flooding Link State
 Advertisements (LSA) across the network. The algorithms used to build the
 routing table from this link state are described in Appendix~\ref{dijkstra}.
 
-Several different message types exist in OSPF\@. These include Hello,
-sent out periodically to discover new adjacencies, Database Descriptions, Link
-State Requests, Link State Updates and Link State Acknowledgments, all of which
-have fairly self descriptive names.
+Several different message types exist in OSPF\@. These include:
+\begin{itemize}
+ \item Hello -- Sent out periodically to discover new adjacencies.
+ \item Database Descriptions -- Which lists the LSAs in the routers LSDB (see below).
+ \item Link State Requests -- Used to ask a router to send an LSA.
+ \item Link State Updates -- Used to send an LSA.
+ \item Link State Acknowledgments -- Sent on the receipt of an LSU.
+\end{itemize}
 
 The routers store the LSAs that they know about in their Link State Database
 (LSDB)\nomenclature{LSDB}{Link State Database}. To identify which router
@@ -501,7 +513,7 @@ originated an LSA, each router is given a unique Router ID.
 \subsection{Links State Advertisements}
 There are many different LSA types in OSPF\@. Each LSA is originated by
 a router on the network and forwarded on by other routers depending on its
-flooding scope. Each LSA contains some information about the network. An 
+flooding scope. Each LSA contains some information about the network. 
  
 The two most important LSA types are the Router LSA and the Network LSA\@.
 Together they can be used to build up a complete picture of the areas that the
@@ -509,16 +521,16 @@ router belongs to. Appendix~\ref{LSA-HEADER} shows the structure of
 an LSA header. 
 
 \subsubsection{Router LSA}
-The Router LSA is originated by each router and is flooded to the whole area.
+The Router LSA is originated by each router and is flooded across its own area.
 Router LSAs contain information about the state of the router and its
 capabilities. They also contain information about the interfaces attached to
 the router, the types of these interfaces, and the metrics associated with
 using these interfaces. 
 
 \subsubsection{Network LSA}
-Network LSAs are originated for each subnet, they are flooded to a single area.
-The only router that should originate this LSA is the Designated Router (DR)
-\nomenclature{DR}{Designated Router}, and is elected with the DR Election
+Network LSAs are originated for each subnet, they are also flooded to its own
+area.  The only router that should originate this LSA is the Designated Router
+(DR) \nomenclature{DR}{Designated Router}, and is elected with the DR Election
 algorithm. The Backup Designated Router (BDR) \nomenclature{BDR}{Backup
 Designated Router} is elected in a similar way, and must be prepared to start
 emitting a Network LSA if the DR becomes unreachable. 
@@ -685,39 +697,40 @@ if they occur.
 There are several algorithms used in Autoconfig OSPFv3 to ensure that the network
 is configured correctly.
 
-\subsection{Router Hardware Fingerprint Generation}
-The Router Hardware Fingerprint is a value that is based on properties of
+\subsection{Router-Hardware-Fingerprint Generation}
+The Router-Hardware-Fingerprint is a value that is based on properties of
 the router that has a high probability of being unique across the network. 
 
 In my implementation I chose to use a concatenation of hashes of the MAC
 \nomenclature{MAC Address}{Media Access Control Address} addresses of the
 attached interfaces. Although, the MAC addresses are not guaranteed to be
-unique as manufacturers could cut corners - if they are not, we face much
+unique as manufacturers could cut corners -- if they are not, we face much
 bigger problems on the lower layers.
 
 \subsection{Router ID Generation}
 Autoconfig OSPFv3 says the Router ID should be a pseudo-random number, based on
-the Router Hardware Fingerprint. As the router will need to reassign its Router
-ID a new value if there is a conflict, a seed value must be stored. This value
-is passed by reference to the \texttt{rand\_r} function call, which modifies it
-to maintain the state of the random sequence.
+the RHWFP\@. As the router will need to reassign its Router ID a new value if
+there is a conflict, a seed value must be stored. This value is passed by
+reference to the \texttt{rand\_r} function call, which modifies it to maintain
+the state of the random sequence.
 
 I found one difficult part of the project was cleanly shutting down OSPFv3,
 changing the Router ID, and then bringing it back up again. 
 
 \subsection{Router ID Conflict Resolution}
 As the Router IDs are random, there is a possibility of
-a collision - two routers on the network assign themselves the same Router
+a collision -- two routers on the network assign themselves the same Router
 ID\@. To prevent things going awry a mechanism for resolving this conflicts is needed. 
 
 The drafts specifies two mechanisms for detecting, and resolving,
 conflicts. 
 
 \subsubsection{Local Collisions}
-A local collision, one where there is an adjacency between the conflicting
-routers, is detected when any valid LSA is detected to have the same Router ID
-but a different Link-Local IPv6 address. To resolve this conflict, the router
-with the numerically lower Link-Local Address generates a new Router ID\@. 
+A local collision, one where there is an adjacency\footnote{Routers are
+directly connected.} between the conflicting routers, is detected when any
+valid LSA is detected to have the same Router ID but a different Link-Local
+IPv6 address. To resolve this conflict, the router with the numerically lower
+Link-Local Address generates a new Router ID\@. 
 
 \subsubsection{Network-Wide Collisions}
 To detect collisions that occur for routers that are not directly connected,
@@ -931,7 +944,7 @@ extended the \texttt{zClient-zServ} protocol to include messages that expose
 this functionality to the routing protocol implementations. 
 
 \section{Endians}
-An on going issue in my project was the storage of integers.
+An ongoing issue in my project was the storage of integers.
 \ x86 architecture, found in modern desktop processors is little endian.
 This means a value represented as multiple bytes, is stored with the least
 significant (lowest in value) byte first. On the contrast
@@ -960,9 +973,9 @@ tested.
 
 \section{Assertions}
 To ensure that my code failed early and completely if something was wrong, I
-peppered my code with assertions. Assertions are statements that state that
-something is true, and will do nothing if it is. If the assertion is incorrect,
-then the program will halt.
+peppered my code with assertions. Assertions are statements that insist that
+something is true -- If the assertion is incorrect, the program will halt,
+otherwise execution continues as normal.
 
 I added assertions in my code to check for circumstances that should under no
 circumstances occur. This ensures that the code never executes in an invalid
@@ -1007,7 +1020,7 @@ Netkit presents the user with an \texttt{xterm} virtual terminal for each
 virtual host they are running. The virtual hosts act as though they are real
 machines, and can have multiple virtual interfaces, that appear to the virtual
 host as real interfaces. Netkit allows these virtual interfaces to be joined
-together by specifying their collision domains - setting two interfaces to have
+together by specifying their collision domains -- setting two interfaces to have
 the same collision domain has the same effect as plugging two hosts into the
 same network switch. Netkit also allows a special type of collision domain
 called a ``tap'', that can be used to share the host computers network
@@ -1017,16 +1030,16 @@ I found that Netkit provided me with an indispensable testing environment.
 Having up seven or so terminal windows on a single computer, is much more
 convenient than having seven separate devices that must be configured
 separately. Netkit has a serious advantage over using \texttt{ssh} or
-\texttt{telnet} - as it is not dependent on network connectivity, you are free
+\texttt{telnet} -- as it is not dependent on network connectivity, you are free
 to make any change to the network without the fear of losing your remote
 connection.   
 
 Compiling the code from within Netkit was also much faster than it was
 compiling it on the Alix2d3s, the difference was between several hours on the
 Alix2d3s and several minutes in Netkit. This was because rather than using a
-500MHz AMD Geode (A low power System-on-chip designed for the embedded market
-in around 2002), Netkit was able to make use of my desktop PC's 3.3GHz (Speed
-stepped to 3.7GHz) Intel i5 2500k (A mid-high end processor from 2011) for
+500MHz AMD Geode\footnote{A low power System-on-chip designed for the embedded market
+in around 2002}, Netkit was able to make use of my desktop PC's 3.3GHz 
+Intel i5 2500k\footnote{A mid/high end desktop processor from 2011} for
 compiling. 
 
 I feel that Netkit is a really great tool for understanding how networks
@@ -1034,7 +1047,7 @@ actually work. I found that translating my knowledge of networks from a
 reasonably practical theoretic understanding of how they should work, to
 configuring networks to actually work was quite difficult. The trivial things
 that one is unlikely to study in great detail often turned out to be the issue
-when I was having problems getting things working - an example is setting
+when I was having problems getting things working -- an example is setting
 \texttt{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6 traffic to
 be forwarded. Its the kind of thing that theoretically,  does not need learning,
 but in practice, it is very important if you want your router to work as a
@@ -1096,7 +1109,7 @@ Vanilla Quagga.
 
 \subsection{Ben's Implementation}
 Ben Paterson's implementation was written in C, I found it very easy to install onto my
-Netkit testbed - it required nothing more than cloning the Git repository and
+Netkit testbed -- it required nothing more than cloning the Git repository and
 then compiling the fork of bird on one of the netkit VMs. 
 
 \todo{Is there a way of being more precise with the documents}
@@ -1142,7 +1155,7 @@ within my Netkit testbed.
 Once I had this version of Bird up and running, I found that it was not
 compatible with my implementation straight out the box. To enable compatibility
 with the private implementation created by the author of the draft (Jari Arrko),
-a different LSA Type number was used - this confused me at first, but once I
+a different LSA Type number was used -- this confused me at first, but once I
 realised it was this issue it was simple to fix. The other compatibility issue
 that I faced was that this implementation had interpreted the TLVs length to
 include the TLV header. This is actually mentioned explicitly in the draft to
@@ -1313,7 +1326,7 @@ intimidated by the size and style of the code base. I remember feeling unsure
 about where the code for these applications even started from. Having completed
 this project, I have come to realise that the individual blocks and statements
 that make up the large projects, are exactly the same as those that I am very
-familiar with in my own work - there is not often anything that when taken in
+familiar with in my own work -- there is not often anything that when taken in
 isolation, I am totally unable to understand.
 
 The final aspect that I feel went well in this project is that I discovered a
@@ -1334,7 +1347,7 @@ differently.
 
 Firstly, I did not properly dig into the project until later than I would have
 liked.  This was partially due to having a very high workload from my other
-courses at the end of Semester One - given the chance I would go back in time
+courses at the end of Semester One -- given the chance I would go back in time
 and choose less coursework intensive optional modules. The other factor was a
 lack of confidence about jumping in at the deep end. With the experience of
 working on a project like this I now know that one of the best ways of learning
@@ -1427,7 +1440,7 @@ which I called from a bash shell script, invoked using the \texttt{system}
 function. 
 
 This proof of concept shows that Quagga can be extended to implement source
-based routing. It is however nowhere nearly a complete solution - firstly it
+based routing. It is however nowhere nearly a complete solution -- firstly it
 will not be interoperable with any other implementations as it does not conform
 to the draft, and secondly the use of the \texttt{system} system call is
 neither secure, elegant nor portable. 
@@ -1471,7 +1484,7 @@ randomly generated Wireless PSKs that currently come with wireless access points
 \section{Deployment in the Home}
 As IPv6 becomes more common place, and IPv4 is slowly phased out, this project can 
 actually be used in the home. For home users to actively switch to IPv6 there needs 
-to be some features that they cannot get from IPv4 - I think that this project 
+to be some features that they cannot get from IPv4 -- I think that this project 
 implements one of those features.
 
 Unfortunately though it does not stop at home users, ISPs also need to be on
