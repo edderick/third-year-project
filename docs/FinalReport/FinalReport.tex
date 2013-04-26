@@ -772,6 +772,7 @@ a router detects that one of its own assignments is no longer valid, it will
 deprecate it and make a new assignment. 
 
 \subsection{Making an Assignment}
+\label{pending_list}
 The prefix assignment draft specified that a hysteresis period of 20 seconds
 before an assignment is committed to. The draft does not explain exactly what
 is meant by this. My implementation uses a list to indicate that a prefix is
@@ -1342,50 +1343,70 @@ having never been involved with the Internet Engineering Task Force or any
 other international standards body before. 
  
 \chapter{Conclusions and Future Work}
-\todo{Conclusions and future work}
 
 \section{Conclusions}
-\todo{Add the ambiguities I previously came up with}
 In this project I have shown that it is possible to extend Quagga to implement
-zero configuration OSPFv3. Along the way I learned a lot. 
+zero configuration OSPFv3; Along the way I learned a lot about networks. 
 
-\section{Ambiguities in the Drafts}
-There are a few areas of the draft that I feel are slightly ambiguous or under
-prescriptive. In the Autoconfig draft: 
+\subsection{Ambiguities in the Drafts}
+There are a few areas of the drafts that I feel are slightly ambiguous or under
+prescriptive. I plan on sending the following suggestions to the authors of the
+drafts.
 
+The following comments refer to the Autoconfiguration draft
+\cite{draft-ietf-ospf-ospfv3-autoconfig-02}:
 \begin{enumerate}
 	\item In section 5.1 the draft says: 
-		\begin{quote}
+		%\begin{quote}
+
 		``An OSPFv3 router implementing this specification should assure that the
 		inadvertent connection of multiple router interfaces to the same physical
 		link in not misconstrued as detection of a different OSPFv3 router with a
 		duplicate Router-ID.'' 
-		\end{quote}
-		I am unsure of how this should be detected. My implementation checks the
-		router's interfaces link local addresses, comparing them to the source
-		address of the packet. I am not sure my method is correct, and feel the
-		draft should be more prescriptive on this issue.
+		%\end{quote}
 
-	\item Section 7.\ states:
-		\begin{quote}
+		 I feel the draft should be more prescriptive on this issue.  My
+		 implementation checks the router's interfaces link local addresses,
+		 comparing them to the source address of the packet, I am not sure this is
+		 correct.
+	\item Section 7 states:
+		%\begin{quote}
+
 		``It is RECOMMENDED that OSPFv3 routers supporting this specification
 		also allow explicit configuration of OSPFv3 parameters as specified
 		in Appendix C of [OSPFV3].''
-	\end{quote}
-		These parameters include the Router-ID. The draft doesn't seem mention
-		what to do if there is a conflict between an automatically generated RID
-		and a manually configured one: The two routers decide independently whether
-		they need to change. If the auto-configured router had a higher lladr or
-		router-hardware fingerprint, then it would assume the other router would
-		change. It would seem undesirable for a manually configured parameter to
-		change, but if it didn't the conflict would remain.
+		%\end{quote}
 
-	\item I don't actually understand why we need to check the neighbour case
-		(5.1) at all. Surely it is covered by the non-neighbour case (5.2). I don't
-		know if drafts are supposed to justify things, but I would find that
-		helpful. 
+		It does not mention what to do upon a conflict between an automatically
+		generated and a manually configured Router-ID: The two routers decide
+		independently whether they will change. If the autoconfigured router
+		determines that the other must change its RID, we will be left in a
+		conflicting state.
+	\item  The non-neighbour case (5.2) for RID collisions covers all collisions,
+		it should cover the neighbour case (5.1). A justification for the existance
+		of the neighbour case might be beneficial.
 \end{enumerate}
 
+These suggestions are about the prefix assignment draft
+\cite{draft-arkko-homenet-prefix-assignment-03}:
+\begin{enumerate}
+	\item Section 8 says:
+		%\begin{quote}
+
+		``A new prefix assignment within an aggregated prefix SHOULD NOT be
+		committed before the router has waited NEW\_PREFIX\_ASSIGNMENT seconds for
+		another prefix or reachable OSPFv3 router to appear.''
+		%\end{quote}
+
+		The draft doesn't state exactly what is meant by commited. As mentioned in
+		Section \ref{pending_list}, I used a pending list to ensure a young
+		conflicting assignment could be deleted quickly.
+	\item The draft does not indicate how assignments should be chosen. Using a
+		random or sequential value seems obvious, but it may be possible to reduce
+		routing table entries by employing a scheme that facilitates route
+		aggregation. 
+\end{enumerate}
+	
 
 \section{Continuing the project}
 Now that the project is over, I plan to continue with the work I have been
