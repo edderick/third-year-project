@@ -1244,10 +1244,28 @@ the project on schedule. Fortunately this was not an issue. The iterative
 approach that I took to the project enabled me to implement a proof of
 concept of an extension.  
 
+\section{Gantt Charts}
+As the project progressed my schedule changed slightly, the Gantt charts
+reflect these changes.
+
+Firstly, I did not account for the high work load over the Christmas holiday. I
+expected to work on my third year project but instead spent time on other
+coursework and preparation for January exams. This meant that implementation
+began later than planned, by working hard on my project I was able to complete
+it on time; then go on to do an extension. 
+
+At the start of the project I though I would use Alix2d3s for testing, so
+did not allocated time for setting up Netkit. Although this did take time
+initially, it saved me time in the long run by reducing the time taken for
+testing. 
+
+I decided that user testing was not be appropriate for this project. The aims
+of the project were more about the feasibility and correctness of the drafts
+that their usability. Users should never need to know that this software is
+running in their homes, so do not need to evaluate it. 
+
 \pagebreak
 \begin{landscape} 
-
-\section{Gantt Charts}
 \subsection{Interim Gantt Chart}
 \todo{More squished up diagrams would be easier to compare}
 This Gantt chart shows how I had spent my time, and estimated that I would
@@ -1261,7 +1279,7 @@ spend the remainder of my time when I submitted my Progress Report in December.
 \pagebreak
 
 \subsection{Final Gantt Chart}
-This Gantt chart shows how I actually progressed in my project.
+This Gantt chart shows how my project actually progressed.
 
 \begin{center}
   \hspace*{-0.75cm}
@@ -1272,67 +1290,51 @@ This Gantt chart shows how I actually progressed in my project.
 
 \pagebreak
 
-\subsection{Explanation of Gantt Charts}
-The two Gantt charts I have produced have a few diferences.
-
-Firstly, I did not account properly for the very high work load I had over the
-Christmas holiday. I expected to work on my third year project but
-instead I spent my time on other courseworks and preparing for my
-January exams. 
-
-
-
 \chapter{Evaluation}
 \todo{A critical evaluation}
 
 \section{What Went Well?}
-In general I felt that project was successful. Although it was difficult, I
-managed to complete my implementation only very slightly behind schedule. I
-feel that the software I have developed is functional, robust and maintainable.
-Hopefully after code review it will be accepted as part of Quagga.
+\todo{Mention Requirements or Goals}
+In general the project was a success. Although it was difficult, I managed to
+complete my implementation on schedule. I feel the software I have produced is
+functional, robust and maintainable.  Hopefully after code review it will be
+accepted as part of Quagga.
 
-The program that I have produced meets the goals that I originally set; 
+I enjoyed the opportunity to work in a language and style of programming with
+which I had little experience.  Because of this I have learnt lots about how
+procedural programming differs from an object oriented approach. Over the
+project my C programming ability improved drastically. I am much more confident
+in my understanding of pointers and \texttt{struct}s, and in turn, the low
+level operation computers.  
 
-I like that I got an opportunity to work in a language, and therefore style of
-programming, that I had had little experience using before this project.  I
-feel that because of this I have learnt a lot about how to develop programs in
-a procedural style rather than an object oriented one. My skills in writing C
-code have improved hugely thanks to this project. I am much more confident in
-my understanding of pointers and \texttt{struct}s, and in turn, the low level
-operation of a computer.  
+I am now more confident working on large projects. Before this project, I
+looked at open source code bases and felt intimidated by their size and style.
+I was unsure of where the code for these applications even began executing.
+Having completed this project, I realise that the statements that make up large
+projects, are no different from ones I am familiar with from my own work --
+there is rarely anything that when taken in isolation, I am unable to
+understand.
 
-I also feel much more confident now about working on large projects. Prior to
-this project I had looked at the code bases of open source projects and felt
-intimidated by the size and style of the code base. I remember feeling unsure
-about where the code for these applications even started from. Having completed
-this project, I have come to realise that the individual blocks and statements
-that make up the large projects, are exactly the same as those that I am very
-familiar with in my own work -- there is not often anything that when taken in
-isolation, I am totally unable to understand.
+I learnt a lot about the software projects that exist to support networking.
+Not only did I discover Quagga, but I also learnt about many other projects. I
+used competing routing daemon implementations: Bird and XORP\@. I also read
+about Cisco's proprietary implementations of these protocols. 
 
-The final aspect that I feel went well in this project is that I discovered a
-huge amount of information about the software projects that exist to support
-networking. Not only did I learn about the Quagga project, but I also learnt
-about many other projects. I read about and used the competing routing daemon
-implementations Bird and XORP\@. I read about Cisco's proprietary implementations of
-these protocols too. And I also made use of many other pieces of network
-software: I made heavy use of \texttt{iproute2}, the package that has
-superseded \texttt{ifconfig} as the de facto way to control TCP/IP networking
-in Linux; I also experimented with \texttt{radvd} the Router Advertisement
-Daemon; and also played with WIDE-DHCPv6. 
+I used many other pieces of network software: I made heavy use of
+\texttt{iproute2}, the package that has superseded \texttt{ifconfig} as the de
+facto way to control TCP/IP networking in Linux. I also experimented with
+\texttt{radvd} the Router Advertisement Daemon, and played with WIDE-DHCPv6. 
 
 \section{What Could Have Gone Better?}
-In general the project went well, perfection however is rarely obtainable, and
-there were things that if I was to do this project again, I might have done
-differently. 
+Although the project generally went well, perfection is rarely obtainable, and
+there are things that if I did this project again, I would do differently. 
 
-Firstly, I did not properly dig into the project until later than I would have
-liked.  This was partially due to having a very high workload from my other
-courses at the end of Semester One -- given the chance I would go back in time
-and choose less coursework intensive optional modules. The other factor was a
-lack of confidence about jumping in at the deep end. With the experience of
-working on a project like this I now know that one of the best ways of learning
-how a piece of software works is just to try to add a feature to it.
+Firstly, due a high workload from other modules at the end of Semester One, I
+did not properly dig into the project until later than I would have liked -- in
+hindsight I should have chosen  less coursework intensive optional modules.
+Another factor was my lack of confidence about jumping in at the deep end.
+Working on this project I have learnt that one of the best ways of understanding
+a code base is to try adding a feature to it.
 
 I also feel that I could have become more involved in the discussion about the
 drafts, again I think I was held back by a lack of experience and confidence,
@@ -1345,9 +1347,45 @@ other international standards body before.
 \section{Conclusions}
 \todo{Add the ambiguities I previously came up with}
 In this project I have shown that it is possible to extend Quagga to implement
-zero configuration OSPFv3. Along the way I learned a lot. I also uncovered a
-few areas of the draft that I feel are slightly ambiguous or under
-prescriptive. 
+zero configuration OSPFv3. Along the way I learned a lot. 
+
+\section{Ambiguities in the Drafts}
+There are a few areas of the draft that I feel are slightly ambiguous or under
+prescriptive. In the Autoconfig draft: 
+
+\begin{enumerate}
+	\item In section 5.1 the draft says: 
+		\begin{quote}
+		``An OSPFv3 router implementing this specification should assure that the
+		inadvertent connection of multiple router interfaces to the same physical
+		link in not misconstrued as detection of a different OSPFv3 router with a
+		duplicate Router-ID.'' 
+		\end{quote}
+		I am unsure of how this should be detected. My implementation checks the
+		router's interfaces link local addresses, comparing them to the source
+		address of the packet. I am not sure my method is correct, and feel the
+		draft should be more prescriptive on this issue.
+
+	\item Section 7.\ states:
+		\begin{quote}
+		``It is RECOMMENDED that OSPFv3 routers supporting this specification
+		also allow explicit configuration of OSPFv3 parameters as specified
+		in Appendix C of [OSPFV3].''
+	\end{quote}
+		These parameters include the Router-ID. The draft doesn't seem mention
+		what to do if there is a conflict between an automatically generated RID
+		and a manually configured one: The two routers decide independently whether
+		they need to change. If the auto-configured router had a higher lladr or
+		router-hardware fingerprint, then it would assume the other router would
+		change. It would seem undesirable for a manually configured parameter to
+		change, but if it didn't the conflict would remain.
+
+	\item I don't actually understand why we need to check the neighbour case
+		(5.1) at all. Surely it is covered by the non-neighbour case (5.2). I don't
+		know if drafts are supposed to justify things, but I would find that
+		helpful. 
+\end{enumerate}
+
 
 \section{Continuing the project}
 Now that the project is over, I plan to continue with the work I have been
