@@ -690,8 +690,6 @@ from an Aggregated prefix. Each assignment is made to one interface, and is a
 if they occur. 
 
 \chapter{Implementation}
-\todo{The implementation}
-
 \section{Core Algorithms}
 \todo{This stuff might fit better into the previous section}
 There are several algorithms used in Autoconfig OSPFv3 to ensure that the network
@@ -809,6 +807,46 @@ Once a ULA prefix has been generated it is advertised like any other aggregated
 prefix. If a router with a higher Router ID becomes reachable, or an aggregated
 prefix from another source is received, the prefix is deprecated after 120
 seconds. 
+
+\subsection{Source Based Routing}
+\label{SourceBasedRouting}
+In the future it may become common for households to have multiple broadband
+connections. A cable connection, with an ADSL line for backup could provide
+households with a resilient connection. 
+
+To prevent various attacks\footnote{Denial of Service
+(DoS)\nomenclature{DoS}{Denial of Service} attacks using spoofed source
+addresses are common.}, in accordance with BCP 38\cite{bcp38}, ISPs will not
+forward traffic with a source address outside the prefix allocated to that
+network.  As such, if multiple ISPs are used, network traffic must be routed to
+the correct ISP. Source based routing aims to solve this problem by considering
+source addresses, as well as destinations. 
+
+I implemented a proof of concept based on my autoconfig code. My source based
+routing branch is incompatible with my unaltered autoconfig implementation. My
+code is based loosely on drafts that specify replacement LSAs for the standard
+OSPFv3 LSA types, using Type Length Values (TLVs) similar to those in the
+autoconfig draft. Due to the complexity of these drafts, I decided not to
+conform to them in my proof of concept.
+
+My implementation works by exploiting the Linux Kernel's ability to have
+multiple routing tables. A routing table is created for each source address
+range that will be routed. The system's policy table is then used to select
+which routing table to use based on the source address.  
+
+Quagga's Zebra daemon has the ability to manipulate any routing table. I
+extended the Zebra protocol's message for adding entires to the routing table
+to include the source address, and then chose the routing table based on a hash
+of this address. Unfortunately Quagga does not offer the ability to manipulate
+the policy table. To overcome this I used of \texttt{iproute2}'s \texttt{ip
+-6 rule} command, which I called from a bash shell script, invoked using the
+\texttt{system} function. 
+
+This proof of concept demonstrates that Quagga can be extended to implement
+source based routing. It is not a complete solution -- firstly it is not
+interoperable with other implementations as it does not conform to the draft.
+Secondly using the \texttt{system} system call is not secure, elegant or
+portable. 
 
 \section{Quagga}
 Quagga is written in C89, following the GNU coding
@@ -1406,97 +1444,59 @@ These suggestions are about the prefix assignment draft
 		routing table entries by employing a scheme that facilitates route
 		aggregation. 
 \end{enumerate}
-	
 
 \section{Continuing the project}
-Now that the project is over, I plan to continue with the work I have been
-doing.  My goal is to have the code that I have written merged back into the
-Quagga mainline. Before this can happen, the code will need to go through a
-cleanup stage and a series of code reviews to ensure that it is of sufficient
-quality, and is relevant to fit with the rest of the Quagga project.
+Now the project is over, I plan to continue the work I have been doing.  My
+goal is to have the code that I have written merged back into the Quagga
+mainline. Before this can happen, the code will need to go through a cleanup
+stage and a series of code reviews to ensure that it is of sufficient quality,
+and is a good fit with the Quagga project.
 
-I also hope to be able to attend the 87th IETF meeting that will take place
-during the summer holidays. I have applied for the ECS Student Development
-fund, to help me fund the trip. If I am able to go it will give me the
-opportunity to discuss future work, and participate in interoperability tests.
+I also hope to be able to attend the 87th IETF meeting during the summer
+holidays. I have applied for the ECS Student Development fund, to help me fund
+the trip. If I am able to go it will give me the opportunity to discuss future
+work, and participate in interoperability tests.
 
 \section{Future Work}
-The scope of my project was fairly large. As it is such a current research
-area, and the drafts I have implemented are designed to be very extensible,
-there is a large amount of work that could be based on what I have produced. 
+My project had a large scope, and as it is in a very current research area,
+based on highly extensible drafts, there is a large amount of work that could
+be based on what I have produced. 
+
+This project is a good candidate for extension by a Google Summer of Code
+student, or a future Third Year Project. 
 
 \subsection{DHCPv6-PD}
 Ideally an implementation of OSPFv3 Prefix Assignment should be able to handle
-aggregated prefixes DHCPv6-PD\@. I decided fairly early on in the project that
-this would be beyond the scope of the project. 
+aggregated prefixes delegated by DHCPv6-PD\@. I decided early on in the project
+that this was beyond the scope of the project. 
 
-There are two ways that I would suggest implementing this functionality. The
-first is to make use of an existing DHCPv6 Client such as WIDE-DHCPv6, and find
-a way to hook into the PD message functionality. The other would be to add
-functionality to Quagga itself to handle the DHCPv6-PD messages. 
+There are two ways I would suggest implementing this functionality. The first
+is to make use of an existing DHCPv6 Client such as WIDE-DHCPv6, and hook into
+its PD message functionality. The other would be to add functionality to Quagga
+itself to handle the DHCPv6-PD messages. 
 
-I feel that adding this functionality to Quagga would be the better solution
-since it does not couple Quagga to any other projects. It would however be
-likely to require a lot more work to achieve.
+I feel implementing this as part of Quagga is the better solution as it does
+not couple Quagga to other projects. However, it would be likely to require
+more work to achieve.
 
-\subsection{Source Based Routing}
-\todo{Draw attention to the fact that I have actually done this}
-In the future it may become more common for households to have more than one
-broadband connection. Having a cable connection, with a ADSL line for backup is
-a scenario that may become common in the home of the future. 
-
-The issue with this type of set up is that to prevent various attacks, in
-accordance with BCP 38, ISPs are likely to drop any traffic that has a source
-address that does not fall within the prefix that it allocated to that network.
-As such, if multiple ISPs are used, the network traffic must be routed to the
-correct ISP. 
-
-Source Based routing is a possible solution to this. Source based routing works
-by forwarding traffic based on the source address of the packet, as well as its
-destination address. 
-
-I implemented a basic proof of concept as an extension to my main code. The
-branched version of the code that I produced is not compatible with the vanilla
-autoconfiguration implementation. It is based loosely on drafts by Fred Baker,
-a former IETF chair. These drafts specify a set of replacement LSAs for some of
-the standard OSPFv3 LSA types, these LSAs are based on Type Length Values
-(TLVs) similar to those used in the autoconfiguration draft, rather than the
-more rigid specification of standard OSPFv3. Due to the complexity of these
-drafts, I decided that within the project not to conform strictly to the
-draft.
-
-My implementation worked by exploiting the Linux Kernel's ability to have
-multiple routing tables. A routing table is created for each source address
-range that will be routed. The systems policy table is then used to select
-which routing table to use based on the source address.  
-
-Quagga's Zebra daemon by default ships with the ability to manipulate any
-routing table. I extended the Zebra protocol's message for adding entires to
-the routing table to include the source address, and then chose the routing
-table based on a hash of the source address.  Unfortunately Quagga does not
-currently offer any functionality for manipulating the Policy table. To
-overcome this I made use of \texttt{iproute2}'s \texttt{ip -6 rule} command,
-which I called from a bash shell script, invoked using the \texttt{system}
-function. 
-
-This proof of concept shows that Quagga can be extended to implement source
-based routing. It is however nowhere nearly a complete solution -- firstly it
-will not be interoperable with any other implementations as it does not conform
-to the draft, and secondly the use of the \texttt{system} system call is
-neither secure, elegant nor portable. 
+\subsection{Source Based Routing} 
+My proof of concept code (See Section \ref{SourceBasedRouting}) shows that it
+is possible to do source based routing by extending Quagga. A more formal
+implementation of source based routing would be beneficial to the community.
+Ideally it would conform to the drafts, and be consistent with Quagga's
+existing coding style. 
 
 \subsection{Multi-hop Service discovery}
-Service discovery has become very popular in modern networks. Its major use
-cases include finding media streaming severs and printers on a home network. At
-present, a device must be connected to the same subnet as a service for it to
-be able to discover it as the service discovery messages are not forwarded by
-the router. 
+Service discovery is very popular in modern networks. Major use cases include
+finding media streaming severs and printers on a home network. At present, a
+device must reside on the same subnet as a service to be able to discover it as
+the service discovery messages are not forwarded by the router. 
 
 It would be possible for Quagga to be extended to flood these service discovery
 messages across the whole network, allowing services on one subnet, to be
-accessible from another. Major use cases for this include: monitoring home
-appliances from within the home workstation network, and displaying images on a
-screen from a guest network.
+accessible from another. Uses for this include: monitoring home appliances from
+within the home workstation network, and displaying images on a public screen
+from a guest network.
 
 There are currently no drafts suggesting how this would be done, ideally Apple
 Inc.\@ would eventually extend their service discovery platform, Bonjour, to
