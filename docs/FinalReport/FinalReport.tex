@@ -77,7 +77,7 @@ IETF\@\nomenclature{IETF}{Internet Engineering Task Force}.
 \clearpage
 
 \chapter*{Acknowledgements}
-\todo{Write as prose}
+\todo{Write as prose?}
 I would like to thank the following people for all their help, support and
 influence during this project:
 \begin{itemize}
@@ -90,7 +90,6 @@ influence during this project:
 \end{itemize}
 
 \chapter{Introduction}
-\todo{A clear statement of the problem and goals of the project.}
 The title of my project is ``Implementing Zero Configuration OSPFv3''. During
 the project, I have modified an open source implementation of the OSPFv3
 routing protocol to comply with two recently published, and very topical,
@@ -149,7 +148,6 @@ the project:
 \end{itemize}
 
 \chapter{Background}
-\todo{Is this section a big waffle?}
 To enable me to explain my project in detail, I first need to explain the
 concepts that it is based on.
 
@@ -435,7 +433,6 @@ relatively recent development. There was no mention at all of more recent
 drafts since they are very much on the cutting edge.
 
 \chapter{Analysis}
-\todo{An analysis and specification of the solution to the problem}
 
 \section{Alternatives}
 There are also other approaches that can be used to solved the problems
@@ -582,7 +579,7 @@ Finally Quagga is a good choice as there were no existing implementations, so
 my contributions would be more useful to the community.
 
 \chapter{Specification}
-\todo{I am finding it difficult to know what to put in this section.}
+\todo{This section is up for eviction}
 To help direct my projects implementation and allow a thorough evaluation, I
 came up with the following specification based on the drafts I am implementing.
 
@@ -609,7 +606,6 @@ came up with the following specification based on the drafts I am implementing.
 \end{itemize}
 
 \chapter{Design}
-\todo{A detailed design}
 
 \section{Simplifications}
 To allow OSPFv3 to function without configuration, a number of simplifications
@@ -691,7 +687,6 @@ if they occur.
 
 \chapter{Implementation}
 \section{Core Algorithms}
-\todo{This stuff might fit better into the previous section}
 There are several algorithms used in Autoconfig OSPFv3 to ensure that the network
 is configured correctly.
 
@@ -896,7 +891,6 @@ library provides commonly used data structures and algorithms to the protocol
 implementations. 
 
 \subsubsection{Thread}
-\todo{Do all these names need quoting\dots Really?}
 I made heavy use of the Thread library item. Threads are a similar to
 operating system threads. They consist of pointers to functions that will be
 called upon some event, or after a set time. These threads are an application
@@ -1005,7 +999,6 @@ endians altogether. It would then cause serious problems when the software is
 ported to a platform that uses different endians to the network.
     
 \chapter{Testing}
-\todo{Testing strategy and results}
 To ensure that my code worked as I intended it to, it needed to be
 tested. 
 
@@ -1207,8 +1200,6 @@ Beta testing, where it is released to the public, but without guarantees of
 correct functionality.
 
 \chapter{Project Management}
-\todo{If I have too many words, This can be pulled into appendix?}
-
 \section{Tools}
 A personal goal for my project was to use of lots of new tools. During the
 project, I ended up using a wide variety of tools. Some of the tools I had used
@@ -1252,7 +1243,7 @@ documents than WYSIWYG editors such as Microsoft Word. Additionally I made use
 of tools and packages to help me produce the report. (e.g. TexCount and BibTeX)
 
 \section{Risk Assessment}
-\todo{Tablate?}
+\todo{Tabulate?}
 Throughout my project there were many risks, I ensured I took necessary
 precautions to limit the damage caused by these risks.
 
@@ -1306,7 +1297,6 @@ running in their homes, so do not need to evaluate it.
 \pagebreak
 \begin{landscape} 
 \subsection{Interim Gantt Chart}
-\todo{More squished up diagrams would be easier to compare}
 This Gantt chart shows how I had spent my time, and estimated that I would
 spend the remainder of my time when I submitted my Progress Report in December. 
 
@@ -1330,7 +1320,6 @@ This Gantt chart shows how my project actually progressed.
 \pagebreak
 
 \chapter{Evaluation}
-\todo{A critical evaluation}
 
 \section{What Went Well?}
 \todo{Mention Requirements or Goals}
@@ -1488,52 +1477,68 @@ existing coding style.
 
 \subsection{Multi-hop Service discovery}
 Service discovery is very popular in modern networks. Major use cases include
-finding media streaming severs and printers on a home network. At present, a
-device must reside on the same subnet as a service to be able to discover it as
-the service discovery messages are not forwarded by the router. 
+finding media streamers and printers on a home network. At present, since the
+service discovery messages are not forwarded by the router, to discover a
+service, a host must be on the same subnet.
 
-It would be possible for Quagga to be extended to flood these service discovery
-messages across the whole network, allowing services on one subnet, to be
-accessible from another. Uses for this include: monitoring home appliances from
+It would be possible to extend Quagga to flood service discovery
+messages across the whole network, enabling services on one subnet, to be
+discoverable from another. Uses for this include: monitoring home appliances from
 within the home workstation network, and displaying images on a public screen
 from a guest network.
 
-There are currently no drafts suggesting how this would be done, ideally Apple
-Inc.\@ would eventually extend their service discovery platform, Bonjour, to
-use this kind of technology.
+There are currently no drafts indicating how to do this. Ideally Apple Inc.\@
+would extend their service discovery platform, Bonjour, to use this kind of
+technology.
 
 \subsection{Domain Name Services}
-\todo{Expand}
-Draft mentions DNS by both stateless DHCP and through RAs. The draft recomends
-that each router is set up as a DHCP relay.
+In a typical single subnet IPv4 home network, DNS servers  are learned through
+DHCP from an ISP, or manually configured. In a multi-subnet home network,
+mechanisms are needed for propagating the DNS severs available to the network.
+The prefix assignment draft recommends supporting stateless DHCPv6 and Router
+Advertisement otions.
 
-\subsection{Security Considerations}
-Currently the only security that exists in the implementation is IPSec (IP
-level security). It might be beneficial to add an extra layer of security to future 
-releases.
+Stateless DHCPv6 works by running a DHCPv6 server that maintains no state about
+its clients. It simply serves configuration details such as the DNS server
+addresses. The draft recommends that each router acts as a DHCPv6 relay so
+hosts deep within the network can obtain DNS information.  Enabling DHCPv6
+should be simple as packages (Such as WIDE-DHCPv6, Dibbler) already exist. 
 
-Built in security was a feature of OSPFv2 but it was removed in OSPFv3 in favour of 
-using IPSec. In some circumstances, IPSec is considered difficult to employ. 
-RFC6506 reintroduces OSPF level security through the use of an Authentication 
-Trailer. 
+Router advertisements contain two types of listing for discovering DNS servers.
+First, listings for Recursive DNS Servers (RDNSS)
+\nomenclature{RNDSS}{Recursive DNS Server}: Servers that will recursively
+resolve Domain Names. Secondly, DNS Search Lists (DNSSL)
+\nomenclature{DNSSL}{DNS Search List}, a list of servers that can be used to
+resolve local names. Adding this functionality to my implementation would be
+more difficult that adding stateless DHCPv6 as Quaggas Router advertisement
+code would need to be modified to deal with these options.
 
-This RFC could be implemented to add Security to Autoconfigured networks. It would 
-be possible to provide CPE that comes with a randomly generated key similar to the 
-randomly generated Wireless PSKs that currently come with wireless access points.
+The draft does not mention whether configuration learned through either method
+should be consolidated, and advertised through both. If this is required,
+complexity would increase.
+
+\subsection{Security Considerations} 
+Built in security was a feature of OSPFv2 but was removed in OSPFv3 in favour
+IPSec (IP Security). IPSec is difficult to deploy so is not suitable for home
+users. RFC6506 reintroduces OSPF security through the use of an Authentication
+Trailer\cite{rfc6506}. Implementing this RFC would add Security to
+Autoconfigured networks. Users would need to choose a secret key and enable
+authentication trailers to prevent unauthorised routers joining their home
+network.  
 
 \section{Deployment in the Home}
 As IPv6 becomes more common place, and IPv4 is slowly phased out, this project can 
-actually be used in the home. For home users to actively switch to IPv6 there needs 
-to be some features that they cannot get from IPv4 -- I think that this project 
+actually be used in the home. For home users to want to switch to IPv6 there must 
+be features they cannot get from IPv4 -- I feel that this project 
 implements one of those features.
 
-Unfortunately though it does not stop at home users, ISPs also need to be on
-board.  Currently in the UK there is only a very small number of ISPs who
-provide IPv6 addresses to their customers. SixXS list just 7 UK ISPs, the only
-one on the list I have heard is Andrews \& Arnold.
+It does not however stop at home users, ISPs also need to be on board.
+Currently in the UK there is only a handful of ISPs providing IPv6 addresses to
+their customers. SixXS list just 7 UK ISPs, the most popular of these being
+Andrews \& Arnold.
 
-Of course these problems are outside of my control, hopefully with time, the
-large ISPs will be able to overcome the inertia of switching to IPv6.
+These problems are outside of my control, hopefully with time, the
+large ISPs will overcome the inertia of switching to IPv6.
  
 \pagebreak
 
