@@ -1,5 +1,46 @@
 \appendix 
 %\appendixpage
+\chapter{OSI Model}
+\label{osi}
+  \begin{center}
+  \begin{tabular}{|lc|}
+  \hline
+  7: &
+  Application Layer \\
+  & (e.g. DNS, DHCP) \\
+  \hline
+  6: &
+  Presentation Layer \\
+  & (e.g. telnet) \\ 
+  \hline
+  5: &
+  Session Layer \\
+  & (e.g. RPC) \\
+  \hline
+  4: &
+  Transport Layer \\
+  & (e.g. TCP, UDP) \\
+  \hline
+  3: &
+  Network Layer \\
+  & (e.g. IPv4, IPv6) \\
+  \hline  
+  2: &
+  Data Link Layer \\
+  & (e.g. MAC) \\ 
+  \hline  
+  1: &
+  Physical Layer \\
+  & (e.g. Ethernet, Wi-Fi) \\
+  \hline
+\end{tabular}
+\end{center}
+
+The seven layer OSI model is a logical grouping of the types of protocols found
+in computer networks. Each layer is dependent only on the layer directly below
+it. 
+
+The TCP/IP model is a similar, but simpler model of networking.
 
 \begin{landscape}
 \chapter{Typical Home Networks}
@@ -38,6 +79,9 @@ This diagram shows the typical topology of a corporate network. For the sake of 
 
 \chapter{Packets}
 Images created with http://interactive.blockdiag.com/packetdiag/
+
+\section{LSA Header}
+\label{LSA-HEADER}
 
 \section{Auto Configuration LSA}
 \label{AC-LSA}

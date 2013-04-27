@@ -1,4 +1,4 @@
-\documentclass[12pt]{report}
+\documentclass[12pt,a4paper,twoside]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -26,7 +26,7 @@
 \titlespacing*{\paragraph}{0pt}{0pt}{5pt}
 
 % Set margins to required
-\usepackage[top=2.4cm, bottom=2.4cm, left=3.5cm, right=2.4cm]{geometry} 
+\usepackage[top=2.4cm, bottom=2.4cm, left=2.95cm, right=2.95cm]{geometry} 
 
 % Sort out margins for todonotes
 \setlength{\marginparwidth}{3cm}
@@ -42,6 +42,7 @@
 \usepackage{appendix}
 \usepackage{pdflscape}
 \usepackage{cite}
+\usepackage{wrapfig}
 
 \hypersetup{colorlinks=false, pdfborder={0 0 0}, }
 
@@ -152,12 +153,22 @@ To enable me to explain my project in detail, I first need to explain the
 concepts that it is based on.
 
 \section{Home Networks}
-\todo{Bring forward the part about CIDR}
+
+\begin{figure}
+\label{typical_homenet}
+\begin{center}
+  \includegraphics[width=\linewidth]{../Diagrams/Network/TypicalHomenet.png}
+	\caption{The topology of a typical present day homenet.}
+\end{center}
+\end{figure}
+
 Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office Home
 Office} networks tend to follow the same pattern. A single ISP provides a
 connection to the internet using the phone line or television cable.  The ISP
-will typically provide a single IPv4 address (/32). Usually this is an unstable
-(dynamic) allocation -- a static IP is usually only offered as a premium service. 
+will typically provide a single IPv4 address (/32)\footnote{This is CIDR
+notation, it represents the number of bits used to identify the network the
+host.}. Usually this is an unstable (dynamic) allocation -- a static IP is
+usually only offered as a premium service. 
 
 To allow multiple hosts on the network, Network Address Translation (NAT)
 \nomenclature{NAT}{Network Address Translation} is usually employed. With NAT,
@@ -178,14 +189,21 @@ WirelessBox}, commonly as a ``Router''.  This device provides the modem for
 connecting to the internet, an Ethernet switch with around four ports, and a
 wireless access point (802.11) that tends to be bridged to the wired network to
 provide just one subnet. A diagram of a typical home network can be seen in
-Appendix~\ref{typical_homenet_present}.
+Figure~\ref{typical_homenet}.
 
 \section{Campus and Enterprise Networks}
+\begin{figure}
+\label{corporate_net}
+\begin{center}
+	\includegraphics[width=\linewidth]{../Diagrams/Network/CorporateNetwork.png}
+	\caption{The topology of a typical corporate network.}
+\end{center}
+\end{figure}
 Larger networks like the ones found on University campuses and larger
 businesses tend to employ many of the more advanced features of networking.
 They are often split into multiple subnets separating the physical locations,
 work groups and expected use of the hosts. One potential corporate network
-topology can be seen in Appendix~\ref{typical_corporate_net}.
+topology can be seen in Figure~\ref{corporate_net}.
 
 \todo{Is there any evidence to support this?}
 In the early days of the internet, many organisations were able to obtain large
@@ -210,11 +228,18 @@ network and ensure its day-to-day operation. This is something that the vast
 majority of households are not able to obtain.
 
 \section{Future Networks}
+\begin{figure}
+\label{future_net}
+\begin{center}
+	\includegraphics[width=\linewidth]{../Diagrams/Network/FutureHomenet.png}
+	\caption{The topology of a hypothetical home network.}
+\end{center}
+\end{figure}
 In the future users will expect more from their home networks. We are likely to
 see a dramatic increase in the number of devices in the average home, ranging
 from more laptops, smart phones and tablets, to more sensors (e.g.\@
 temperature/humidity)  and home automation devices. A hypothetical home network
-of the future is depicted in Appendix~\ref{typical_homenet_future}.
+of the future is depicted in Figure~\ref{future_net}.
 
 A home network with this quantity and heterogeneity of traffic is likely to
 experience slow downs and other issues. These problems arise for two reasons:
@@ -238,13 +263,12 @@ future. Their work mainly focuses on addressing, routing, topology and security
 in home networks. 
 
 \section{IPv6}
-To communicate with a computer, we need a way of uniquely identifying it. At
-present, IPv4 is the dominant technology for addressing computers on the
-internet. Unfortunately when IPv4 was designed, it was not foreseeable that we
-would need more than 4 billion addresses, so a neat 32 bit identifier was used.
-In 2011 however, The Internet Assigned Numbers Authority (IANA)
-\nomenclature{IANA}{Internet Assigned Numbers Authority} ran out of IPv4
-addresses. 
+To communicate with a computer, a way of uniquely identifying it is required.
+Currently, IPv4 is the dominant technology for addressing computers on the
+internet. When IPv4 was designed, it was not foreseeable that we 4 billion
+addresses would be needed, so a neat 32 bit identifier was used.  In 2011 the
+Internet Assigned Numbers Authority (IANA) \nomenclature{IANA}{Internet
+Assigned Numbers Authority} ran out of IPv4 addresses \cite{potaroo}. 
 
 One solution to the IPv4 address space exhaustion problem is migration to
 IPv6; a protocol that is fundamentally similar to IPV4, but instead uses 128
@@ -255,11 +279,12 @@ of stars visible from Earth falling at about $7.0\times10^{22}$, and the
 estimated human population of Earth being a mere $7.0\times10^{9}$,
 this address space should be sufficient for at least the foreseeable future. 
 
-IPv6 address ranges are often given in Classless Inter-Domain Routing (CIDR)
+IPv6 address ranges are given in Classless Inter-Domain Routing (CIDR)
 \nomenclature{CIDR}{Classless Inter-Domain Routing} notation. In this notation
-an IPv6 address is written, followed by a slash and then and number between 0
-and 128. This number represents the number of bits in the IPv6 address that
-identify the network, and the rest of the bits identify the host.
+an IPv6 address is followed by a slash and a number between 0 and 128 that
+represents the number of bits in the IPv6 address that identify the network --
+the remaining bits identify the host. CIDR notation replaces subnet masks used
+in IPv4.
 
 IPv6 prefixes tend to be /64, as this is required by Stateless Address
 Autoconfiguration (SLAAC)\nomenclature{SLAAC}{Stateless Address
@@ -267,13 +292,13 @@ Autoconfiguration}. A /48 prefix may be allocated by an ISP to allow the user
 to assign multiple subnets on their network.
 
 \section{Routing}
-\todo{Appendix might like a layer diagram}
 For packets of data to find their way between subnets, they require routing.
-The routing we are concerned with is Layer 3 (Network/IP Layer) routing. When
-an IP packet is sent, its address is compared with those stored in the kernel's
-routing table, and then transmitted using the appropriate interface. Networks
-contain many computers, known as routers, whose sole purpose is to forward
-network traffic.
+The routing we are concerned with is Layer 3 (Network/IP Layer)
+routing\footnote{For a brief explaination of OSI layers see
+Appendix~\ref{osi}}. When an IP packet is sent, its address is compared with
+those stored in the kernel's routing table, and then transmitted using the
+appropriate interface. Networks contain many computers, known as routers, whose
+sole purpose is to forward network traffic.
 
 A number of different protocols exist to build up these routing tables:
 
@@ -368,7 +393,7 @@ home networking. An architecture for future home networks is proposed, along
 with a discussion of emerging technologies. 
 
 \subsection{OSPF Version 2}
-I studied RFC2328\cite{RFC2328} in depth to understand the OSPF Protocol. The
+I studied RFC2328\cite{rfc2328} in depth to understand the OSPF Protocol. The
 memo is surprisingly easy to read, and offers a complete discussion of the data
 structures and algorithms the OSPF protocol employs to build routing tables for
 IPv4. 
@@ -378,7 +403,7 @@ including a long discussion on areas, and details of the SPF algorithms, I found
 the understanding I gained through studying it invaluable to my project.
 
 \subsection{OSPF for IPv6}
-RFC5340 defines OSPFv3\cite{RFC5340}; it builds on RFC2328, to give the
+RFC5340 defines OSPFv3\cite{rfc5340}; it builds on RFC2328, to give the
 reader a clear understanding of OSPFv3 by explaining the differences between
 from OSPFv2. 
 
@@ -389,7 +414,7 @@ autoconfiguration for both IPv4 and IPv6, this made it a more complex and
 restrictive solution. 
 
 \subsection{The OSPF Opaque LSA Option}
-RFC5250\cite{RFC5250} introduces the opaque LSA\@. An opaque LSA is a generic
+RFC5250\cite{rfc5250} introduces the opaque LSA\@. An opaque LSA is a generic
 LSA type that can be used to transmit application specific data. The concept is
 similar to that used in the autoconfiguration draft, but it does not make use
 of Type-Length-Values (TLVs)\nomenclature{TLV}{Type-Length-Value}. I found the
@@ -402,16 +427,17 @@ that were either referenced from the more relevant drafts or defined a concept
 that had been mentioned. This list includes:
 
 \begin{itemize} 
-  \item {\bf RFC 5838} Support of Address Families in OSPFv3 
+  \item {\bf RFC 5838} Support of Address Families in OSPFv3 \cite{rfc5838}
 	\\ Extensions to allow different kinds of address to be used with OSPFv3.
   
-	\item {\bf RFC 6506} Supporting Authentication Trailer for OSPFv3 
+\item {\bf RFC 6506} Supporting Authentication Trailer for OSPFv3  \cite{rfc6506}
 	\\ Adds a level of security back into OSPFv3.
 
-	\item {\bf RFC 3630} (Updated by 4230 \& 5786) Traffic Engineering Extensions for OSPF
+	\item {\bf RFC 3630} (Updated by 4230 \& 5786) Traffic Engineering Extensions
+	for OSPF \cite{rfc3630} \cite{rfc4230} \cite{rfc5786} 
 	\\ Extra set of LSAs to pass information useful for traffic shaping etc.\@
   
-\item {\bf RFC 4862} IPv6 Stateless Address Autoconfiguration (SLAAC)
+\item {\bf RFC 4862} IPv6 Stateless Address Autoconfiguration (SLAAC) \cite{rfc4862}
 	\\ Explains how an IPv6 networks can be established using NDP.\@
 
 \end{itemize}
@@ -1257,11 +1283,11 @@ failure. I was unable to do other coursework because I needed to use the
 software within ECS\@. Although I was fortunate enough to avoid any network
 outages, my use of DVCS meant that it would not have been an issue.
 
-Fire or other unforeseeable disaster could have damaged to my data, in 2005 the old
-Mountbatten building burned to the ground. To ensure that, if something like
-this happens, I would not have been affected, I shall made frequent backups of
-my work, and stored it within Github which is hosted on remote servers.
-Although this risk had a very low likelihood, its severity was high.
+Fire or other unforeseeable disaster could have damaged to my data, in 2005 the
+old Mountbatten building burned to the ground. Although this risk had a very
+low likelihood, its severity was high.  To ensure that, if something like this
+happened, I would not have been affected, I made frequent backups of my
+work, and stored it within Github which is hosted on remote servers.
 
 As my project involves using specialist hardware, there was a possibility that
 the hardware could break. Fortunately the Alix2d3s did not cease to function
@@ -1543,6 +1569,8 @@ large ISPs will overcome the inertia of switching to IPv6.
 \pagebreak
 
 \printnomenclature
+\raggedbottom
+
 
 \addcontentsline{toc}{chapter}{Nomenclature}
 \pagebreak
@@ -1551,7 +1579,7 @@ large ISPs will overcome the inertia of switching to IPv6.
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{FinalReport}{}
-\bibliographystyle{unsrt}
+\bibliographystyle{ieeetr}
 
 \input{./Appendix.tex}
 
