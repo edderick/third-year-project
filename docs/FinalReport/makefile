@@ -14,6 +14,10 @@ quick:
 	pdflatex $(TEXFILE)
 	chmod a+r $(FILE).pdf
 
+deploy:
+	cp $(FILE).pdf ~/public_html/$(FILE).pdf
+	chmod a+r ~/public_html/$(FILE).pdf
+
 pdf:	all
 	
 
