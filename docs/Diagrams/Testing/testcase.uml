@@ -1,0 +1,53 @@
+@startuml
+
+class testcase {
+
+	+number
+	+num_of_lsas
+	+num_of_interfaces
+
+	+lsa[LIMIT]
+
+}
+
+class lsa {
+
+	+id
+	
+	+if_index
+
+	+num_of_aggregated_prefixes
+  +aggregated_prefixes[LIMIT]
+	
+	+num_of_assigned_prefixes 
+	+assigned_prefixes[LIMIT]
+	+assigned_prefix_ifindex[LIMIT]
+
+}
+
+class expected_value {
+
+ 	+num_of_interfaces
+  +num_of_interfaces;
+  +num_of_aggregated_prefixes;
+	+num_of_assigned_prefixes;
+	+num_of_assigned_prefixes_on_interface[10];
+
+	+num_of_conditions
+	+conditions[LIMIT]
+
+}
+
+class condition {
+	+type
+	+prefix
+	+if_index
+}
+
+testcase "1" --o "*" lsa
+testcase "1" -* "1" expected_value
+expected_value "1" --o "*" condition
+
+hide circle
+hide methods
+@enduml
