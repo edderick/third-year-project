@@ -42,27 +42,73 @@ it.
 
 The TCP/IP model is a similar, but simpler model of networking.
 
-\chapter{Packets}
-Images created with http://interactive.blockdiag.com/packetdiag/
+\chapter{Additional zClient-zServ Messages}
+I extended the zClient-zServ protocol to expose some of the features,
+previously only available through the vtysh, to the routing protocol
+implementations. 
+
+\begin{center}
+	\includegraphics[width=0.9\linewidth]{../Diagrams/Packets/nd_no_suppress.png}
+\end{center}
+
+The first of these messages is one to enable sending Router Advertisements. It
+works by stopping NDP messages from being suppressed. There is also a
+corresponding message to turn these RAs off again. 
+
+\begin{center}
+	\includegraphics[width=0.9\linewidth]{../Diagrams/Packets/ipv6_nd_prefix.png}
+\end{center}
+
+The next message adds a prefix prefix to the RAs. This is used to advertise a
+new assigned prefix. There is also a similar messages to remove the prefix.
+
+
+\begin{center}
+	\includegraphics[width=0.9\linewidth]{../Diagrams/Packets/addr_add.png}
+\end{center}
+
+The final message adds an IPv6 Address to a specified interface. In my
+implementation this was used to associate a prefix an interface for the routing
+table calculations. Again, there is also a message to remove the address.
 
 \chapter{Netkit}
-\section{Screenshot of Netkit running}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Netkit/NetkitScreenshot.png}
 \end{center}
 
+Above is a screen shot of a typical Netkit session.  
+
+Netkit instances are started with \texttt{vstart \$NAME}.
+
+A lab is a collection of VMs and collision domains, described in a
+configuration file. Labs are started with \texttt{lstart}. It is often useful
+to allocate the VMs in the lab more memory using the flag \texttt{-o-M}n, where
+n is the size of the memory to allocate in megabytes.
+
 \chapter{Github Stats}
 \label{GithubStats}
+GitHub offers various graphics that can be used to visualise the progress and
+patterned in the project. 
 
 \section{Github Commit Graph}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubCommitGraph.png}
 \end{center}
 
+This commit graph shows all of the commits that I made to my fork of Quagga.
+The graph shows that I began working on my implementation in early February and
+worked steadily, peaking at the beginning of the Easter vacation. The second
+peak is when I began working on testing.
+
+
 \section{Github Punchcard}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubPunchCard.png}
 \end{center}
+
+This punch card shows the time of day, and day of the week that I made 
+my contributions. The graph is for my documentation repository as the code
+repository contained many commits by other authors.
 
 \chapter{Alix2d3}
 As the project progressed it became clear that they Alix2d3s were not as useful
@@ -70,7 +116,7 @@ as was originaly believed, thanks to discovery of the briliant software package
 Netkit. I did however undertake testing on the Alix2d3s. If someone wished to
 repeat my experimentation, the following guides would be helpful. 
 
-\section{Installation Guide}
+\section{Ubuntu Installation Guide}
 
  This guide\cite{germanGuide} offered a comprehensive list of steps that need to
  be taken to install Ubuntu Linux on a PC Engines alix2d3\cite{alix2d3}.  The article is
@@ -103,84 +149,87 @@ repeat my experimentation, the following guides would be helpful.
  \section{Quagga Installation Guide}
 
  \subsection{Normal Installation}
-This is a procedure that has  turned out to be far more difficult that anticipated.
+This procedure turned out to be far more difficult that anticipated.
 
-First of all, need to ensure that all the dependencies are present. The easiest
+First, ensure all the dependencies are present. The easiest
 way I have found to do this is to use:
 
-sudo apt-get build-dep quagga
+\texttt{sudo apt-get build-dep quagga}
 
-This should fetch all the packages that quagga depends on. I see no reason to
-build these from source, since I shall not be modifying them.
+This should fetch all the packages that Quagga depends on. These do not need to
+be built from source, since I do not modify them. libtool and libreadline need
+to be installed separately. 
 
-It seems that a package called libtool is also needed to ensure installation works.
-Not certain this is needed.
 
-\ libreadline also seems to be an issue (mainly with vtysh):
+Next it should be possible to run \texttt{\@./bootstrap}, this creates the
+configure script; run it:
 
-\texttt{sudo apt-get install lib32readline6}
-
-Next it should be possible to run \texttt{\@./bootstrap}. As far as I know this
-produces (among other things) the configure script.
-
-Next run the configure script. This [wiki][wiki] suggests that it is best to
-move the folders using:
-
-\texttt{sudo \@./configure --sysconfdir=/usr/local/quagga --localstatedir=/usr/local/quagga}
+\begin{quote}
+\texttt{sudo \@./configure \\ --sysconfdir=/usr/local/quagga \\ --localstatedir=/usr/local/quagga}
+\end{quote}
 
 The configure script will prompt you to create a user called quagga. Do this by:
 
-sudo adduser quagga
-sudo mkdir /usr/local/quagga
-sudo chown quagga:quagga /usr/local/quagga
+\begin{quote}
+\texttt{sudo adduser quagga}
 
-It is now time to run make. See the crosscompiling document for more
-information about this. Previously I had issues with zebra making, to fix this
-manually editing the Makefile in \@./zebra by adding -lcap to LIBS\@. This doesn't
-seem to be a problem with the latest source.
+\texttt{sudo mkdir /usr/local/quagga}
 
-Run sudo make install. This should install everything, and the daemons
-should have installed themselves to /usr/local/sbin.
+\texttt{sudo chown quagga:quagga /usr/local/quagga}
+\end{quote}
 
-Now a little bit of configuration is required. \texttt{cd /usr/local/quagga}.
-Either make a real config file for the daemon, or just create a file containing ``password test''.
+It is now time to run \texttt{make}. See Appendix~\ref{cross_compile} for more
+information about this. I had issues with making zebra, I fixed them by
+manually editing the Makefile in \texttt{\@./zebra}, adding \texttt{-lcap} to
+\texttt{LIBS}\@. This issue no longer occurs with the latest release of quagga.
 
+Next run \texttt{sudo make install}. This should install everything -- the daemons
+should have installed themselves to \texttt{/usr/local/sbin}.
 
-You should now be able to run sudo ospf6d. If you can't, try ldconfig.
+Finally a little bit of configuration is required. \texttt{cd
+/usr/local/quagga} Either make a real config file for the daemons (zebra and
+ospf6d), or just create file containing ``password test''.
 
-
-[wiki]: http://wiki.nil.com/Installing\_and\_running\_Quagga
+You should now be able to run ospf6d. If you can't, try \texttt{ldconfig}.
 
 \subsection{Cross Compilation}
+\label{cross_compile}
+Since Alix2d3s are very slow, building Quagga can be incredibly slow. The make
+parts alone can take around 15 minutes. (XORP had an even slower compile time,
+in the order of hours) 
 
-Since Alix2d3s are very slow, a build of Quagga can be incredibly slow. The make parts
-alone can take around 15 minutes. (I actually found that XORP had an even slower
-compile time, in the order of hours) 
-
-To over come this issue it is possible to compile the source code on a much
+To overcome this issue it is possible to compile the source code on a much
 faster machine (e.g.\@ desktop pc) and copy it across. 
 
 Since modern machines use a 64bit architecture rather than 32bit like the
-Alix2d3s, the compiler must be set up correctly. Adding the cflag ``-m32'' should
-suffice, however to be on the safe side, ``-m32 -march=i386'' can be used. 
-
-This should be done by appending '--with-clfags=``-m32 -march=i386i''' to \@./configure.
+Alix2d3s, the compiler must be set up correctly. The cflag \texttt{-m32
+-march=i386} can be used. This can be done by appending
+\texttt{--with-clfags=`-m32 -march=i386i'} to \texttt{\@./configure}.
 
 I initially had problems with this compilation. I resolved the issues by going
 back to basics and trying to compile a simple helloworld program for the Alix.
-Turns out I was missing ``gcc-multilib''. This can be installed with apt.
+Turns out I was missing \texttt{gcc-multilib}. This can be installed with \texttt{apt}.
 
 \chapter{vtysh}
 \label{vtysh}
-
-Commands are added using DEFUN and install.
+Commands are added using the macro DEFUN and the function install.
 
 I added the commands:
 \begin{itemize}
-  \item show ipv6 ospf6 prefix aggregated
-  \item show ipv6 ospf6 prefix allocated 
-  \item show ipv6 ospf6 prefix assigned X
+	\item \texttt{show ipv6 ospf6 prefix aggregated} \\
+		Used to display all aggregated prefixes in the system.
+	\item \texttt{show ipv6 ospf6 prefix allocated} \\ 
+		Used to display the only aggregated prefixes that were allocated to this
+		router only.
+	\item \texttt{show ipv6 ospf6 prefix assigned X} \\
+		Used to display the prefixes that have been assigned to a given interface
+		by the prefix assignment algorithm. 
 
-  \item enable $>$ configure terminal $>$ ipv6 allocate-prefix X:X::X:X/M
-  \item enable $>$ configure terminal $>$ no ipv6 allocate-prefix X:X::X:X/M
+
+	\item \texttt{enable $\rightarrow$ configure terminal 
+		$\rightarrow$ ipv6 allocate-prefix X:X::X:X/M} \\
+		Used to manually allocate a new aggregated prefix to the routers.
+	\item \texttt{enable $\rightarrow$ configure terminal
+		$\rightarrow$ no ipv6 allocate-prefix X:X::X:X/M} \\
+		Used to remove a previously allocated aggregated prefix.
 \end{itemize}
