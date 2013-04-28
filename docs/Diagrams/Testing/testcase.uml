@@ -1,5 +1,7 @@
 @startuml
 
+scale 450 width
+
 class testcase {
 
 	+number
