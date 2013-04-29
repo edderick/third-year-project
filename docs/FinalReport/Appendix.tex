@@ -85,6 +85,13 @@ configuration file. Labs are started with \texttt{lstart}. It is often useful
 to allocate the VMs in the lab more memory using the flag \texttt{-o-M}n, where
 n is the size of the memory to allocate in megabytes.
 
+\chapter{radvdump}
+This \texttt{radvdump} output shows the contents of the router advertisements
+made by one of my quagga instances. The prefix fc35:6225:4b8:6::/64 is a ULA
+that was generated automatically.
+
+\lstinputlisting{../Issues/radvdump.md}
+
 \chapter{Github Stats}
 \label{GithubStats}
 GitHub offers various graphics that can be used to visualise the progress and
@@ -99,7 +106,6 @@ This commit graph shows all of the commits that I made to my fork of Quagga.
 The graph shows that I began working on my implementation in early February and
 worked steadily, peaking at the beginning of the Easter vacation. The second
 peak is when I began working on testing.
-
 
 \section{Github Punchcard}
 \begin{center}
