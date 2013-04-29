@@ -43,6 +43,7 @@ it.
 The TCP/IP model is a similar, but simpler model of networking.
 
 \chapter{Additional zClient-zServ Messages}
+\label{zClient}
 I extended the zClient-zServ protocol to expose some of the features,
 previously only available through the vtysh, to the routing protocol
 implementations. 
@@ -86,6 +87,7 @@ to allocate the VMs in the lab more memory using the flag \texttt{-o-M}n, where
 n is the size of the memory to allocate in megabytes.
 
 \chapter{radvdump}
+\label{radvdump}
 This \texttt{radvdump} output shows the contents of the router advertisements
 made by one of my quagga instances. The prefix fc35:6225:4b8:6::/64 is a ULA
 that was generated automatically.
@@ -239,3 +241,26 @@ I added the commands:
 		$\rightarrow$ no ipv6 allocate-prefix X:X::X:X/M} \\
 		Used to remove a previously allocated aggregated prefix.
 \end{itemize}
+
+\chapter{Test Results}
+\label{testResults}
+Of the X testcases that I produced, all of them now pass. The following is an
+example of the output of my unit testing code: 
+
+\begin{lstlisting}
+Testcase 5  %{\color{green} OK}%
+Toal interface count: 2 
+ Aggregated Prefix: fc00::/48
+ Aggregated Prefix: fc00:1::/48
+Total Aggregated Prefix count: 2 
+ eth0's Assigned Prefix count: 2
+  Assigned Prefix: fc00:0:0:1::/64
+   Not Valid
+   Deprecation Thread
+  Assigned Prefix: fc00:0:0:3::/64
+ eth1's Assigned Prefix count: 2
+  Assigned Prefix: fc00:0:0:2::/64
+  Assigned Prefix: fc00:1::/64
+   Pending Thread
+Total Assigned Prefix count: 4 
+\end{lstlisting}

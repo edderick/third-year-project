@@ -38,7 +38,12 @@
 \setlength{\marginparwidth}{3cm}
 \reversemarginpar
 
+\renewcommand*\ttdefault{cmtt}
+\usepackage[T1]{fontenc}
+
 \usepackage{listings}
+\lstset{basicstyle=\ttfamily, escapechar=\%}
+
 
 % Set paragraph spacing to required
 \setlength\parindent{0pt}
@@ -211,16 +216,15 @@ Multiple subnets separate hosts based on their physical locations,
 work groups and expected uses. One potential corporate network
 topology is shown in Figure~\ref{fig:corporate_net}.
 
-\todo{Is there any evidence to support this?}
-In the early days of the internet, many organisations were issued large
-chunks of IPv4 address space -- MIT famously has the control of a /8 address
-range. The University of Southampton has a /16 (152.78.0.0), providing around
-65000 addresses. Having this many addresses allows each machine on the network
-to be globally addressable -- at first this may seem to be insecure, but a good
-firewall is far more effective protection than NAT\@. Even with this many
-addresses, the University still struggles. This is due at part to address space
-wastage, the now deprecated ISS wireless service still takes up a large
-proportion of the address space.
+In the early days of the internet, many organisations were issued large chunks
+of IPv4 address space -- MIT famously has the control of a /8 address
+range\cite{IPv4IANA}. The University of Southampton has a /16 (152.78.0.0),
+providing around 65000 addresses. Having this many addresses allows each
+machine on the network to be globally addressable -- at first this may seem to
+be insecure, but a good firewall is far more effective protection than NAT\@.
+Even with this many addresses, the University still struggles. This is due at
+part to address space wastage, the now deprecated ISS wireless service still
+takes up a large proportion of the address space.
 
 Although it is not yet common place, the networks run by ECS are dual stack,
 the machines are allocated both IPv4 and IPv6 addresses. 6th June 2012 was
@@ -760,10 +764,11 @@ to one interface, and is a /64 as this is the length used by SLAAC\@. Conflicts
 are resolved automatically if they occur. 
 
 \chapter{Implementation}
-\todo{Generate a more accural SLOC count}
 Over the course of the project I produced and tested an augmented version of
-the Quagga routing daemon. My changes took around 1,500 lines of C code for the
-core functionality, and around 630 lines for testing.
+the Quagga routing daemon. My changes consisted of adding ~1,900 lines of C
+code to the \texttt{ospf6d} code base along with ~400 lines to \texttt{zebra} and
+\texttt{lib}. I also modified existing lines. ~600 lines of code were
+used for unit testing.
 
 \section{Core Algorithms}
 Several algorithms are used in Autoconfig OSPFv3 to ensure that the network
@@ -1098,7 +1103,6 @@ state, producing incorrect results.
 	\label{fig:testcase}
 \end{center}
 \end{figure}
-\todo{Generate some kind of unit test report}
 I created unit tests to ensure that my code behaved as expected, my unit tests
 focused heavily on the edge cases. Creating unit tests gave me confidence that
 my code did what I intended it to do, however, it did not ensure that my
@@ -1109,7 +1113,9 @@ using them.  I felt using external libraries  would go against the ethos of
 Quagga, and my testing strategy did not fit the design of most popular
 libraries. 
 
-The design of my unit testing code is shown in Figure~\ref{fig:testcase}.
+The design of my unit testing code is shown in Figure~\ref{fig:testcase}. A
+summary of the results for my testing can be seen in
+Appendix~\ref{testResults}.
 
 \subsection{Test Cases}
 Test cases are specified by \texttt{struct}s containing the parameters of
@@ -1174,12 +1180,10 @@ not done, routing will not work.
 \section{radvdump}
 \texttt{radvdump} is a tool that shows the contents of all received router
 advertisements. It is designed to be used with \texttt{radvd} and outputs the
-contents of a RA in the style of a \texttt{radvd} configuration file. 
+contents of a RA in the style of a \texttt{radvd} configuration file, an example is shows in Appendix~\ref{radvdump} 
 
 I used \texttt{radvdump} to ensure that Quagga was successfully sending RAs and
 the contents were as expected. 
-
-\todo{Add an example of one of these to the appendix}
 
 \section{Tunnel Broker}
 Using Hurricane Electric's (HE) Tunnel broker service, I was able to give my
