@@ -9,7 +9,7 @@
 \usepackage{nomencl}
 \makenomenclature
 
-%Might be useful if I cut abot 4 entires
+%Might be useful if I cut about 4 entires
 %\setlength{\nomitemsep}{-\parsep}
 
 % Makes Chapter heading look like Section heading
@@ -78,80 +78,79 @@
 \input{./Title.tex}
 
 \begin{abstract}
-As home networks become more and more complex, it is inevitable that they will
+As the complexity of home networks increases, it is inevitable that they will
 require splitting into multiple subnets. As the average home user is unable to
 configure a router, a minimal configuration solution is required. In this
-project I produced an implementation of the Open Shortest Path First for IPv6
-(OSPFv3) routing protocol, that requires no configurations to run in the home.
-The implementation is based mainly on two drafts published recently by the
-IETF\@\nomenclature{IETF}{Internet Engineering Task Force}. 
+project I made enhancements to an existing implementation of the Open Shortest
+Path First for IPv6 (OSPFv3) routing protocol, Quagga. This augmented daemon
+requires no configuration to run, and handles the allocation of IPv6 prefixes
+to the subnets in the home network. The implementation is based mainly on two
+internet drafts published recently by the IETF\@\nomenclature{IETF}{Internet
+Engineering Task Force}, and exhibits a level of interoperability with other
+existing implementations. 
 \end{abstract}
 
 \tableofcontents
 \clearpage
 
 \chapter*{Acknowledgements}
-\todo{Write as prose?}
 I would like to thank the following people for all their help, support and
 influence during this project:
 \begin{itemize}
-\item Tim Chown -- Offered support as project supervisor
-\item David Lamparter -- Responded to my queries about how Quagga works
-\item Jari Arkko -- Wrote the drafts that I was implementing
-\item Markus Stenberg \& Benjamin Paterson --- Provided implementations against which 
-      to interop test
+\item Tim Chown -- Offered support as project supervisor.
+\item David Lamparter -- Responded to my queries about how Quagga works.
+\item Jari Arkko -- Wrote the drafts that I was implementing.
+\item Markus Stenberg \& Benjamin Paterson --- Provided implementations against which
+      to interop test.
 \item Friends \& Family -- Proof read this document.
 \end{itemize}
 
 \chapter{Introduction}
-The title of my project is ``Implementing Zero Configuration OSPFv3''. During
-the project, I have modified an open source implementation of the OSPFv3
-routing protocol to comply with two recently published, and very topical,
-internet drafts. The changes allow routed networks to be set up without the
-need for manual configuration.
+My project's title is ``Implementing Zero Configuration OSPFv3''. During the
+project, I have modified an open source implementation of the OSPFv3 routing
+protocol to comply with two cutting edge internet drafts. The changes allow
+routed networks to be set up without manual configuration.
 
 \section{The Problem}
-As computing becomes more and more ubiquitous, the complexity of an average home
-network will increase. Not only will the number of devices rise, but with the
-advent of sensor networks and home automation, the quantity of speeds,
-types and topologies present will grow. To ensure these more complex networks
-run smoothly, they should be separated into multiple subnets. Routing is
-required to allow communication between these subnets. 
+As computing becomes increasingly ubiquitous, the complexity of home networks
+will increase. Not only will the number of devices rise, but with the advent of
+sensor networks and home automation, the quantity of speeds, types and
+topologies present will grow. To ensure these more complex networks run
+smoothly, they should be separated into multiple subnets. Routing is required
+to allow communication between these subnets. 
 
 Unfortunately, the vast majority of home networks do not have a professional
-System Administrator around to configure and maintain them. This means a
-network should require no manual configuration to work.
+System Administrator to configure and maintain them. This means a network
+should not require manual configuration to work.
 
-Another issue that is addressed in this project is IPv4
-\nomenclature{IPv4}{Internet Protocol Version 4} address space exhaustion. IPv6
-is the main candidate for replacing IPv4, and with its much larger address
-space solves the exhaustion problem. Home users do not want to configure IPv6
-addresses by hand, so a mechanism is needed for assigning prefixes to the
-networks in the home. 
+Another issue addressed in this project is IPv4 \nomenclature{IPv4}{Internet
+Protocol Version 4} address space exhaustion. IPv6 is the main candidate for
+replacing IPv4, and with its much larger address space solves the exhaustion
+problem. Home users do not want to configure IPv6 addresses by hand, so a
+mechanism is needed for assigning prefixes to the networks in the home. 
 
 \section{The Goals}
-This project set out to meet many goals, and over the course of the project, as my
-understanding of the problem improved, the goals have transformed slightly.
+This project set out to meet many goals, and over the course of the project, as
+my understanding of the problem improved, the goals have transformed slightly.
 
 \subsection{Project Goals}
 The goals for the project are to:
 
 \begin{itemize}
-\item Allow multiple subnets in the home; allow hosts to communicate from one
-  subnet to another.
-\item Distribute IPv6 subnet prefixes across a home network in an efficient
+\item Enable multiple automatically configured routed subnets in the home.
+\item Automatically distribute IPv6 network prefixes across home networks in an efficient
 	manner. 
-\item Require no configuration: The user should not need to enter any settings,
-  they should simply plug in the router, and it should work.
-\item Produce something of value for the community. The code I produce should
-  adhere to style and quality guidelines to ensure it is useful.
-\item Verify past implementations of the drafts.
-\item Discover any ambiguities in the drafts.
+\item Require no configuration: Users should not need to enter any settings,
+  routers connected arbitrarily should just work.
+\item Produce something valuable to the community. My code should
+  adhere to coding standards to ensure its usefulness.
+\item Verify and test interoperability with past implementations of the drafts.
+\item Discover any ambiguities in the drafts, providing feedback to their authors.
 \end{itemize}
 
 \subsection{Personal Goals}
-I also had a set of personal goals that I aimed to achieve over the course of
-the project:
+I also set personal goals that I aimed to achieve over the course of the
+project:
 \begin{itemize}
 	\item Develop a good understanding of the OSPF routing protocol.
 	\item Improve my understanding of the process of the creation of internet
@@ -162,8 +161,8 @@ the project:
 \end{itemize}
 
 \chapter{Background}
-To enable me to explain my project in detail, I first need to explain the
-concepts upon which it is based.
+To explain my project in detail, I must first explain the concepts upon which
+it is based.
 
 \section{Home Networks}
 
@@ -175,18 +174,18 @@ concepts upon which it is based.
 \end{figure}
 
 Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office Home
-Office} networks tend to follow the same pattern. A single ISP provides a
-connection to the internet using the phone line or television cable.  The ISP
-will typically provide a single IPv4 address (/32)\footnote{This is CIDR
-notation, it represents the number of bits used to identify the network the
-host.}. Usually this is an unstable (dynamic) allocation -- a static IP is
-usually only offered as a premium service. 
+Office} networks tend to follow a pattern. A single ISP provides internet
+connectivity using the phone line or television cable.  The ISP typically
+provides a single IPv4 address (/32)\footnote{This is CIDR notation, it
+represents the number of bits used to identify the network the host.}. Usually
+this is an unstable (dynamic) allocation -- a static IP is usually only offered
+as a premium service. 
 
 To allow multiple hosts on the network, Network Address Translation (NAT)
 \nomenclature{NAT}{Network Address Translation} is usually employed. With NAT,
 the router rewrites the address of the packets from the global IP address to a
-local IP address. The address range 192.168.1.0/24 is often used for these
-local IP addresses. Ports number are often used to multiplex between the
+local IP address. The private address range 192.168.1.0/24 is often used for
+local IP addresses. Ports number are regularly used to multiplex between the
 different hosts and applications on the network. To allow programs like Skype
 to function, Universal Plug and Play (UPnP) \nomenclature{UPnP}{Universal Plug
 and Play}, a technology that allow automatic port mapping on a network, is
@@ -200,7 +199,7 @@ referred to by many names\footnote{Names include Super Hub, HomeHub and
 WirelessBox}, but most commonly as a ``Router''.  This device provides the modem for
 connecting to the internet, an Ethernet switch with around four ports, and a
 wireless access point (802.11) that tends to be bridged to the wired network to
-provide just one subnet. A diagram of a typical home network is shown in
+provide just one subnet. A typical home network topology is shown in
 Figure~\ref{fig:typical_homenet}.
 
 \section{Campus and Enterprise Networks}
@@ -210,32 +209,25 @@ Figure~\ref{fig:typical_homenet}.
 	\caption{The topology of a typical corporate network.}\label{fig:corporate_net}
 \end{center}
 \end{figure}
-Larger networks like the ones found on University campuses and larger
-businesses employ many of the more advanced features of networking.
-Multiple subnets separate hosts based on their physical locations,
-work groups and expected uses. One potential corporate network
-topology is shown in Figure~\ref{fig:corporate_net}.
+Larger networks like the ones found on university campuses and larger
+businesses employ many of the more advanced features of networking.  Multiple
+subnets separate hosts based on their physical locations, work groups and
+expected uses. One potential corporate network topology is shown in
+Figure~\ref{fig:corporate_net}.
 
 In the early days of the internet, many organisations were issued large chunks
 of IPv4 address space -- MIT famously has the control of a /8 address
 range\cite{IPv4IANA}. The University of Southampton has a /16 (152.78.0.0),
 providing around 65000 addresses. Having this many addresses allows each
-machine on the network to be globally addressable -- at first this may seem to
-be insecure, but a good firewall is far more effective protection than NAT\@.
-Even with this many addresses, the University still struggles. This is due at
-part to address space wastage, the now deprecated ISS wireless service still
-takes up a large proportion of the address space.
+machine on the network to be globally addressable -- a good firewall ensures
+this is secure.  Even with this many addresses, the University still struggles.
+This is due at part to address space wastage, the now deprecated ISS wireless
+service still consumes a large proportion of the address space.
 
-Although it is not yet common place, the networks run by ECS are dual stack,
-the machines are allocated both IPv4 and IPv6 addresses. 6th June 2012 was
-World IPv6 Launch; many websites, including Facebook and Google, began offering
-IPv6 connectivity. \cite{IPv6Launch} This demonstrated that IPv6 is mature
-enough to be deployed in large networks.
-
-It should be noted however, running a network the size of the University's,
-based on today's technology requires specialist staff to configure the
-network and ensure its day-to-day operation. This is something that the vast
-majority of households do not have.
+Running a network the size of the University's, based on today's technology
+does require specialist staff to configure the network and ensure its
+day-to-day operation. This is something that the vast majority of households do
+not have.
 
 \section{Future Networks}
 \begin{figure}
@@ -253,8 +245,8 @@ shows a hypothetical future home network.
 A home network with this quantity and heterogeneity of traffic is likely to
 experience slow downs and other issues. These problems arise for two reasons:
 Firstly sensor networks run very slowly, where as Gigabit Ethernet networks run
-very quickly -- this difference in speed can result in both networks running
-even slower. The other issue is the vast amounts of multicast and broadcast
+very quickly -- differences in speed can result in both networks running
+slower. The other issue is the vast amounts of multicast and broadcast
 traffic that will build up on networks with many devices performing functions
 such as service discovery. It would be beneficial to split the network up into
 multiple subnets to ensure the best performance from each network. 
@@ -262,31 +254,31 @@ multiple subnets to ensure the best performance from each network.
 Guest networks are already an option provided by some high end wireless access
 points. By using Virtual Access Points (VAPs) \nomenclature{VAP}{Virtual Access
 Point} guest clients can connect to the internet, but are restricted from
-having full access to the local network. To facilitate this, hard coded local
+having access to the local network. To facilitate this, hard coded local
 IPv4 addresses are usually used, with the advent of IPv6 and globally valid
 addresses, a mechanism to assign IP addresses and route traffic is required. 
 
 The Internet Engineering Task Force's (IETF) Homenet working group
 \cite{homenet} are working on the architecture of the home network of the
-future. Their work mainly focuses on addressing, routing, topology and security
+future. Their work focuses on addressing, routing, topology and security
 in home networks. 
 
 \section{IPv6}
 To communicate with a computer, a way of uniquely identifying it is required.
-Currently, IPv4 is the dominant technology for addressing computers on the
-internet. When IPv4 was designed, it was not foreseeable that we 4 billion
-addresses would be needed, so a neat 32 bit identifier was used.  In 2011 the
-Internet Assigned Numbers Authority (IANA) \nomenclature{IANA}{Internet
-Assigned Numbers Authority} ran out of IPv4 addresses \cite{potaroo}. 
+Currently, IPv4 is the dominant technology for addressing computers. When IPv4
+was designed, it was not foreseeable that we 4 billion addresses would be
+needed, so a neat 32 bit identifier was used.  In 2011 the Internet Assigned
+Numbers Authority (IANA) \nomenclature{IANA}{Internet Assigned Numbers
+Authority} ran out of IPv4 addresses \cite{potaroo}. 
 
-One solution to the IPv4 address space exhaustion problem is migration to
-IPv6; a protocol that is fundamentally similar to IPV4, but instead uses 128
-bit addresses. This gives us far more addresses to work with -- in fact a total
-of $3.4028237\times10^{38}$ unique addresses. With estimates for the total
-number of grains of sand on Earth being around $7.5\times10^{18}$, the number
-of stars visible from Earth falling at about $7.0\times10^{22}$, and the
-estimated human population of Earth being a mere $7.0\times10^{9}$,
-this address space should be sufficient for at least the foreseeable future. 
+One solution to the IPv4 address space exhaustion problem is migration to IPv6.
+IPv6 is fundamentally similar to IPV4, but uses larger 128 bit addresses. This
+gives us far more addresses to work with -- a total of $3.4028237\times10^{38}$
+unique addresses. With estimates for the total number of grains of sand on
+Earth being around $7.5\times10^{18}$, the number of stars visible from Earth
+falling at about $7.0\times10^{22}$, and the estimated population of Earth
+being a mere $7.0\times10^{9}$, this address space should be sufficient for at
+least the foreseeable future. 
 
 IPv6 address ranges are given in Classless Inter-Domain Routing (CIDR)
 \nomenclature{CIDR}{Classless Inter-Domain Routing} notation. In this notation
@@ -300,58 +292,65 @@ Autoconfiguration (SLAAC)\nomenclature{SLAAC}{Stateless Address
 Autoconfiguration}. A /48 prefix may be allocated by an ISP to allow the user
 to assign multiple subnets on their network.
 
+The networks run by ECS are dual stack: the machines have both IPv4 and IPv6
+addresses. Although this is not yet common place, 6th June 2012 was World IPv6
+Launch; many websites, including Facebook and Google, began offering IPv6
+connectivity. \cite{IPv6Launch} This demonstrates that IPv6 is mature enough to
+be deployed in large networks.
+
 \section{Routing}
 For packets of data to find their way between subnets, they require routing.
-The routing we are concerned with is Layer 3 (Network/IP Layer)
-routing\footnote{For a brief explaination of OSI layers see
-Appendix~\ref{osi}}. When an IP packet is sent, its address is compared with
-those stored in the kernel's routing table, and then transmitted using the
-appropriate interface. Networks contain many computers, known as routers, whose
-sole purpose is to forward network traffic.
+We are concerned with Layer 3 (Network/IP Layer) routing\footnote{For a brief
+explaination of OSI layers see Appendix~\ref{osi}}. When an IP packet is sent
+(or forwarded), its address is compared with those stored in the kernel's
+routing table, and then transmitted using the appropriate interface. Networks
+contain many computers, known as routers, whose sole purpose is to forward
+network traffic.
 
-A number of different protocols exist to build up these routing tables:
+Several protocols exist to build up these routing tables:
 
 \subsection{Interior gateway protocols}
 Interior Gateway Protocols (IGPs) \nomenclature{IGP}{Interior Gateway
-Protocols} are concerned with building the routing tables for a single
-autonomous system (AS) \nomenclature{AS}{Autonomous System}. ASs are generally
-managed by ISPs or other very large organisations.  
+Protocols} build routing tables for a single autonomous system (AS)
+\nomenclature{AS}{Autonomous System}. ASs are generally managed by ISPs or
+other very large organisations.  
 
 \subsubsection{Distance Vector}
 Distance vector routing works by having each router advertise to its neighbors
 (directly connected routers) the shortest path it knows about to each subnet.
 Although less complex than link-state routing protocols, they are often slower
-to converge, and experience what is know as the ``count to infinity'' problem
-whereby loops in the network topology can lead to weights increasing to
-infinity when a router goes down. 
+to converge, and experience the ``count to infinity'' problem whereby loops in
+the network topology can lead to weights increasing to infinity when a router
+goes down. 
 
-The most common Distance Vector protocol is Routing Information Protocol (RIP).
+The most common distance vector protocol is Routing Information Protocol (RIP).
 \nomenclature{RIP}{Routing Information Protocol} \footnote{The routing protocol
 famous for defining 15 as infinity.} The latest revision is RIP Next Generation
 (RIPng) which offers IPv6 support. IGRP and EIGRP are Cisco's own proprietary
 alternatives.
 
 \subsubsection{Link-State}
-Link state routing protocols work by allowing each router on the network to get
-a full understanding of the network topology. From this representation of the
-networks topology, the router then performs some calculations to work out the
-best routes. The two most common Link-State routing protocols, Open Shortest
-Path First (OSPF) \nomenclature{OSPF}{Open Shortest Path First} and
-Intermediate System to Intermediate System (IS-IS),
+In a link state routing protocols each router on the network builds a full
+``map'' of the network topology. From this representation of the network, the
+router calculates the best routes. The two most common Link-State routing
+protocols, Open Shortest Path First (OSPF) \nomenclature{OSPF}{Open Shortest
+Path First} and Intermediate System to Intermediate System (IS-IS),
 \nomenclature{IS-IS}{Intermediate System - Intermediate System} both use
 Dijkstra's algorithm to calculate these shortest paths. 
 
-OSPF and IS-IS are both very similar protocols, the main difference is that
-IS-IS as a Layer 2 protocol is Layer 3 agnostic, whereas OSPF is dependent on
-IPv4 or IPv6 depending on the version.
+OSPF and IS-IS are very similar protocols, the main difference is that IS-IS as
+a Layer 2 protocol is Layer 3 agnostic, whereas OSPF is dependent on IPv4 or
+IPv6 depending on the version.
 
 \subsection{Exterior Gateway Protocols}
 Exterior Gateway Protocols (EGP) \nomenclature{EGP}{Exterior Gateway Protocol}
 are used to establish peerings between ASs. EGPs typically run only on edge
 routers and construct the route tables based on policy rather than the
 technical distance of the destinations. In this project I was not concerned
-with this kind of routing protocol.  The most widely used EGP today is Border
-Gateway Protocol (BGP) \nomenclature{BGP}{Border Gateway Protocol}.
+with this kind of routing protocol.  The most widely used EGP is Border
+Gateway Protocol (BGP)\nomenclature{BGP}{Border Gateway Protocol}.
+
+
 
 \chapter{Literature Review} 
 The project was based on two closely related internet drafts, they were both
@@ -1180,7 +1179,8 @@ not done, routing will not work.
 \section{radvdump}
 \texttt{radvdump} is a tool that shows the contents of all received router
 advertisements. It is designed to be used with \texttt{radvd} and outputs the
-contents of a RA in the style of a \texttt{radvd} configuration file, an example is shows in Appendix~\ref{radvdump} 
+contents of a RA in the style of a \texttt{radvd} configuration file, an
+example is shows in Appendix~\ref{radvdump} 
 
 I used \texttt{radvdump} to ensure that Quagga was successfully sending RAs and
 the contents were as expected. 
@@ -1285,8 +1285,8 @@ autoconfiguration.
 
 Moving beyond this, some level of user testing should be undertaken before
 publicly releasing this code, and integrating it into Quagga. Typically, code
-undergoes closed Alpha testing by a small number of developers. Followed by
-Beta testing, where it is released to the public, but without guarantees of
+undergoes closed Alpha testing by a small number of developers, followed by
+Beta testing, where it is released to the public without guarantees of
 correct functionality.
 
 \chapter{Project Management}
@@ -1412,34 +1412,32 @@ This Gantt chart shows how my project actually progressed.
 \chapter{Evaluation}
 
 \section{What Went Well?}
-In general the project was a success. Although it was difficult, I managed to
+In general the project was a success. Despite its difficulty, I managed to
 complete my implementation on schedule. I feel the software I have produced is
-functional, robust and maintainable. I managed to meet all of my goals, and the
-only requirement that I did not fulfil was number 8, obtaining aggregated
-prefixes from DHCP-PD. Hopefully after code review it will be accepted as part
-of Quagga.
+functional, robust and maintainable. I managed to meet all my goals, and the
+only requirement that I did not fulfil was number 8: obtaining aggregated
+prefixes from DHCP-PD. My code is now ready for code review, after which it may
+be accepted as part of Quagga. The feedback on the drafts I produced should
+help them progress along the standards track.
 
-I enjoyed the opportunity to work in a language and style of programming with
-which I had little experience.  Because of this I have learnt lots about how
-procedural programming differs from an object oriented approach. Over the
-project my C programming ability improved drastically. I am much more confident
-in my understanding of pointers and \texttt{struct}s, and in turn, the low
-level operation of computers.  
+I enjoyed working in a language and style of programming with which I had
+little experience -- I have learnt a huge amount about how procedural
+programming differs from an object oriented approach. My C programming ability
+has improved dramatically, and I have a much better understanding of pointers
+and \texttt{struct}s, and in turn, the low-level operation of computers.  
 
 I am now more confident working on large projects. Before this project, I
 looked at open source code bases and felt intimidated by their size and style.
-I was unsure of where the code for these applications even began executing.
-Having completed this project, I realise that the statements that make up large
-projects, are no different from ones I am familiar with from my own work --
+I was unsure where the code for these applications even began executing.
+Having completed this project, I realise that the statements making up large
+projects are no different from ones I am familiar with from my own work --
 there is rarely anything that when taken in isolation, I am unable to
 understand.
 
-I learnt a lot about the software projects that exist to support networking.
+I learnt a lot about software projects that exist to support networking.
 Not only did I discover Quagga, but I also learnt about many other projects. I
 used competing routing daemon implementations: Bird and XORP\@. I also read
-about Cisco's proprietary implementations of these protocols. 
-
-I used many other pieces of network software: I made heavy use of
+about Cisco's proprietary implementations of these protocols. I made heavy use of
 \texttt{iproute2}, the package that has superseded \texttt{ifconfig} as the de
 facto way to control TCP/IP networking in Linux. I also experimented with
 \texttt{radvd} the Router Advertisement Daemon, and played with WIDE-DHCPv6. 
@@ -1449,17 +1447,18 @@ Although the project generally went well, perfection is rarely obtainable, and
 there are things that if I did this project again, I would do differently. 
 
 Firstly, due a high workload from other modules at the end of Semester One, I
-did not properly dig into the project until later than I would have liked -- in
-hindsight I should have chosen  less coursework intensive optional modules.
+did not dig into the project until later than I would have liked -- in
+hindsight I could have chosen less coursework intensive optional modules.
 Another factor was my lack of confidence about jumping in at the deep end.
-Working on this project I have learnt that one of the best ways of understanding
-a code base is to try adding a feature to it.
+Working on this project taught me that one of the best ways of understanding
+a code base is trying adding a feature to it.
 
 I also feel that I could have become more involved in the discussion about the
 drafts, again I think I was held back by a lack of experience and confidence,
 having never been involved with the Internet Engineering Task Force or any
 other international standards body before. 
- 
+
+
 \chapter{Conclusions and Future Work}
 
 \section{Conclusions}
@@ -1526,29 +1525,29 @@ These suggestions are about the prefix assignment draft
 \end{enumerate}
 
 \section{Continuing the project}
-Now the project is over, I plan to continue the work I have been doing.  My
-goal is to have the code that I have written merged back into the Quagga
-mainline. Before this can happen, the code will need to go through a cleanup
-stage and a series of code reviews to ensure that it is of sufficient quality,
-and is a good fit with the Quagga project.
+Now the project is over, I plan to continue working on my implementation. My
+goal is to have my code merged back into the Quagga mainline. Before this can
+happen, the code will need to go through a cleanup stage and a series of code
+reviews to ensure it is of sufficient quality, and fits well with the Quagga
+project.
 
-I also hope to be able to attend the 87th IETF meeting during the summer
-holidays. I have applied for the ECS Student Development fund, to help me fund
-the trip. If I am able to go it will give me the opportunity to discuss future
-work, and participate in interoperability tests.
+This summer I hope to attend the 87th IETF meeting, I have been awarded
+the ECS Student Development fund to help fund the trip. Attending this event
+will give me the opportunity to discuss future work, and participate in
+interoperability tests.
 
 \section{Future Work}
-My project had a large scope, and as it is in a very current research area,
-based on highly extensible drafts, there is a large amount of work that could
-be based on what I have produced. 
+My project had a large scope, is in a topical research area, and is based on
+highly extensible drafts. As such a large amount of work can be based on what I
+have produced. 
 
 This project is a good candidate for extension by a Google Summer of Code
 student, or a future Third Year Project. 
 
 \subsection{DHCPv6-PD}
-Ideally an implementation of OSPFv3 Prefix Assignment should be able to handle
-aggregated prefixes delegated by DHCPv6-PD\@. I decided early on in the project
-that this was beyond the scope of the project. 
+Ideally an implementation of OSPFv3 Prefix Assignment should handle aggregated
+prefixes delegated by DHCPv6-PD\@. I decided early on in the project that this
+was beyond the scope of the project. 
 
 There are two ways I would suggest implementing this functionality. The first
 is to make use of an existing DHCPv6 Client such as WIDE-DHCPv6, and hook into
