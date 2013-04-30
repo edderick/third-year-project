@@ -44,6 +44,7 @@
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily, escapechar=\%}
 
+\newcommand*{\mysym}{\mathord{\sim}}
 
 % Set paragraph spacing to required
 \setlength\parindent{0pt}
@@ -87,7 +88,9 @@ requires no configuration to run, and handles the allocation of IPv6 prefixes
 to the subnets in the home network. The implementation is based mainly on two
 internet drafts published recently by the IETF\@\nomenclature{IETF}{Internet
 Engineering Task Force}, and exhibits a level of interoperability with other
-existing implementations. 
+existing implementations. As an extension, a proof-of-concept was produced to
+show how source based routing could be used to overcome issues with multihomed
+networks. 
 \end{abstract}
 
 \tableofcontents
@@ -99,7 +102,7 @@ influence during this project:
 \begin{itemize}
 \item Tim Chown -- Offered support as project supervisor.
 \item David Lamparter -- Responded to my queries about how Quagga works.
-\item Jari Arkko -- Wrote the drafts that I was implementing.
+\item Jari Arkko \& Acee Lindem -- Wrote the drafts that I was implementing.
 \item Markus Stenberg \& Benjamin Paterson --- Provided implementations against which
       to interop test.
 \item Friends \& Family -- Proof read this document.
@@ -176,8 +179,8 @@ it is based.
 Modern home and small/home office (SOHO) \nomenclature{SOHO}{Small Office Home
 Office} networks tend to follow a pattern. A single ISP provides internet
 connectivity using the phone line or television cable.  The ISP typically
-provides a single IPv4 address (/32)\footnote{This is CIDR notation, it
-represents the number of bits used to identify the network the host.}. Usually
+provides a single IPv4 address (/32).\footnote{This is CIDR notation, it
+represents the number of bits used to identify the network the host.} Usually
 this is an unstable (dynamic) allocation -- a static IP is usually only offered
 as a premium service. 
 
@@ -195,8 +198,8 @@ Host Configuration Protocol}.
 
 A single item of Customer Premises Equipment (CPE) \nomenclature{CPE}{Customer
 Premises Equipment} is usually supplied to the customer. These devices are
-referred to by many names\footnote{Names include Super Hub, HomeHub and
-WirelessBox}, but most commonly as a ``Router''.  This device provides the modem for
+referred to by many names,\footnote{Names include Super Hub, HomeHub and
+WirelessBox} but most commonly as a ``Router''.  This device provides the modem for
 connecting to the internet, an Ethernet switch with around four ports, and a
 wireless access point (802.11) that tends to be bridged to the wired network to
 provide just one subnet. A typical home network topology is shown in
@@ -293,15 +296,15 @@ Autoconfiguration}. A /48 prefix may be allocated by an ISP to allow the user
 to assign multiple subnets on their network.
 
 The networks run by ECS are dual stack: the machines have both IPv4 and IPv6
-addresses. Although this is not yet common place, 6th June 2012 was World IPv6
+addresses. Although this is not yet common place, 6\textsuperscript{th} June 2012 was World IPv6
 Launch; many websites, including Facebook and Google, began offering IPv6
 connectivity. \cite{IPv6Launch} This demonstrates that IPv6 is mature enough to
 be deployed in large networks.
 
 \section{Routing}
 For packets of data to find their way between subnets, they require routing.
-We are concerned with Layer 3 (Network/IP Layer) routing\footnote{For a brief
-explaination of OSI layers see Appendix~\ref{osi}}. When an IP packet is sent
+We are concerned with Layer 3 (Network/IP Layer) routing.\footnote{For a brief
+explanation of OSI layers see Appendix~\ref{osi}} When an IP packet is sent
 (or forwarded), its address is compared with those stored in the kernel's
 routing table, and then transmitted using the appropriate interface. Networks
 contain many computers, known as routers, whose sole purpose is to forward
@@ -323,11 +326,11 @@ to converge, and experience the ``count to infinity'' problem whereby loops in
 the network topology can lead to weights increasing to infinity when a router
 goes down. 
 
-The most common distance vector protocol is Routing Information Protocol (RIP).
-\nomenclature{RIP}{Routing Information Protocol} \footnote{The routing protocol
-famous for defining 15 as infinity.} The latest revision is RIP Next Generation
-(RIPng) which offers IPv6 support. IGRP and EIGRP are Cisco's own proprietary
-alternatives.
+The most common distance vector protocol is Routing Information Protocol
+(RIP).\nomenclature{RIP}{Routing Information Protocol}\footnote{The routing
+protocol famous for defining 15 as infinity.} The latest revision is RIP Next
+Generation (RIPng) which offers IPv6 support. IGRP and EIGRP are Cisco's own
+proprietary alternatives.
 
 \subsubsection{Link-State}
 In a link state routing protocols each router on the network builds a full
@@ -354,17 +357,16 @@ Gateway Protocol (BGP)\nomenclature{BGP}{Border Gateway Protocol}.
 
 \chapter{Literature Review} 
 The project was based on two closely related internet drafts, they were both
-published very recently, and have the same authors. If these drafts are
-approved by the IETF they will end up becoming Request for Comments
-(RFC)\nomenclature{RFC}{Request for Comments}, the technical documents that
-specify how the internet works. As RFCs these documents will be placed on the
-standards track and will be labeled as ``Proposed Standards''. If they are
-successful in meeting certain criteria, they may eventually become ``Internet
-Standards''\cite{rfc6410}.
+published very recently, and share authors. If these drafts are approved by the
+IETF they will become Request for Comments (RFC)\nomenclature{RFC}{Request for
+Comments}, the technical documents that specify how the internet works. As RFCs
+these documents will be placed on the standards track and will be labeled as
+``Proposed Standards''. If they are successful in meeting certain criteria,
+they may eventually become ``Internet Standards''\cite{rfc6410}.
 
 \section{OSPFv3 Autoconfiguration}
-This draft\cite{draft-ietf-ospf-ospfv3-autoconfig-02} describes how OSPF for
-IPv6 can be extended to run without requiring configuration. The draft begins
+Lindem and Arkko\cite{draft-ietf-ospf-ospfv3-autoconfig-02} describe how OSPFv3
+can be extended to run without requiring configuration. The draft begins
 by enforcing some default values, and restricting a few features -- such as
 allowing only the backbone area to be used. It then specifies a mechanism for
 generating Router IDs (RID) \nomenclature{RID}{Router ID} and ensuring that
@@ -372,32 +374,32 @@ there are no conflicts across the network. This is achieved by the introduction
 of a new Link State Advertisement (LSA) \nomenclature{LSA}{Link State
 Advertisement} type -- the Autoconfiguration LSA. 
 
-The most recent release of this document was on 15th April 2013. Although this
+The most recent release of this document was on 15\textsuperscript{th} April 2013. Although this
 was towards the end of my project, the changes were only minor and I was able
 to incorporate them into my implementation.
 
 \section{OSPFv3 Prefix Assignment}
-Building on the work of the Autoconfiguration draft, this
-draft\cite{draft-arkko-homenet-prefix-assignment-03} solves the issue of
+Building on the work of the Autoconfig draft, Arkko, et
+al.\cite{draft-arkko-homenet-prefix-assignment-03} solve the issue of
 delegating IPv6 network prefixes from a larger pool of IPv6 addresses. As well
 as offering a realistic solution to a problem, the draft also demonstrates the
-extensibility of the Autoconfiguration draft. 
+extensibility of the Autoconfig draft. 
 
 A method for breaking up a short prefix delegation into many network prefixes
 is given, along with a strategy for avoiding conflicts across the network.
-Typically an ISP will allocate a customer a /48 IPv6 prefix to cover their
+Typically an ISP will allocate customers a /48 IPv6 prefix to cover their
 whole home, each network in their home then requires a /64 IPv6 prefix.
 
 An update to this document was published on 23rd October 2013, it expired on
-26th April 2013, although it is likely a refresh will be released soon.
+26\textsuperscript{th} April 2013, although it is likely a refresh will be released soon.
 
 \section{Other Important Drafts}
 There are several other documents that are relevant to this project. These are
-both articles that are relevant as background knowledge and papers that have
+articles that are relevant as background knowledge and papers that have
 been referenced from one another.
 
 \subsection{Home Networking Architecture for IPv6} 
-This paper\cite{draft-ietf-homenet-arch-07} puts forward a vision of future
+Chown, et al.\cite{draft-ietf-homenet-arch-07} put forward a vision of future
 home networking. An architecture for future home networks is proposed, along
 with a discussion of emerging technologies. 
 
@@ -417,14 +419,14 @@ reader a clear understanding of OSPFv3 by explaining the differences between
 from OSPFv2. 
 
 \subsection{Zeroconfiguration OSPF}
-This document\cite{draft-dimitri-zospf-00} is an old draft that had similar
-aims to the OSPFv3 Autoconfiguration draft, but focused on autoconfiguration for
+Dimitrelis\cite{draft-dimitri-zospf-00} published a draft in 2002 with similar
+aims to the OSPFv3 Autoconfig draft, but focused on automatic configuration of
 both IPv4 and IPv6, making it a more complex and restrictive solution. 
 
 \subsection{The OSPF Opaque LSA Option}
 RFC5250\cite{rfc5250} introduces the opaque LSA\@. An opaque LSA is a generic
 LSA type that can be used to transmit application specific data. The concept is
-similar to that used in the autoconfiguration draft, but it does not make use
+similar to that used in the autoconfig draft, but it does not make use
 of Type-Length-Values (TLVs)\nomenclature{TLV}{Type-Length-Value}. I found the
 discussion about the reachability of LSAs useful.
 
@@ -442,7 +444,7 @@ that had been mentioned. This list includes:
 
 	\item {\bf RFC 3630}  Traffic Engineering Extensions
 	for OSPF \cite{rfc3630} 
-	\\ (Updated by 4230 \& 5786) \cite{rfc4230} \cite{rfc5786} 
+	\\ (Updated by 4230 \& 5786) \cite{rfc4230}\cite{rfc5786} 
 	\\ Extra set of LSAs to pass information for traffic shaping etc.\@
   
 \item {\bf RFC 4862} IPv6 Stateless Address Autoconfiguration (SLAAC) \cite{rfc4862}
@@ -601,8 +603,8 @@ more subtle changes include:
 
 \section{Implementation Candidates}
 Below is a list of Open source implementations of OSPFv3\@. There are also
-commercial implementations\footnote{Most notably the one provided by Cisco with
-their routers.}, these have not been considered as they are closed source. 
+commercial implementations,\footnote{Most notably the one provided by Cisco with
+their routers.} these have not been considered as they are closed source. 
 
 \subsection{Bird}
 Bird\cite{BirdHome} is a lightweight suite of routing protocols, written
@@ -627,8 +629,9 @@ surrounding XORP is low.
 I chose to base my project on Quagga. I found that after subscribing to all
 three developer mailing lists, Quagga seemed to be the most active project.  I
 also liked the clear separation between OSPFv2 and OSPFv3 that Quagga offered.
-Finally Quagga is a good choice as there were no existing implementations, so
-my contributions would be more useful to the community.
+Finally Quagga is a good choice as there were no existing implementations of
+autoconfig OSPFv3 based on Quagga, so my contributions would be more useful to
+the community.
 
 \chapter{Specification}
 To direct the implementation and allow a thorough evaluation, I produced the
@@ -707,7 +710,7 @@ Figure~\ref{fig:AC-LSA}
 \begin{figure}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Packets/tlv.png}
-	\caption{The Structure of a TLV contained in an AC-LSA. Value has a variable
+	\caption{The Structure of a TLV contained in an AC-LSA\@. Value has a variable
 	size and is padded to the nearest 32 bits.}\label{fig:TLV}
 \end{center}
 \end{figure}
@@ -764,9 +767,9 @@ are resolved automatically if they occur.
 
 \chapter{Implementation}
 Over the course of the project I produced and tested an augmented version of
-the Quagga routing daemon. My changes consisted of adding ~1,900 lines of C
-code to the \texttt{ospf6d} code base along with ~400 lines to \texttt{zebra} and
-\texttt{lib}. I also modified existing lines. ~600 lines of code were
+the Quagga routing daemon. My changes consisted of adding $\mysym1,900$ lines of C
+code to the \texttt{ospf6d} code base along with $\mysym400$ lines to \texttt{zebra} and
+\texttt{lib}. I also modified existing lines. $\mysym600$ lines of code were
 used for unit testing.
 
 \section{Core Algorithms}
@@ -870,8 +873,8 @@ If a there are no aggregated prefixes in the routing domain after 20 seconds,
 the router with the highest RID must generate a Unique Local Address
 (ULA)\nomenclature{ULA}{Unique Local Address} prefix\footnote{In the defining
 RFC these are referred to as Global IDs.} to facilitate local connectivity.
-ULAs are similar in concept to IPv4 Private addresses\footnote{Although it is
-not recommended to use NAT with IPv6} (e.g. 192.168.1.0). 
+ULAs are similar in concept to IPv4 Private addresses (e.g. 192.168.1.0).\footnote{Although it is
+not recommended to use NAT with IPv6}
 
 The ULA prefix generation algorithm is defined in RFC4193 (Section
 3.2)\cite{rfc4193}. It attempts to generate a unique /48 prefix, based on a
@@ -883,7 +886,9 @@ Identifier}
 Once a ULA prefix has been generated it is advertised like any other aggregated
 prefix. If a router with a higher RID becomes reachable, or an aggregated
 prefix from another source is received, the prefix is deprecated after 120
-seconds. 
+seconds. The draft recommends that ULAs are deprecated if there are any global
+addresses in the system, so as to prevent local IPv6 islands forming -- this is
+still an area of debate within the IPv6 community. 
 
 \subsection{Source Based Routing}
 \label{SourceBasedRouting}
@@ -894,23 +899,26 @@ seconds.
 \end{center}
 \end{figure}
 In the future it may become common for households to have multiple broadband
-connections, as shown in Figure~\ref{fig:MultipleISP}. A cable connection, with
-an ADSL line for backup could provide households with a resilient connection. 
+connections, as shown in Figure~\ref{fig:MultipleISP}. For example, a cable
+connection with ADSL for backup could provide households with a resilient
+connection. 
 
-To prevent various attacks\footnote{Denial of Service
+To prevent various attacks,\footnote{Denial of Service
 (DoS)\nomenclature{DoS}{Denial of Service} attacks using spoofed source
-addresses are common.}, in accordance with BCP 38\cite{bcp38}, ISPs will not
+addresses are common.} in accordance with BCP 38\cite{bcp38}, ISPs will not
 forward traffic with a source address outside the prefix allocated to that
-network.  As such, if multiple ISPs are used, network traffic must be routed to
-the correct ISP. Source based routing aims to solve this problem by considering
-source addresses, as well as destinations. 
+network. As such, if multiple ISPs are used, network traffic must be routed to
+the correct ISP\@. Source based routing aims to solve this problem by considering
+the source address, as well as the destination. 
 
-I implemented a proof of concept based on my autoconfig code. My source based
-routing branch is incompatible with my unaltered autoconfig implementation. My
-code is based loosely on drafts that specify replacement LSAs for the standard
-OSPFv3 LSA types, using Type Length Values (TLVs) similar to those in the
-autoconfig draft. Due to the complexity of these drafts, I decided not to
-conform to them in my proof of concept.
+I implemented a proof-of-concept based on my autoconfig code. This branch is
+incompatible with my unaltered autoconfig implementation. It is based loosely
+on work by Baker \cite{draft-baker-ipv6-ospf-extensible-00}
+\cite{draft-baker-ipv6-ospf-dst-src-routing-00}, published
+17\textsuperscript{th} February 2013, that specifies replacements for the
+standard OSPFv3 LSA types, using Type Length Values (TLVs) similar to those in
+the autoconfig draft. Due to the complexity of these drafts, I decided not to
+conform to them in my proof-of-concept.
 
 My implementation works by exploiting the Linux Kernel's ability to have
 multiple routing tables. A routing table is created for each source address
@@ -921,11 +929,11 @@ Quagga's Zebra daemon has the ability to manipulate any routing table. I
 extended the Zebra protocol's message for adding entires to the routing table
 to include the source address, and then chose the routing table based on a hash
 of this address. Unfortunately Quagga does not offer the ability to manipulate
-the policy table. To overcome this I used of \texttt{iproute2}'s \texttt{ip
+the policy table. To overcome this I used \texttt{iproute2}'s \texttt{ip
 -6 rule} command, which I called from a bash shell script, invoked using the
 \texttt{system} function. 
 
-This proof of concept demonstrates that Quagga can be extended to implement
+This proof-of-concept demonstrates that Quagga can be extended to implement
 source based routing. It is not a complete solution -- firstly it is not
 interoperable with other implementations as it does not conform to the draft.
 Secondly using the \texttt{system} system call is not secure, elegant or
@@ -936,7 +944,7 @@ Quagga is written in C89, following the GNU coding
 standards\cite{gnucodestandards}. These rules help to improve the portability
 of the code, meaning that if there is a C compiler, and the operating system is
 Unix-like, then Quagga is likely to compile for it.  Quagga does not
-support Microsoft Windows\footnote{Or WinDoze as the GNU coding standards would
+support Microsoft Windows.\footnote{Or WinDoze as the GNU coding standards would
 put it}.
 
 \subsection{Style}
@@ -976,14 +984,13 @@ library provides commonly used data structures and algorithms to the protocol
 implementations. 
 
 \subsubsection{Thread}
-I made heavy use of the Thread library item. Threads are a similar to
-operating system threads. They consist of pointers to functions that will be
-called upon some event, or after a set time. These threads are an application
-level construct. The program  executes as one process, only one thing is
-being executed at any given time. Although this means the multicore
-architecture of modern CPUs \nomenclature{CPU}{Central Processing Unit} is not
-exploited, it simplifies development, removing the need to worry about thread
-safety.
+I made heavy use of the Thread library item. Threads are a similar to operating
+system threads. They consist of pointers to functions that will be called upon
+some event, or after a set time. These threads are an application level
+construct. The program  executes as one process, only one thing is being
+executed at any given time. Although this means the multi-core architecture of
+modern CPUs is not exploited, it simplifies development, removing the need to
+worry about thread safety.
 
 \subsubsection{LinkList}
 Linklist was another useful element of the library. It implements a doubly
@@ -991,8 +998,8 @@ linked list -- a series of nodes with pointers to the next and previous node in
 the list. Many of the data structures that I required in my program were
 variable length lists, and Linklist worked well for this. Linklist also offers
 a macro \texttt{ALL\_LIST\_ELEMENTS} that can be used like to Java's enhanced
-\texttt{for} loop\footnote{Variables to hold pointers to the current and next
-node make it look messy though.}. Linklist's main drawback is that due to
+\texttt{for} loop.\footnote{Variables to hold pointers to the current and next
+node make it look messy though.} Linklist's main drawback is that due to
 limitations of C, the data is referenced by a typeless pointer, and therefore
 is not type safe. If the developer is careful this should not be an issue. 
 
@@ -1022,11 +1029,11 @@ Quagga. \texttt{vtysh} can be accessed locally on the router using the
 are made directly to the routing protocol daemon, i.e. \texttt{telnet ::
 ospf6d}.  
 
-The interface is based on Cisco's router's. Commands like
-``\texttt{show ipv6 ospf6 database detail}'' can be used. ``\texttt{sh ipv os
-da de}'' is also a valid representation of the same command as it is
-unambiguous. The aforementioned command will list out, in full detail, the
-contents of all of the LSAs that \texttt{ospf6d} knows about. 
+The interface is based on Cisco's router's. Commands like ``\texttt{show ipv6
+ospf6 database detail}'' can be used. ``\texttt{sh ipv os da de}''  will
+perform the same command as it is unambiguous. The aforementioned command will
+list out, in full detail, the contents of all of the LSAs that \texttt{ospf6d}
+knows about. 
 
 I added commands to \texttt{vtysh} that allow the user to list and add
 prefixes. Details of this can be found in Appendix~\ref{vtysh}. 
@@ -1047,7 +1054,7 @@ finally there do not seem to be any clean ways of interfacing with
 \texttt{radvd}: the daemon must be halted, configuration files updated and then
 started up again.
 
-Fortunately Quagga has its own, slightly limited, code for emmiting RAs. This
+Fortunately Quagga has its own, slightly limited, code for emitting RAs. This
 functionality is part of Zebra, the code responsible for updating the routing
 table. The \emph{correct} way of accessing this functionality from within the
 routing protocol implementation (i.e. \texttt{ospf6d}), is to send a message
@@ -1146,7 +1153,7 @@ Linux} to run many Virtual Machines (VMs) \nomenclature{VM}{Virtual Machine}
 on a single desktop PC. 
 
 Netkit presents the user with an \texttt{xterm} window for each VM\@. These VMS
-behave like normal linux computers. They have virtual interfaces, that act much
+behave like normal Linux computers. They have virtual interfaces, that act much
 like real interfaces. Netkit allows these virtual interfaces to be joined
 together through collision domains -- setting two interfaces to the same
 collision domain is like plugging two hosts into the same network switch.
@@ -1220,9 +1227,11 @@ Quagga both implement the same specifications for OSPFv3, I felt it was safe to
 assume that the unmodified versions Bird and Quagga would be compatible. 
 
 \subsection{Ben's Implementation}
-Ben Paterson's implementation was written in C. I found it easy to install onto
-my Netkit testbed -- it required nothing more than cloning the Git repository
-and then compiling the fork of Bird on one of the netkit VMs. 
+Ben Paterson's implementation\footnote{Available at:
+\url{https://github.com/fingon/bird-homenet}} was written in C. I found it
+easy to install onto my Netkit testbed -- it required nothing more than
+cloning the Git repository and then compiling the fork of Bird on one of the
+Netkit VMs. 
 
 Ben's implementation correctly implements the Autoconfig draft. However, I
 discovered that my implementation was wrong: The RHWFP is defined as 32 bytes,
@@ -1244,17 +1253,19 @@ picking the addresses sequentially.
 
 \subsection{Markus' Implementation}
 Markus Stenberg's implementation takes an unusual approach to extending Bird. A
-fork of Bird has been created called Bird-Ext-LSA\@\footnote{Not to be confused
-with External LSAs in OSPFv3 that carry information from other protocols.},
-which offers a mechanism that allows LSAs to be processed by an separate
-program. 
+fork of Bird has been created called Bird-Ext-LSA\@,\footnote{Not to be
+confused with External LSAs in OSPFv3 that carry information from other
+protocols.}\footnote{Available at:
+\url{https://github.com/fingon/bird-ext-lsa}} which offers a mechanism that
+allows LSAs to be processed by an separate program. 
 
-Bird-Ext-LSA is complimented by hnet-core (Homenet Core), a project that makes
-use of Bird-Ext-LSA to implement, among other things, the Autoconfig drafts\@.
-hnet-core is written in the scripting language Lua. Running this code was a
-challenge -- I had problems creating the right environment; the code has  many
-dependencies. \texttt{Luarocks} helped install some of these. I did eventually
-get the code running on my Netkit testbed.
+Bird-Ext-LSA is complimented by hnet-core\footnote{Available at:
+\url{https://github.com/fingon/hnet-core}} (Homenet Core), a project that
+makes use of Bird-Ext-LSA to implement, among other things, the Autoconfig
+drafts\@.  hnet-core is written in the scripting language Lua. Running this
+code was a challenge -- I had problems creating the right environment; the
+code has  many dependencies. \texttt{Luarocks} helped install some of these.
+I did eventually get the code running on my Netkit testbed.
 
 Once I had the code running, I found it was incompatible with my implementation
 without alteration. To enable compatibility with a version created by the
@@ -1308,9 +1319,9 @@ necessary. DVCSs are superior to traditional centralised version control
 system such as Subversion (SVN) because they allow work to be done without internet
 connectivity and commits are much faster so tend to be made more often. 
 
-I kept the source code for my project in a public GitHub repository\footnote{My
+I kept the source code for my project in a public GitHub repository.\footnote{My
 project's GitHub can be found at
-\url{https://github.com/edderick/quagga\_zOSPF}}. This allowed me to work in
+\url{https://github.com/edderick/quagga\_zOSPF}} This allowed me to work in
 many different locations without worrying about synchronising files. Although
 I made regular backups of my project, I believe that GitHub is an incredibly
 safe place to store my code. Appendix~\ref{GithubStats} contains some
@@ -1318,8 +1329,8 @@ diagrams and stats generated by GitHub about my project.
 
 \subsection{Trello}
 During my project, I used Trello, a web based kanban style task
-management system\footnote{My Trello can be found at
-\url{https://trello.com/board/50b53fc0ec17d1c75f003c17}}.
+management system.\footnote{My Trello can be found at
+\url{https://trello.com/board/50b53fc0ec17d1c75f003c17}}
 Trello provides cards than can be placed into lists and then moved around
 between them. The lists can have titles such as ``Thinking'', ``Doing'' and
 ``Done''. Trello was very useful for tracking what tasks I had done, and what
@@ -1333,7 +1344,6 @@ documents than WYSIWYG editors such as Microsoft Word. Additionally I made use
 of tools and packages to help me produce the report. (e.g. TexCount and BibTeX)
 
 \section{Risk Assessment}
-\todo{Tabulate?}
 Throughout my project there were many risks, I ensured I took necessary
 precautions to limit the damage caused by these risks.
 
@@ -1342,10 +1352,10 @@ shock. I took the power supplies to be PAT tested, as the power supplies are
 double insulated, a quick visual inspection by a trained member of staff
 reassured me that they would be safe to use.
 
-Around 01/12/2012, ECS had a fairly major network outage due to a hardware
+In December 2012, ECS had a fairly major network outage due to a hardware
 failure. I was unable to do other coursework because I needed to use the
 software within ECS\@. Although I was fortunate enough to avoid any network
-outages, my use of DVCS meant that it would not have been an issue.
+outages my use of DVCS meant that it would not have been an issue.
 
 Fire or other unforeseeable disaster could have damaged to my data. For example
 in 2005 the old Mountbatten building burned to the ground. Although such risks
@@ -1359,10 +1369,10 @@ during the project. However, it turned out that they were not as important to
 the project as I had initially thought since I did most of my testing and
 development using Netkit.
 
-I could have misjudged the difficulty of the project and been unable to complete
-the project on schedule. Fortunately this was not an issue. The iterative
-approach that I took to the project enabled me to implement a proof of
-concept of an extension.  
+I could have misjudged the difficulty of the project and been unable to
+complete the project on schedule. Fortunately this was not an issue. The
+iterative approach that I took to the project enabled me to implement a
+proof-of-concept of an extension.  
 
 \section{Gantt Charts}
 As the project progressed my schedule changed slightly, the Gantt charts
@@ -1416,7 +1426,7 @@ In general the project was a success. Despite its difficulty, I managed to
 complete my implementation on schedule. I feel the software I have produced is
 functional, robust and maintainable. I managed to meet all my goals, and the
 only requirement that I did not fulfil was number 8: obtaining aggregated
-prefixes from DHCP-PD. My code is now ready for code review, after which it may
+prefixes from DHCP-PD\@. My code is now ready for code review, after which it may
 be accepted as part of Quagga. The feedback on the drafts I produced should
 help them progress along the standards track.
 
@@ -1500,7 +1510,7 @@ The following comments refer to the Autoconfiguration draft
 		determines that the other must change its RID, we will be left in a
 		conflicting state.
 	\item  The non-neighbour case (5.2) for RID collisions covers all collisions,
-		it should cover the neighbour case (5.1). A justification for the existance
+		it should cover the neighbour case (5.1). A justification for the existence
 		of the neighbour case might be beneficial.
 \end{enumerate}
 
@@ -1515,8 +1525,8 @@ These suggestions are about the prefix assignment draft
 		another prefix or reachable OSPFv3 router to appear.''
 		%\end{quote}
 
-		The draft doesn't state exactly what is meant by commited. As mentioned in
-		Section \ref{pending_list}, I used a pending list to ensure a young
+		The draft doesn't state exactly what is meant by committed. As mentioned in
+		Section~\ref{pending_list}, I used a pending list to ensure a young
 		conflicting assignment could be deleted quickly.
 	\item The draft does not indicate how assignments should be chosen. Using a
 		random or sequential value seems obvious, but it may be possible to reduce
@@ -1559,7 +1569,7 @@ not couple Quagga to other projects. However, it would be likely to require
 more work to achieve.
 
 \subsection{Source Based Routing} 
-My proof of concept code (See Section \ref{SourceBasedRouting}) shows that it
+My proof-of-concept code (See Section~\ref{SourceBasedRouting}) shows that it
 is possible to do source based routing by extending Quagga. A more formal
 implementation of source based routing would be beneficial to the community.
 Ideally it would conform to the drafts, and be consistent with Quagga's
@@ -1586,7 +1596,7 @@ In a typical single subnet IPv4 home network, DNS servers  are learned through
 DHCP from an ISP, or manually configured. In a multi-subnet home network,
 mechanisms are needed for propagating the DNS severs available to the network.
 The prefix assignment draft recommends supporting stateless DHCPv6 and Router
-Advertisement otions.
+Advertisement options.
 
 Stateless DHCPv6 works by running a DHCPv6 server that maintains no state about
 its clients. It simply serves configuration details such as the DNS server
@@ -1624,8 +1634,8 @@ implements one of those features.
 
 It does not however stop at home users, ISPs also need to be on board.
 Currently in the UK there is only a handful of ISPs providing IPv6 addresses to
-their customers. SixXS list just 7 UK ISPs, the most popular of these being
-Andrews \& Arnold.
+their customers. SixXS list just seven UK ISPs, the most popular of these being
+Andrews \& Arnold \cite{SixXS}.
 
 These problems are outside of my control, hopefully with time, the
 large ISPs will overcome the inertia of switching to IPv6.
