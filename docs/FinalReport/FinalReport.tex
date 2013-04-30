@@ -1110,8 +1110,8 @@ using them.  I felt using external libraries  would go against the ethos of
 Quagga, and my testing strategy did not fit the design of most popular
 libraries. 
 
-The design of my unit testing code is shown in Figure~\ref{fig:testcase}. A
-summary of the results for my testing can be seen in
+The design of my unit testing code is shown in Figure~\ref{fig:testcase}, and a
+summary of the results for this testing can be seen in
 Appendix~\ref{testResults}.
 
 \subsection{Test Cases}
@@ -1143,7 +1143,7 @@ configuration. Netkit uses User Mode Linux (UML) \nomenclature{UML}{User Mode
 Linux} to run many Virtual Machines (VMs) \nomenclature{VM}{Virtual Machine}
 on a single desktop PC. 
 
-Netkit presents the user with an \texttt{xterm} window for each VM\@. These VMS
+Netkit presents its user with an \texttt{xterm} window for each VM\@. These VMs
 behave like normal Linux computers. They have virtual network interfaces, that
 act much like real network interfaces. Netkit allows these virtual interfaces
 to be joined together through collision domains -- setting two interfaces to
@@ -1157,19 +1157,19 @@ an instance of Quagga on each virtual machine, and control them through
 \texttt{vtysh}. Having seven terminal windows on a single computer is far more
 convenient than having seven separate devices that must be configured
 separately. Netkit's biggest advantage over using \texttt{ssh} or
-\texttt{telnet} is that it does not  dependent on network connectivity, so you
+\texttt{telnet} is that it does not depend on network connectivity, so you
 are free to make changes to the network without losing your remote connection.
 
-Compiling the code from within Netkit is also much faster than on the Alix2d3s
+Compiling the code from within Netkit is much faster than on the Alix2d3s
 (See Section\ref{alix}), the difference was between several hours on the
-Alix2d3s and several minutes in Netkit. This was because rather than using a
+Alix2d3s and a few minutes in Netkit. This was because rather than using a
 500MHz AMD Geode\footnote{A low power System-on-chip designed for the embedded
 market in around 2002}, Netkit used my desktop PC's 3.3GHz Intel i5
 2500k\footnote{A mid/high end desktop processor from 2011} for compiling. 
 
 I found Netkit to be a great tool for understanding how networks work.
 Translating my knowledge of network theory to an ability to configure real
-networks was tough. Trivial things often turn out to be the issue -- an example
+networks was tough. Trivial things are often problematic -- an example
 is setting \path{/proc/sys/net/ipv6/conf/all/forwarding} to 1, allowing IPv6
 traffic to be forwarded. It is not an important piece of theory, but if it is
 not done, routing will not work. 
@@ -1187,8 +1187,8 @@ the contents were as expected.
 Using Hurricane Electric's (HE) Tunnel broker service, I was able to give my
 network global connectivity. An HE tunnel, provides you with a single /64 IPv6
 prefix. It is possible to request a larger /48 allocation. The tunnel is
-configured at their end to route any traffic that is destined to your prefix,
-to the endpoint that you specified.  
+configured at their end to route any traffic destined for your prefix, to the
+endpoint that you specified.  
 
 By configuring a static route forwarding all traffic for the allocated /48
 prefix into the Netkit network, then setting up Quagga within the Netkit
@@ -1201,7 +1201,7 @@ the devices had global addressability.
 \label{alix}
 Although I was confident that testing my code using Netkit was sufficient to
 show it working correctly, I ran my code on two Alix2d3 devices. Alix2d3s are
-very small computers on which one can install Linux. They make good routers as
+very small computers on which one can install Linux; they make good routers as
 they have multiple network interfaces. This offered more tangible proof
 that my code functions correctly. It also allowed me to do things that home
 users are likely to do, such as plugging the routers together in arbitrary
@@ -1216,7 +1216,7 @@ everything seemed to be working.
 One of the goals of my project was to verify that the implementations produced
 by other developers were compatible with the code I produced. 
 
-Both of the implementations I tested against were based on Bird. As Bird and
+Both the implementations I tested against were based on Bird. As Bird and
 Quagga both implement the same specifications for OSPFv3, I felt it was safe to
 assume that the unmodified versions Bird and Quagga would be compatible. 
 
@@ -1262,7 +1262,7 @@ creating the right environment; the code has many dependencies,
 Eventually I got the code running; without alteration, it was incompatible with
 my implementation. To enable compatibility with a version created by the
 draft's author (Jari Arrko), a different AC-LSA Type number was used -- this
-confused me at first, but once spotted it was simple to fix.
+confused me at first, but once spotted, it was simple to fix.
 
 The other compatibility issue was that this implementation interpreted the TLVs
 length to include the TLV header. The draft explicitly states that the length is
@@ -1275,8 +1275,8 @@ After all this was fixed, there seemed to be a good level of compatibility,
 with prefixes from one finding their way into the other.
 
 \section{Further Testing}
-To increase the confidence in my code to the level expected of a
-commercial product, it would be wise to undergo further testing. 
+To increase the confidence in my code to the level expected of a commercial
+product, it would be wise to undergo further testing. 
 
 One method of testing is to use a commercial network protocol compliance
 verification suite, such as IxANVL or Spirent. These ensure that the protocol
@@ -1286,18 +1286,17 @@ is an open source library for testing OSPFv2, I was unable to find any open
 source libraries for testing OSPFv3 that could be easily extended to test
 autoconfiguration. 
 
-Moving beyond this, some level of user testing should be undertaken before
-publicly releasing this code, and integrating it into Quagga. Typically, code
-undergoes closed Alpha testing by a small number of developers, followed by
-Beta testing, where it is released to the public without guarantees of
-correct functionality.
+Moving beyond this, user testing should be undertaken before publicly releasing
+this code, and integrating it into Quagga. Typically, code undergoes closed
+Alpha testing by a small number of developers, followed by Beta testing, where
+it is released to the public without guarantees of correct functionality.
 
 \chapter{Project Management}
 \section{Tools}
-A personal goal for my project was to use of lots of new tools. During the
-project, I ended up using a wide variety of tools. Some of the tools I had used
-before, but using them on a large project meant that I made use of features that
-I did not know existed before.
+A personal goal for my project was to use many of new tools. During the
+project, I ended up using a wide variety of tools. Some of these I had used
+before, but using them on a large project meant I made use of features that I
+did not know existed before.
 
 \subsection{Git}
 I chose to use Git as my version control system. This choice was
@@ -1315,9 +1314,9 @@ I kept the source code for my project in a public GitHub repository.\footnote{My
 project's GitHub can be found at
 \url{https://github.com/edderick/quagga\_zOSPF}} This allowed me to work in
 many different locations without worrying about synchronising files. Although
-I made regular backups of my project, I believe that GitHub is an incredibly
+I did make regular backups of my project, I believe that GitHub is an incredibly
 safe place to store my code. Appendix~\ref{GithubStats} contains some
-diagrams and stats generated by GitHub about my project. 
+diagrams and statistics generated by GitHub about my project. 
 
 \subsection{Trello}
 During my project, I used Trello, a web based kanban style task
@@ -1331,9 +1330,9 @@ tasks still needed doing.
 \subsection{\LaTeX}
 I chose to produce all of the documentation associated with this project using
 \LaTeX, because it is a powerful tool that allows me to focus on writing my
-report rather than typesetting it. It also tends to be more robust for longer
-documents than WYSIWYG editors such as Microsoft Word. Additionally I made use
-of tools and packages to help me produce the report. (e.g. TexCount and BibTeX)
+report rather than typesetting it. It is also more robust for long documents
+than WYSIWYG editors such as Microsoft Word. Additionally I made use of tools
+and packages to help me produce the report. (e.g. TexCount and BibTeX)
 
 \section{Risk Assessment}
 Throughout my project there were many risks, I ensured I took necessary
@@ -1374,16 +1373,15 @@ Firstly, I did not account for the high work load over the Christmas holiday. I
 expected to work on my third year project but instead spent time on other
 coursework and preparation for January exams. This meant that implementation
 began later than planned, by working hard on my project I was able to complete
-it on time; then go on to do an extension. 
+it on time; going on to do an extension. 
 
 At the start of the project I though I would use Alix2d3s for testing, so
-did not allocate time for setting up Netkit. Although this did take time
-initially, it saved me time in the long run by reducing the time taken for
-testing. 
+did not allocate time for setting up Netkit. Although initially this took time,
+in the long run it saved time, by reducing the time taken for testing. 
 
 I decided that user testing was not be appropriate for this project. The aims
 of the project were more about the feasibility and correctness of the drafts
-that their usability. Users should never need to know that this software is
+than their usability. End users should never need to know that this software is
 running in their homes, so do not need to evaluate it. 
 
 \pagebreak
@@ -1453,13 +1451,12 @@ did not dig into the project until later than I would have liked -- in
 hindsight I could have chosen less coursework intensive optional modules.
 Another factor was my lack of confidence about jumping in at the deep end.
 Working on this project taught me that one of the best ways of understanding
-a code base is trying adding a feature to it.
+a code base is trying to add a feature to it.
 
 I also feel that I could have become more involved in the discussion about the
 drafts, again I think I was held back by a lack of experience and confidence,
-having never been involved with the Internet Engineering Task Force or any
+having never been involved with the Internet Engineering Task Force or
 other international standards body before. 
-
 
 \chapter{Conclusions and Future Work}
 
@@ -1468,11 +1465,11 @@ In this project I have shown that it is possible to extend Quagga to implement
 zero configuration OSPFv3; Along the way I learned a lot about networks. 
 
 \subsection{Ambiguities in the Drafts}
-There are a few areas of the drafts that I feel are slightly ambiguous or under
-prescriptive. I plan on sending the following suggestions to the authors of the
-drafts.
+There are a few areas of the drafts that I feel are slightly ambiguous or
+under-prescriptive. I plan on sending the following suggestions to the authors
+of the drafts.
 
-The following comments refer to the Autoconfiguration draft
+The following comments refer to the autoconfig draft
 \cite{draft-ietf-ospf-ospfv3-autoconfig-02}:
 \begin{enumerate}
 	\item In section 5.1 the draft says: 
@@ -1498,7 +1495,7 @@ The following comments refer to the Autoconfiguration draft
 
 		It does not mention what to do upon a conflict between an automatically
 		generated and a manually configured Router-ID: The two routers decide
-		independently whether they will change. If the autoconfigured router
+		independently whether they will change, if the autoconfigured router
 		determines that the other must change its RID, we will be left in a
 		conflicting state.
 	\item  The non-neighbour case (5.2) for RID collisions covers all collisions,
@@ -1515,7 +1512,7 @@ These suggestions are about the prefix assignment draft
 		``A new prefix assignment within an aggregated prefix SHOULD NOT be
 		committed before the router has waited NEW\_PREFIX\_ASSIGNMENT seconds for
 		another prefix or reachable OSPFv3 router to appear.''
-		%\end{quote}
+	%\end{quote}
 
 		The draft doesn't state exactly what is meant by committed. As mentioned in
 		Section~\ref{pending_list}, I used a pending list to ensure a young
@@ -1540,8 +1537,8 @@ interoperability tests.
 
 \section{Future Work}
 My project had a large scope, is in a topical research area, and is based on
-highly extensible drafts. As such a large amount of work can be based on what I
-have produced. 
+highly extensible drafts. As such, a large amount of work could be based on
+what I have produced. 
 
 This project is a good candidate for extension by a Google Summer of Code
 student, or a future Third Year Project. 
@@ -1553,23 +1550,23 @@ was beyond the scope of the project.
 
 There are two ways I would suggest implementing this functionality. The first
 is to make use of an existing DHCPv6 Client such as WIDE-DHCPv6, and hook into
-its PD message functionality. The other would be to add functionality to Quagga
-itself to handle the DHCPv6-PD messages. 
+its DHCPv6-PD message functionality. The other would be to extend Quagga itself
+to handle the DHCPv6-PD messages. 
 
 I feel implementing this as part of Quagga is the better solution as it does
-not couple Quagga to other projects. However, it would be likely to require
-more work to achieve.
+not couple Quagga to other projects. However, it is likely to require more work
+to achieve.
 
 \subsection{Source Based Routing} 
-My proof-of-concept code (See Section~\ref{SourceBasedRouting}) shows that it
-is possible to do source based routing by extending Quagga. A more formal
-implementation of source based routing would be beneficial to the community.
+My proof-of-concept code (See Section~\ref{SourceBasedRouting}) shows it is
+possible for Quagga to be extended to support source based routing. A more
+formal implementation of source based routing would benefit the community.
 Ideally it would conform to the drafts, and be consistent with Quagga's
 existing coding style. 
 
 \subsection{Multi-hop Service discovery}
-Service discovery is very popular in modern networks. Major use cases include
-finding media streamers and printers on a home network. At present, since the
+Service discovery is popular in modern networks, major use cases include
+finding media streamers and printers on a home network. Currently, since the
 service discovery messages are not forwarded by the router, to discover a
 service, a host must be on the same subnet.
 
@@ -1584,17 +1581,17 @@ would extend their service discovery platform, Bonjour, to use this kind of
 technology.
 
 \subsection{Domain Name Services}
-In a typical single subnet IPv4 home network, DNS servers  are learned through
-DHCP from an ISP, or manually configured. In a multi-subnet home network,
-mechanisms are needed for propagating the DNS severs available to the network.
+In a typical single subnet IPv4 home network, DNS servers are learned from an
+ISP through DHCP, or manually configured. In a multi-subnet home network,
+mechanisms are needed for propagating available DNS severs through the network.
 The prefix assignment draft recommends supporting stateless DHCPv6 and Router
 Advertisement options.
 
 Stateless DHCPv6 works by running a DHCPv6 server that maintains no state about
-its clients. It simply serves configuration details such as the DNS server
+its clients, it simply serves configuration details such as DNS server
 addresses. The draft recommends that each router acts as a DHCPv6 relay so
 hosts deep within the network can obtain DNS information.  Enabling DHCPv6
-should be simple as packages (Such as WIDE-DHCPv6, Dibbler) already exist. 
+should be simple as packages (Such as WIDE-DHCPv6 and Dibbler) already exist. 
 
 Router advertisements contain two types of listing for discovering DNS servers.
 First, listings for Recursive DNS Servers (RDNSS)
@@ -1619,18 +1616,18 @@ authentication trailers to prevent unauthorised routers joining their home
 network.  
 
 \section{Deployment in the Home}
-As IPv6 becomes more common place, and IPv4 is slowly phased out, this project can 
-actually be used in the home. For home users to want to switch to IPv6 there must 
+As IPv6 becomes commonplace, and IPv4 is slowly phased out, this project can 
+actually be used in the home. To encourage home users to switch to IPv6 there must 
 be features they cannot get from IPv4 -- I feel that this project 
 implements one of those features.
 
-It does not however stop at home users, ISPs also need to be on board.
-Currently in the UK there is only a handful of ISPs providing IPv6 addresses to
-their customers. SixXS list just seven UK ISPs, the most popular of these being
-Andrews \& Arnold \cite{SixXS}.
+It does not stop at home users, ISPs must also be on board. Currently in the UK
+only a handful of ISPs provide IPv6 addresses to their customers. SixXS list
+just seven UK ISPs, the most popular of these being Andrews \& Arnold
+\cite{SixXS}.
 
-These problems are outside of my control, hopefully with time, the
-large ISPs will overcome the inertia of switching to IPv6.
+These problems are beyond my control, but hopefully with time, large ISPs will
+overcome the inertia of switching to IPv6.
 
 \raggedbottom
 \pagebreak
