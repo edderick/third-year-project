@@ -296,10 +296,10 @@ Autoconfiguration}. A /48 prefix may be allocated by an ISP to allow the user
 to assign multiple subnets on their network.
 
 The networks run by ECS are dual stack: the machines have both IPv4 and IPv6
-addresses. Although this is not yet common place, 6\textsuperscript{th} June 2012 was World IPv6
-Launch; many websites, including Facebook and Google, began offering IPv6
-connectivity. \cite{IPv6Launch} This demonstrates that IPv6 is mature enough to
-be deployed in large networks.
+addresses. Although this is not yet common place, 6\textsuperscript{th} June
+2012 was World IPv6 Launch; many websites, including Facebook and Google, began
+offering IPv6 connectivity\cite{IPv6Launch}. This demonstrates that IPv6 is
+mature enough to be deployed in large networks.
 
 \section{Routing}
 For packets of data to find their way between subnets, they require routing.
@@ -374,9 +374,9 @@ there are no conflicts across the network. This is achieved by the introduction
 of a new Link State Advertisement (LSA) \nomenclature{LSA}{Link State
 Advertisement} type -- the Autoconfiguration LSA. 
 
-The most recent release of this document was on 15\textsuperscript{th} April 2013. Although this
-was towards the end of my project, the changes were only minor and I was able
-to incorporate them into my implementation.
+The most recent release of this document was on 15\textsuperscript{th} April
+2013. Although this was towards the end of my project, the changes were only
+minor and I was able to incorporate them into my implementation.
 
 \section{OSPFv3 Prefix Assignment}
 Building on the work of the Autoconfig draft, Arkko, et
@@ -391,7 +391,8 @@ Typically an ISP will allocate customers a /48 IPv6 prefix to cover their
 whole home, each network in their home then requires a /64 IPv6 prefix.
 
 An update to this document was published on 23rd October 2013, it expired on
-26\textsuperscript{th} April 2013, although it is likely a refresh will be released soon.
+26\textsuperscript{th} April 2013, although it is likely a refresh will be
+released soon.
 
 \section{Other Important Drafts}
 There are several other documents that are relevant to this project. These are
@@ -437,18 +438,18 @@ that had been mentioned. This list includes:
 
 \begin{itemize} 
   \item {\bf RFC 5838} Support of Address Families in OSPFv3 \cite{rfc5838}
-	\\ Extensions to allow different kinds of address to be used with OSPFv3.
+	\\ Extensions to allow different kinds of address in OSPFv3.
   
 \item {\bf RFC 6506} Supporting Authentication Trailer for OSPFv3  \cite{rfc6506}
-	\\ Adds a level of security back into OSPFv3.
+	\\ Adds security back into OSPFv3.
 
 	\item {\bf RFC 3630}  Traffic Engineering Extensions
 	for OSPF \cite{rfc3630} 
 	\\ (Updated by 4230 \& 5786) \cite{rfc4230}\cite{rfc5786} 
-	\\ Extra set of LSAs to pass information for traffic shaping etc.\@
+	\\ Adds LSAs to pass information for traffic shaping etc.\@
   
 \item {\bf RFC 4862} IPv6 Stateless Address Autoconfiguration (SLAAC) \cite{rfc4862}
-	\\ Explains how an IPv6 networks can be established using NDP.\@
+	\\ Explains how IPv6 networks can be established using NDP.\@
 
 \end{itemize}
 
@@ -470,10 +471,9 @@ drafts since they are very much on the cutting edge.
 
 \chapter{Analysis}
 \section{Alternatives}
-There are also other approaches that can be used to solve the problems
-addressed by these drafts. The different solutions all have their merits -- to
-get a full understanding of the problems with each approach, implementation is
-necessary.
+There are other approaches that can be used to solve the problems addressed by
+these drafts. The different solutions all have their merits -- to get a full
+understanding of the problems with each approach, implementation is necessary.
 
 \subsection{IPv4 Address as Router ID}
 One possible solution to the RID assignment problem would be simply to use the
@@ -484,10 +484,10 @@ configuring by the user.
  
 However, as we enter a world dominated by IPv6, the use of IPv4 addresses will
 diminish. IPv6 addresses are a poor candidate for RIDs for many reasons.
-Firstly as they are larger than 32 bits, it would be difficult to create an identifier
-certain to be unique from them. Secondly an interface is likely to have
-many IPv6 Addresses. Of these addresses the only address it is guaranteed to
-have is a link-local address, which does not have to be unique across the
+Firstly as they are larger than 32 bits, it would be difficult to create an
+identifier certain to be unique from them. Secondly an interface is likely to
+have many IPv6 Addresses. Of these addresses the only address it is guaranteed
+to have is a link-local address, which does not have to be unique across the
 network. 
 
 \subsection{DHCPv6-PD}
@@ -497,24 +497,23 @@ network.
 	\caption{The DHCPv6-PD option.}\label{fig:pd-option}
 \end{center}
 \end{figure}
-
 DHCP for IPv6 Prefix Delegation (DHCvP6-PD)\nomenclature{DHCPv6-PD}{DHCP for
 IPv6 Prefix Delegation}, is a method for handing a prefix from one router to
 another. The receiving router decides how it wishes to hand out the prefixes
 contained in the prefix of the PD message (Shown in Figure~\ref{fig:pd-option}). 
 
-One solution to the prefix assignment issue would be to simply use a
-hierarchical system. Each router splits the prefix received from an upstream
-router and delegates an equal size prefix to each downstream router. A positive
-side of this approach is that it is very simple. The negative is that if the
-network is unbalanced, one side of the network would be delegated a far larger
-address space than it requires, while the other side is starved of prefixes.
-Without some extension there is no way of communicating address space
-requirements to upstream routers.   
+One solution to the prefix assignment issue is using a hierarchical system.
+Each router splits the prefix received from an upstream router and delegates an
+equal size prefix to each downstream router. A positive side of this approach
+is that it is very simple. The negative is that if the network is unbalanced,
+one side of the network would be delegated a far larger address space than it
+requires, while the other side is starved of prefixes.  Without some extension
+there is no way of communicating address space requirements to upstream
+routers.   
 
 \subsection{Manual Configuration}
 Another option is to accept that as networks become more complex, they will
-require more configuration. In a current home network, most end users do not
+require more configuration. In current home networks, most end users do not
 understand how their network works, and have no desire to touch the
 configuration anyway. Home users may end up with a better experience if a
 trained engineer was sent by their ISP to set up their home network for them.
@@ -525,14 +524,14 @@ users.
 Other routing protocols make good candidates for this kind of solution. OSPF
 was chosen as it as an IETF standard with good convergence rates and does not
 suffer from many problems due to misconfiguration of the network -- such as
-plugging two interfaces into the same link. No matter what routing protocol is
-chosen as the eventual standard in home networks, this project will certainly
-be an influence to its design.
+plugging multiple interfaces into the same link. Regardless of the routing
+protocol chosen as the eventual standard in home networks, this project will
+help influence its design.
 
 \section{How OSPF works}
 Open Shortest Path First (OSPF) is a link-state routing protocol. An image of
 the whole network is built up by flooding Link State Advertisements (LSA)
-across the network. Dijkstra's algorithm is used to build up routing table from
+across the network. Dijkstra's algorithm is used to generate routing tables from
 the LSAs.
 
 Several different message types exist in OSPF\@. These include:
@@ -544,7 +543,7 @@ Several different message types exist in OSPF\@. These include:
  \item Link State Acknowledgments -- Sent on the receipt of an LSU.
 \end{itemize}
 
-The routers store the LSAs that they know about in their Link State Database
+The routers store known LSAs in their Link State Database
 (LSDB)\nomenclature{LSDB}{Link State Database}. To identify which router
 originated an LSA, each router is given a unique RID.
 
@@ -555,41 +554,39 @@ originated an LSA, each router is given a unique RID.
 	\caption{OSPFv3's LSA Header.}\label{fig:LSA-header}
 \end{center}
 \end{figure}
-
 There are many different LSA types in OSPF\@. Each LSA is originated by
-a router on the network and forwarded on by other routers depending on its
+a router on the network and forwarded by others depending on its
 flooding scope. Each LSA contains some information about the network. 
  
 The two most important LSA types are the Router LSA and the Network LSA\@.
-Together they can be used to build up a complete picture of the areas that the
-router belongs to. Figure~\ref{fig:LSA-header} shows the structure of
-an LSA header. 
+Together they can be used to build up a complete picture of the
+areas\footnote{Areas are an advanced OSPF feature used to reduce routing
+protocol noise on very large networks.} the router belongs to.
+Figure~\ref{fig:LSA-header} shows the structure of an LSA header. 
 
 \subsubsection{Router LSA}
 The Router LSA is originated by each router and is flooded across its own area.
 Router LSAs contain information about the state of the router and its
 capabilities. They also contain information about the interfaces attached to
-the router, the types of these interfaces, and the metrics associated with
-using these interfaces. 
+the router, their types, and associated metrics.
 
 \subsubsection{Network LSA}
-Network LSAs are originated for each subnet, they are also flooded to its own
+Network LSAs are originated for each subnet, they are flooded to its own
 area.  The only router that should originate this LSA is the Designated Router
 (DR) \nomenclature{DR}{Designated Router}, and is elected with the DR Election
 algorithm. The Backup Designated Router (BDR) \nomenclature{BDR}{Backup
 Designated Router} is elected in a similar way, and must be prepared to start
 emitting a Network LSA if the DR becomes unreachable. 
 
-The Network LSA contains a list of routers that are connected to that subnet.
-There are no weights associated with these connections as they are covered by
-the Router LSAs. 
+The Network LSA contains a list of routers connected to the subnet. There are no
+weights associated with these connections as they are covered by the Router
+LSAs. 
 
 \subsubsection{Other LSAs}
-Several other LSA types are defined.  Many of these LSA types are
-irrelevant in this project as they are concerned with networks that consist of
-many areas, or interactions that occur outside of the current Autonomous System
-(AS). Since OSPFv3 Autoconfig dictates that only one area shall be used, these
-LSA types can be ignored.   
+Several other LSA types exist, many of them irrelevant to this project as they
+are concerned with networks that consist of many areas, or interactions that
+occur outside of the current Autonomous System (AS). Since OSPFv3 Autoconfig
+dictates that only one area shall be used, these LSA types can be ignored.   
 
 \subsection{Differences between OSPFv2 and OSPFv3}
 The main difference is that OSPFv2 is for IPv4 and OSPFv3 is for IPv6. Some
@@ -603,8 +600,8 @@ more subtle changes include:
 
 \section{Implementation Candidates}
 Below is a list of Open source implementations of OSPFv3\@. There are also
-commercial implementations,\footnote{Most notably the one provided by Cisco with
-their routers.} these have not been considered as they are closed source. 
+commercial implementations,\footnote{Most notably the one provided with Cisco
+routers.} these have not been considered as they are closed source. 
 
 \subsection{Bird}
 Bird\cite{BirdHome} is a lightweight suite of routing protocols, written
@@ -612,7 +609,7 @@ in C.
 
 Bird has two implementations of Autoconfiguration OSPFv3. The first was written
 in C as a separate branch. The other, extended Bird to allow LSAs to be
-processed by external programs, and then used Lua to implement the draft.
+processed by external programs, and then used Lua to implement the drafts.
 
 \subsection{Quagga}
 Quagga\cite{QuaggaHome} is a more heavyweight package, it is a fork of now
@@ -622,16 +619,15 @@ Quagga has no public implementations of autoconfig OSPFv3.
 
 \subsection{XORP}
 XORP\cite{XORPHome} is another heavy implementation. It is written in C++,
-there are not any public Autconfig OSPFv3 implementations. The activity
-surrounding XORP is low. 
+there are no public Autconfig OSPFv3 implementations based on XORP\@. The
+activity surrounding XORP is low. 
 
 \section{Chosen Implementation}
-I chose to base my project on Quagga. I found that after subscribing to all
-three developer mailing lists, Quagga seemed to be the most active project.  I
-also liked the clear separation between OSPFv2 and OSPFv3 that Quagga offered.
-Finally Quagga is a good choice as there were no existing implementations of
-autoconfig OSPFv3 based on Quagga, so my contributions would be more useful to
-the community.
+I chose to base my project on Quagga. After subscribing to all three developer
+mailing lists, Quagga seemed to be the most active project.  I also liked the
+clear separation between OSPFv2 and OSPFv3 that Quagga offered.  Finally Quagga
+is a good choice as there were no existing implementations of autoconfig OSPFv3
+based on Quagga, so my contributions would be more useful to the community.
 
 \chapter{Specification}
 To direct the implementation and allow a thorough evaluation, I produced the
@@ -642,6 +638,7 @@ ambiguity in requirements levels, I have used the language recommended by BCP14.
 My implementation:
 \begin{enumerate}
 	\item \textbf{MUST} allow the routing daemon to run without manual configuration.
+	\item \textbf{MUST} resolve RID conflicts if they occur.
 	\item \textbf{MUST} efficiently distribute IPv6 Prefixes across the network.
 	\item \textbf{MUST} store assigned prefixes in non volatile storage.
 	\item \textbf{SHOULD} be interoperable with existing implementations of the drafts.
@@ -653,7 +650,6 @@ My implementation:
 \end{enumerate}
 
 \chapter{Design}
-
 \section{Simplifications}
 To allow OSPFv3 to function without configuration, a number of simplifications
 must be made to how it runs. These simplifications restrict some of the fine
@@ -666,8 +662,8 @@ is no benefit gained by using areas. In Autoconfig OSPFv3, all
 interfaces on all routers will be part of Area 0.0.0.0, the backbone area.
 
 Removing multiple areas also reduces the complexity in other aspects. Various
-summary LSA types are no longer needed, and the flooding scope of area now
-covers the whole network.
+summary LSA types are no longer needed, and the area flooding scope now covers
+the whole network.
 
 \subsection{Default Values}
 The draft specifies the use of default values. These are mainly values that were
@@ -681,7 +677,7 @@ already do this.
 
 Secondly, defaults \texttt{HelloInterval} of 10 seconds, and
 \texttt{RouterDeadInterval} of 40 seconds should be used. There is also an
-optional reduction of the router inactivity time from
+optional reduction of the router inactivity timer from
 \texttt{RouterDeadInterval} down to a minimum of \texttt{HelloInterval} + 1
 seconds. 
 
@@ -702,9 +698,8 @@ there are no conflicts in RID across the network. This new LSA is known
 as an Auto Configuration LSA and currently uses an experimental Type value. A
 value will be assigned by IANA when the draft is upgraded to an RFC. 
 
-The AC-LSA is designed to be extensible, the aim is to allow more information
-to be contained in these LSAs. The structure of an AC-LSA can be seen in
-Figure~\ref{fig:AC-LSA} 
+The AC-LSA is designed to be extensible, allowing for more uses to be added in
+the future. The structure of an AC-LSA can be seen in Figure~\ref{fig:AC-LSA} 
 
 \subsection{TLVs}
 \begin{figure}
@@ -718,12 +713,12 @@ Figure~\ref{fig:AC-LSA}
 The payload of the AC-LSA is a set of Type-Length-Values (TLV). Each TLV
 contains: 
 \begin{itemize}
-    \item The type, or meaning, of the data.
+    \item The type of the data.
     \item The length of the value in bytes.
     \item The data itself.
   \end{itemize}
 
-Diagrams of the TLV's structure can be been in Figure~\ref{fig:TLV}
+A diagram of the TLV's structure can be been in Figure~\ref{fig:TLV}
 
 \subsubsection{Router-Hardware-Fingerprint TLV}
 \begin{figure}
@@ -744,7 +739,7 @@ used to ensure that the network is free from RID conflicts.
 	\caption{An aggregated prefix TLV.}\label{fig:AggregatedPrefix-TLV}
 \end{center}
 \end{figure}
-The Aggregated Prefix TLV (Figure~\ref{fig:AggregatedPrefix-TLV})is defined in
+The Aggregated Prefix TLV (Figure~\ref{fig:AggregatedPrefix-TLV}) is defined in
 the Prefix Assignment draft, it represents a short IPv6 prefix delegation that
 can be used to assign prefixes to the different subnets. 
 
@@ -759,18 +754,18 @@ sources, the main two are DHCPv6-PD and manual configuration.
 	\caption{An assigned prefix TLV.}\label{fig:AssignedPrefix-TLV}
 \end{center}
 \end{figure}
-The Assigned Prefix TLV (Figure~\ref{fig:AssignedPrefix-TLV})is also defined in
-the Prefix Assignment draft. A router adds an Assigned Prefix TLV to its AC-LSA
-when it makes an assignment from an Aggregated prefix. Each assignment is made
-to one interface, and is a /64 as this is the length used by SLAAC\@. Conflicts
-are resolved automatically if they occur. 
+The Assigned Prefix TLV (Figure~\ref{fig:AssignedPrefix-TLV}) is also defined
+in the Prefix Assignment draft. A router adds an Assigned Prefix TLV to its
+AC-LSA when it makes an assignment from an Aggregated prefix. Each assignment
+is made to one interface, and is a /64 as this is the length used by SLAAC\@.
+Conflicts are resolved automatically if they occur. 
 
 \chapter{Implementation}
 Over the course of the project I produced and tested an augmented version of
-the Quagga routing daemon. My changes consisted of adding $\mysym1,900$ lines of C
-code to the \texttt{ospf6d} code base along with $\mysym400$ lines to \texttt{zebra} and
-\texttt{lib}. I also modified existing lines. $\mysym600$ lines of code were
-used for unit testing.
+the Quagga routing daemon. My changes consisted of adding $\mysym1,900$ lines
+of C code to the \texttt{ospf6d} code base along with $\mysym400$ lines to
+\texttt{zebra} and \texttt{lib}. I also modified existing code. $\mysym600$
+lines of code were used for unit testing.
 
 \section{Core Algorithms}
 Several algorithms are used in Autoconfig OSPFv3 to ensure that the network
@@ -780,11 +775,10 @@ is configured correctly.
 The Router-Hardware-Fingerprint (RHWFP) is a value that is based on properties of
 the router that has a high probability of being unique across the network. 
 
-In my implementation I chose to use a concatenation of hashes of the MAC
-\nomenclature{MAC Address}{Media Access Control Address} addresses of the
-attached interfaces. MAC addresses are not totally guaranteed to be
-unique as manufacturers could cut corners, but if they are not, we face much
-bigger problems in lower layers.
+I chose to use a concatenation of hashes of the MAC \nomenclature{MAC
+Address}{Media Access Control Address} addresses of the attached interfaces.
+MAC addresses are not totally guaranteed to be unique as manufacturers could
+cut corners, but if they are not, we face much bigger problems in lower layers.
 
 \subsection{Router ID Generation}
 Autoconfig OSPFv3 says the RID should be a pseudo-random number, based on
@@ -794,14 +788,14 @@ reference to the \texttt{rand\_r} function call, which modifies it to maintain
 the state of the random sequence.
 
 One difficult part of the project was cleanly shutting down OSPFv3, changing
-the RID, and then bringing it back up again. 
+the RID, and then bringing it back up. 
 
 \subsection{Router ID Conflict Resolution}
 As the RIDs are random, there is a possibility of a collision -- two
 routers on the network assigning themselves the same RID\@. To prevent
 things going awry a mechanism for resolving these conflicts is needed. 
 
-The draft specifies two mechanisms for detecting, and resolving conflicts. 
+The draft specifies two mechanisms for detecting and resolving conflicts. 
 
 \subsubsection{Local Collisions}
 A local collision, where there is an adjacency\footnote{Routers are
@@ -812,7 +806,7 @@ Link-Local Address generates a new RID\@.
 
 \subsubsection{Network-Wide Collisions}
 To detect collisions that occur for routers that are not directly connected,
-all apparent Self Originated AC-LSAs are inspected to ensure that the RHWFP
+all apparently self originated AC-LSAs are inspected to ensure that the RHWFP
 match. If they do not then the router with the lower RHWFP must change its
 RID.
 
@@ -820,34 +814,34 @@ RID.
 When a router notices a change in the current set of AC-LSAs in the LSDB, the
 prefix assignment algorithm is scheduled to run. Scheduling uses Quagga's built
 in thread library and has the benefits of allowing the code to finish whatever
-it was doing and the algorithm is only run once if several things schedule it
-in close succession.
+it was doing and ensures the algorithm is only run once if it is scheduled many
+times in close succession.
 
-The algorithm examines all aggregated prefix interface pairs. If
-there is not already an assignment for the pair, and the router has the
-highest RID of all active neighbours on that link, then a
-prefix is assigned to the interface from the aggregated prefix. 
+The algorithm examines all aggregated prefix interface pairs. If there is not
+already an assignment for the pair, and the router has the highest RID of all
+active neighbours on that link, then a prefix is assigned to the interface from
+the aggregated prefix. 
 
-There is no prescribed method in the draft for making an assignment, beyond the
-fact that the prefix assigned must not be in use. I wrote my implementation to
+There is no prescribed method in the draft for making an assignment, beyond
+that the prefix assigned must not be in use. I wrote my implementation to
 ensure it is easy to change the method used for picking a new prefix for the
 assignment. 
 
-The method I chose is to step through the prefixes in numerical order. The
-disadvantage is a fairly high likelihood of collision with a router elsewhere
-in the network; this was advantageous during the testing phase as it makes
-these cases more common, leading to easier testing. The other advantage is that
-this algorithm is guaranteed to either find a free address, or produce an error
-if the address space has been exhausted. 
+I chose to step through the prefixes in numerical order. The disadvantage is a
+high likelihood of collision with a router elsewhere in the network; this was
+advantageous during the testing phase as it makes these cases more common,
+leading to easier testing. The other advantage is that this algorithm is
+guaranteed to either find a free address, or produce an error if the address
+space has been exhausted. 
 
 \subsection{Prefix Conflict Resolution}
-Prefix collisions occur either when two routers have used the same prefix for
-different networks, or two routers have assigned different prefixes to the
+Prefix collisions occur either when multiple routers have used the same prefix for
+different networks, or multiple routers have assigned different prefixes to the
 same network. The prefix assignment algorithm is designed so that these
 collisions are resolved during assignment. Routers will only accept the prefix
 assignment made by the router with the highest RID of the assigning routers. If
 a router detects that one of its own assignments is no longer valid, it will
-deprecate it and make a new assignment. 
+deprecate it and reschedule the algorithm. 
 
 \subsection{Making an Assignment}
 \label{pending_list}
@@ -855,7 +849,7 @@ The prefix assignment draft specified a hysteresis period of 20 seconds
 before an assignment is committed to. The draft does not explain exactly what
 is meant by this. My implementation uses a list to indicate that a prefix is
 pending, so that if it needs to be deleted it can be deleted immediately. After
-the 20 seconds is up, the prefix is removed from the pending list and Router
+20 seconds is up, the prefix is removed from the pending list and Router
 Advertisements (RA) are emitted containing the prefix.
  
 \subsection{Deprecating an Assignment}
@@ -864,17 +858,17 @@ marked invalid. As the algorithm runs, the prefixes that are found to be valid
 are marked as such. If by the end of the algorithm a prefix is still marked
 invalid, deprecation is scheduled. 
 
-If after 240 seconds has passed, the state of the prefix has not changed, the
-prefix is deleted from the interfaces list of assigned prefixes and an RA is
-broadcast with the lifetime set to zero. 
+If after 240 seconds has passed, the prefix is still marked invalid, it is
+deleted from the interfaces list of assigned prefixes and an RA is broadcast
+with the lifetime set to zero. 
 
 \subsection{ULA Prefix Generation}
 If a there are no aggregated prefixes in the routing domain after 20 seconds,
 the router with the highest RID must generate a Unique Local Address
 (ULA)\nomenclature{ULA}{Unique Local Address} prefix\footnote{In the defining
 RFC these are referred to as Global IDs.} to facilitate local connectivity.
-ULAs are similar in concept to IPv4 Private addresses (e.g. 192.168.1.0).\footnote{Although it is
-not recommended to use NAT with IPv6}
+ULAs are similar in concept to IPv4 Private addresses (e.g.
+192.168.1.0).\footnote{Although it is not recommended to use NAT with IPv6}
 
 The ULA prefix generation algorithm is defined in RFC4193 (Section
 3.2)\cite{rfc4193}. It attempts to generate a unique /48 prefix, based on a
@@ -883,12 +877,12 @@ Protocol (NTP) \nomenclature{NTP}{Network Time Protocol} format), and an
 interface's 64-bit MAC address (EUI-64).\nomenclature{EUI-64}{Extended Unique
 Identifier}
 
-Once a ULA prefix has been generated it is advertised like any other aggregated
-prefix. If a router with a higher RID becomes reachable, or an aggregated
-prefix from another source is received, the prefix is deprecated after 120
-seconds. The draft recommends that ULAs are deprecated if there are any global
-addresses in the system, so as to prevent local IPv6 islands forming -- this is
-still an area of debate within the IPv6 community. 
+Once a ULA prefix has been generated it is advertised as an aggregated prefix.
+If a router with a higher RID becomes reachable, or an aggregated prefix is
+received from another source, the prefix is deprecated after 120 seconds. The
+draft recommends that ULAs are deprecated if there are any global addresses in
+the system,to prevent local IPv6 islands forming -- this is an area of debate
+within the IPv6 community. 
 
 \subsection{Source Based Routing}
 \label{SourceBasedRouting}
@@ -898,7 +892,7 @@ still an area of debate within the IPv6 community.
 	\caption{An example of a home network with mutliple ISPs.}\label{fig:MultipleISP}
 \end{center}
 \end{figure}
-In the future it may become common for households to have multiple broadband
+In the future it may become common for households to have multiple internet
 connections, as shown in Figure~\ref{fig:MultipleISP}. For example, a cable
 connection with ADSL for backup could provide households with a resilient
 connection. 
@@ -927,11 +921,10 @@ which routing table to use based on the source address.
 
 Quagga's Zebra daemon has the ability to manipulate any routing table. I
 extended the Zebra protocol's message for adding entires to the routing table
-to include the source address, and then chose the routing table based on a hash
-of this address. Unfortunately Quagga does not offer the ability to manipulate
-the policy table. To overcome this I used \texttt{iproute2}'s \texttt{ip
--6 rule} command, which I called from a bash shell script, invoked using the
-\texttt{system} function. 
+to include the source address, and selected the routing table based on a hash
+of this address. Unfortunately, Quagga cannot manipulate the policy table. To
+overcome this I used \texttt{iproute2}'s \texttt{ip -6 rule} command, which I
+called from a bash shell script, invoked using the \texttt{system} function. 
 
 This proof-of-concept demonstrates that Quagga can be extended to implement
 source based routing. It is not a complete solution -- firstly it is not
@@ -962,12 +955,12 @@ on, reading and writing this formatting became second nature to me.
 
 Being written in C89, Quagga is not object oriented. The structure of the code
 however, does resemble object oriented programming. \texttt{struct}s are used
-extensively to represent the different ``objects'' in the program, many
-functions operate on these \texttt{struct}s, in a similar way methods that
-act on the objects they belong to.
+extensively to represent the ``objects'' in the program. Functions tend operate
+on these \texttt{struct}s, in a similar way methods act on the objects
+they belong to.
 
-Working on a large and complex program was difficult at times, and determining
-the correct level of abstraction for each function was tricky.  I felt I had to
+Working on a large and complex program was difficult, and determining the
+correct level of abstraction for each function was tricky.  I felt I had to
 work around the lack of inheritance and polymorphism to write clean code. 
 
 When writing in a low level language like C, especially when the program will
@@ -987,7 +980,7 @@ implementations.
 I made heavy use of the Thread library item. Threads are a similar to operating
 system threads. They consist of pointers to functions that will be called upon
 some event, or after a set time. These threads are an application level
-construct. The program  executes as one process, only one thing is being
+construct. The program  executes as one process, so only one thing is being
 executed at any given time. Although this means the multi-core architecture of
 modern CPUs is not exploited, it simplifies development, removing the need to
 worry about thread safety.
@@ -995,9 +988,9 @@ worry about thread safety.
 \subsubsection{LinkList}
 Linklist was another useful element of the library. It implements a doubly
 linked list -- a series of nodes with pointers to the next and previous node in
-the list. Many of the data structures that I required in my program were
-variable length lists, and Linklist worked well for this. Linklist also offers
-a macro \texttt{ALL\_LIST\_ELEMENTS} that can be used like to Java's enhanced
+the list.  Variable length lists were required frequently in my program, and
+Linklist worked well for this. Linklist also offers a macro
+\texttt{ALL\_LIST\_ELEMENTS} that can be used like to Java's enhanced
 \texttt{for} loop.\footnote{Variables to hold pointers to the current and next
 node make it look messy though.} Linklist's main drawback is that due to
 limitations of C, the data is referenced by a typeless pointer, and therefore
@@ -1005,21 +998,20 @@ is not type safe. If the developer is careful this should not be an issue.
 
 \subsubsection{Prefix}
 Another library component is Prefix. It represents an IPv4 or IPv6 address, and
-offers an array of functions to perform on them. One of the most
-useful features is the ability to convert between C strings
-(\texttt{char *}) and \texttt{in6\_addrs} (the representation used in Unix-like
-kernels). This is useful for user interface and debugging messages.
-There are also macros available for testing whether two IP addresses were the
-same -- the \texttt{memcmp} function is used by these macros. I extended Prefix
-to include a function that determined whether or not a given Prefix contained
-another Prefix.
+offers several functions to perform on them. One of the most useful features is
+the ability to convert between C strings (\texttt{char *}) and
+\texttt{in6\_addrs} (the representation used in Unix-like kernels). This is
+useful for user interface and debugging messages.  There are also
+\texttt{memcmp} based macros available for testing whether two IP addresses are
+the same. I extended Prefix to include a function that determined whether or
+not a given Prefix contained another given Prefix.
 
 \subsubsection{MD5}
 The other interesting thing in the library is MD5
 \nomenclature{MD5}{Message-Digest Algorithm 5}, which generates cryptographic
 hashes. For the generation of ULAs, SHA-1 \nomenclature{SHA-1}{Secure Hash
 Algorithm 1}, a similar but more secure hash, is recommended. As I did not have
-a SHA-1 implementation, MD5 made an acceptable substitute for the time being. 
+a SHA-1 implementation, MD5 made an acceptable substitute. 
 
 \subsection{vtysh}
 \texttt{vtysh} \nomenclature{vtysh}{The Command Line Interface for Quagga} is a
@@ -1030,8 +1022,8 @@ are made directly to the routing protocol daemon, i.e. \texttt{telnet ::
 ospf6d}.  
 
 The interface is based on Cisco's router's. Commands like ``\texttt{show ipv6
-ospf6 database detail}'' can be used. ``\texttt{sh ipv os da de}''  will
-perform the same command as it is unambiguous. The aforementioned command will
+ospf6 database detail}'' can be used. ``\texttt{sh ipv os da de}''  
+performs the same command as it is unambiguous. This command will
 list out, in full detail, the contents of all of the LSAs that \texttt{ospf6d}
 knows about. 
 
@@ -1046,7 +1038,7 @@ routing domains of the router making the advertisement. Upon receiving
 an RA, a host should generate IPv6 addresses within the prefix being advertised. 
 
 Typically routers use \texttt{radvd} \nomenclature{radvd}{The Router
-Advertisement Daemon} to generate RAs. I feel coupling Quagga to another
+Advertisement Daemon} to generate RAs. I felt coupling Quagga to another
 piece of software would be undesirable. My reasons are firstly, that one cannot
 be sure the package will always the most popular choice. Secondly, if the
 API for \texttt{radvd} changes, then Quagga would also need to be changed. And
@@ -1062,22 +1054,21 @@ using the library component \texttt{zClient}, which is then received and
 enacted upon by \texttt{zServ}, part of Zebra. 
 
 Initially the only way to set whether router advertisements were on or off, and
-to set which prefixes the router advertised, was to use the \texttt{vtysh}. I
+to set which prefixes the router advertised, was to use \texttt{vtysh}. I
 extended the \texttt{zClient-zServ} protocol to include messages that expose
 this functionality to the routing protocol implementations,
 Appendix~\ref{zClient} contains details of these messages. 
 
 \section{Endians}
-An ongoing issue in my project was the storage of integers.
-\ x86 architecture, found in modern desktop processors, is little endian.
-This means a value represented as multiple bytes, is stored with the least
-significant (lowest in value) byte first. On the contrast
-when transmitting data using the IP protocol, network byte order
-is defined as big endian -- the most significant bytes are transmitted
-first. 
+An ongoing issue in my project was the storage of integers.  \ x86
+architecture, found in modern desktop processors, is little endian.  This means
+a value represented as multiple bytes, is stored with the least significant
+(lowest in value) byte first. On the contrast when transmitting data using the
+IP protocol, network byte order is defined as big endian -- the most
+significant bytes are transmitted first. 
 
-I had to be careful to convert to the correct endian; making mistakes here lead
-to a long time debugging. Fortunately for all the standard sized data types
+I had to be careful to convert to the correct endian; tiny mistakes lead
+to a long time debugging. Fortunately for all the standard sized data types,
 there are functions to convert the endian.  \texttt{htons} converts host shorts
 (unsigned 16 bit integers) to network shorts; \texttt{ntohs} does the opposite.
 \texttt{htonl} and \texttt{ntohl} work on longs (unsigned 32 bit integers). 
@@ -1097,9 +1088,9 @@ peppered my code with assertions. Assertions are statements that insist that
 their predicate is true -- If the assertion is correct, execution continues as
 normal, otherwise the program will halt.
 
-Assertions in my code check for circumstances that should under no
-circumstances occur. This ensures that the code never executes in an invalid
-state, producing incorrect results. 
+Assertions in my code check for circumstances that should never occur. This
+ensures that the code never executes in an invalid state, producing incorrect
+results. 
 
 \section{Unit Testing}
 \begin{figure}
@@ -1109,10 +1100,10 @@ state, producing incorrect results.
 	\label{fig:testcase}
 \end{center}
 \end{figure}
-I created unit tests to ensure that my code behaved as expected, my unit tests
-focused heavily on the edge cases. Creating unit tests gave me confidence that
-my code did what I intended it to do, however, it did not ensure that my
-intentions were correct.
+I created unit tests to ensure that my code behaved as expected, I focused
+heavily on edge cases. Creating unit tests gave me confidence that my code did
+what I intended it to do, however, it did not ensure that my intentions were
+correct.
 
 Although there are unit testing frameworks available for C, I decided against
 using them.  I felt using external libraries  would go against the ethos of
@@ -1124,9 +1115,9 @@ summary of the results for my testing can be seen in
 Appendix~\ref{testResults}.
 
 \subsection{Test Cases}
-Test cases are specified by \texttt{struct}s containing the parameters of
-the system, this includes the number of interfaces and a set of LSAs that
-existed in the system. 
+Test cases are specified by \texttt{struct}s containing the parameters of the
+system, this includes the number of interfaces and the set of LSAs in the
+system. 
 
 The test cases are used to construct a mock environment that resembles
 Quagga during normal execution. This is done by populating the \texttt{struct}s
@@ -1153,28 +1144,28 @@ Linux} to run many Virtual Machines (VMs) \nomenclature{VM}{Virtual Machine}
 on a single desktop PC. 
 
 Netkit presents the user with an \texttt{xterm} window for each VM\@. These VMS
-behave like normal Linux computers. They have virtual interfaces, that act much
-like real interfaces. Netkit allows these virtual interfaces to be joined
-together through collision domains -- setting two interfaces to the same
-collision domain is like plugging two hosts into the same network switch.
-Netkit also provides a special type of collision domain called a ``tap''; this
-can be used to share the host computer's network connectivity with the Netkit
-network.
+behave like normal Linux computers. They have virtual network interfaces, that
+act much like real network interfaces. Netkit allows these virtual interfaces
+to be joined together through collision domains -- setting two interfaces to
+the same collision domain is like plugging two hosts into the same network
+switch.  Netkit also provides a special type of collision domain called a
+``tap''; this can be used to share the host computer's network connectivity
+with the Netkit network.
 
 Netkit provided me with an indispensable testing environment. I was able to run
 an instance of Quagga on each virtual machine, and control them through
 \texttt{vtysh}. Having seven terminal windows on a single computer is far more
 convenient than having seven separate devices that must be configured
-separately. Netkit has a huge advantage over using \texttt{ssh} or
-\texttt{telnet} -- it is not dependent on network connectivity, so you are free
-to make changes to the network without losing your remote connection.
+separately. Netkit's biggest advantage over using \texttt{ssh} or
+\texttt{telnet} is that it does not  dependent on network connectivity, so you
+are free to make changes to the network without losing your remote connection.
 
-Compiling the code from within Netkit is also much faster than on the Alix2d3s,
-the difference was between several hours on the Alix2d3s and several minutes in
-Netkit. This was because rather than using a 500MHz AMD Geode\footnote{A low
-power System-on-chip designed for the embedded market in around 2002}, Netkit
-used my desktop PC's 3.3GHz Intel i5 2500k\footnote{A mid/high end desktop
-processor from 2011} for compiling. 
+Compiling the code from within Netkit is also much faster than on the Alix2d3s
+(See Section\ref{alix}), the difference was between several hours on the
+Alix2d3s and several minutes in Netkit. This was because rather than using a
+500MHz AMD Geode\footnote{A low power System-on-chip designed for the embedded
+market in around 2002}, Netkit used my desktop PC's 3.3GHz Intel i5
+2500k\footnote{A mid/high end desktop processor from 2011} for compiling. 
 
 I found Netkit to be a great tool for understanding how networks work.
 Translating my knowledge of network theory to an ability to configure real
@@ -1194,10 +1185,10 @@ the contents were as expected.
 
 \section{Tunnel Broker}
 Using Hurricane Electric's (HE) Tunnel broker service, I was able to give my
-network global connectivity. An HE tunnel,
-provides you with a single /64 IPv6 prefix. It is possible to request a larger
-/48 allocation. The tunnel is configured at their end to route any traffic
-that is destined to your prefix, to the endpoint that you specified.  
+network global connectivity. An HE tunnel, provides you with a single /64 IPv6
+prefix. It is possible to request a larger /48 allocation. The tunnel is
+configured at their end to route any traffic that is destined to your prefix,
+to the endpoint that you specified.  
 
 By configuring a static route forwarding all traffic for the allocated /48
 prefix into the Netkit network, then setting up Quagga within the Netkit
@@ -1207,11 +1198,14 @@ make the IPv6 addresses globally reachable. Using a remote server
 the devices had global addressability.
 
 \section{Alix2d3}
-Although I was confident that testing my code using Netkit was
-sufficient to show it working correctly, I ran my code on two Alix2d3 devices.
-This offered me more tangible proof that my code functions correctly. It also
-allowed me to do things that home users are likely to do, such as plugging the
-routers together in arbitrary configurations.
+\label{alix}
+Although I was confident that testing my code using Netkit was sufficient to
+show it working correctly, I ran my code on two Alix2d3 devices. Alix2d3s are
+very small computers on which one can install Linux. They make good routers as
+they have multiple network interfaces. This offered more tangible proof
+that my code functions correctly. It also allowed me to do things that home
+users are likely to do, such as plugging the routers together in arbitrary
+configurations.
 
 Testing on the Alix2d3s was much more difficult and time consuming that testing
 with Netkit, so I avoided doing the bulk of the testing this way. I employed a
@@ -1220,7 +1214,7 @@ everything seemed to be working.
 
 \section{Interoperability}
 One of the goals of my project was to verify that the implementations produced
-by other developers was compatible with the code that I produced. 
+by other developers were compatible with the code I produced. 
 
 Both of the implementations I tested against were based on Bird. As Bird and
 Quagga both implement the same specifications for OSPFv3, I felt it was safe to
@@ -1229,9 +1223,8 @@ assume that the unmodified versions Bird and Quagga would be compatible.
 \subsection{Ben's Implementation}
 Ben Paterson's implementation\footnote{Available at:
 \url{https://github.com/fingon/bird-homenet}} was written in C. I found it
-easy to install onto my Netkit testbed -- it required nothing more than
-cloning the Git repository and then compiling the fork of Bird on one of the
-Netkit VMs. 
+easy to install onto my Netkit testbed -- I cloned the Git repository and
+compiled the code in one of the Netkit VMs. 
 
 Ben's implementation correctly implements the Autoconfig draft. However, I
 discovered that my implementation was wrong: The RHWFP is defined as 32 bytes,
@@ -1257,23 +1250,22 @@ fork of Bird has been created called Bird-Ext-LSA\@,\footnote{Not to be
 confused with External LSAs in OSPFv3 that carry information from other
 protocols.}\footnote{Available at:
 \url{https://github.com/fingon/bird-ext-lsa}} which offers a mechanism that
-allows LSAs to be processed by an separate program. 
+allows LSAs to be processed by a separate program. 
 
 Bird-Ext-LSA is complimented by hnet-core\footnote{Available at:
-\url{https://github.com/fingon/hnet-core}} (Homenet Core), a project that
-makes use of Bird-Ext-LSA to implement, among other things, the Autoconfig
-drafts\@.  hnet-core is written in the scripting language Lua. Running this
-code was a challenge -- I had problems creating the right environment; the
-code has  many dependencies. \texttt{Luarocks} helped install some of these.
-I did eventually get the code running on my Netkit testbed.
+\url{https://github.com/fingon/hnet-core}} (Homenet Core), which implements,
+among other things, the Autoconfig drafts\@.  hnet-core is written in the
+scripting language Lua. Running this code was a challenge -- I had problems
+creating the right environment; the code has many dependencies,
+\texttt{Luarocks} helped install some of these. 
 
-Once I had the code running, I found it was incompatible with my implementation
-without alteration. To enable compatibility with a version created by the
+Eventually I got the code running; without alteration, it was incompatible with
+my implementation. To enable compatibility with a version created by the
 draft's author (Jari Arrko), a different AC-LSA Type number was used -- this
 confused me at first, but once spotted it was simple to fix.
 
 The other compatibility issue was that this implementation interpreted the TLVs
-length to include the TLV header.The draft explicitly states that the length is
+length to include the TLV header. The draft explicitly states that the length is
 of the value alone, so I corrected the code, to allow myself to continue
 testing. The implementation relied on the interface ID being appended to the
 TLV header rather than being part of the value, so the changes were harder than
