@@ -160,7 +160,7 @@ repeat my experimentation, the following guides would be helpful.
  \subsection*{Normal Installation}
 This procedure turned out to be far more difficult that anticipated. Firstly,
 all the dependencies must be installed. The easiest way I have found to do this
-is to use:
+by using:
 
 \texttt{sudo apt-get build-dep quagga}
 
@@ -196,7 +196,7 @@ Finally a little bit of configuration is required. \path{/usr/local/quagga}
 contains the configuration files, either make a real config file for the
 daemons (zebra and ospf6d), or just create file containing ``password test''.
 
-You should now be able to run ospf6d. If you can't, try \texttt{ldconfig}.
+You should now be able to run \texttt{ospf6d}. If you can't, try \texttt{ldconfig}.
 
 \subsection*{Cross Compilation}
 \label{cross_compile}
@@ -219,7 +219,7 @@ with \texttt{apt}.
 
 \chapter{vtysh}
 \label{vtysh}
-Commands are added using the macro DEFUN and the function install.
+Commands are added using the macro \texttt{DEFUN} and the function \texttt{install}.
 
 I added the commands:
 \begin{itemize}
@@ -253,7 +253,7 @@ I added the commands:
 
 \chapter{Test Results}
 \label{testResults}
-Of the twenty testcases that I produced, all of them now pass. The following is an
+Of the twenty test cases that I produced, all of them now pass. The following is an
 example of the output of my unit testing code: 
 
 \begin{lstlisting}
@@ -281,22 +281,38 @@ Total Failed Tests: 0
 As this project is based on an existing software project, it would be
 unreasonable to list all of the files contained in my submitted archive.
 Instead, the following is a list of the most notable files: Those that I have
-created, modified or made heavy use of throughout the project.
+created, modified or made heavy use of throughout the project. The best way to
+see what I changes I have made is to view my project on
+GitHub.\footnote{\url{https://github.com/edderick/quagga_zOSPF}}
 
 \section*{Netkit Labs}
 The folder \path{netkit} contains a series of Netkit labs. I created these lab
-folders to contain the settings of Netkit Labs. 
+folders to contain the settings of Netkit Labs.
+
+In each lab folder, \path{lab.conf} contains the definition of the collision domains.
+When a VM boots, the file consisting of its name suffixed with \path{.startup}
+is run, and the files within the folder structure rooted at the folder with its
+name are copied to its root directory.
 
 \section*{Quagga}
 The majority of the work that I have done is contained within
 \path{quagga_zOSPF/ospf6d/}. I made modifications to many of the file in this
-folder. \path{ospf6_auto.h} and \path{ospf6_auto.c} are my own additions. 
+folder. \path{ospf6_auto.h} and \path{ospf6_auto.c} are my own additions. I
+also made substantial additions to \path{ospf6_intra.h} and
+\path{ospf6_intra.c}.
 
-I also made alterations to several files in \path{quagga_zOSPF/lib/}. 
+I also made alterations to several files in \path{quagga_zOSPF/lib/}. Most
+notably: \path{prefix.h}, \path{prefix.c}, \path{zclient.h} and
+\path{zclient.c}. In \path{quagga_zOSPF/zebra/}, I modified \path{zserv.c}.
 
 My unit testing code can be found in \path{quagga_zOSPF/tests/}, contained
 entirely within the file \path{ospf6d_autoconf_test.c}. When compiled, this
 generates the file \path{testospf6dautoconf}.
+
+\section*{hnet-core.diff}
+The file \path{hnet-core.diff} contains the changes that I made to hnet-core,
+Markus' autoconf OSPFv3 implementation, to increase its compatibility with my
+own.
 
 \chapter{Original Project Brief}
 
