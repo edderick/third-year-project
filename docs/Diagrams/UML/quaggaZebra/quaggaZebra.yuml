@@ -1,3 +1,22 @@
-[ospf6d]<>->[zebra]
-[ospfd]<>->[zebra]
-[zebra]<>->[Unix Kernel Routing Table]
+@startuml
+
+scale 450 width
+
+package "Routing daemons" {
+  class ospf6d
+  class ospfd
+  class ripd
+  class bgpd
+}
+
+ospf6d -> zebra
+ospfd -> zebra
+ripd -> zebra
+bgpd -> zebra
+
+zebra -> "Unix Kernel Routing Table"
+
+hide circle
+hide methods
+hide fields
+@enduml
