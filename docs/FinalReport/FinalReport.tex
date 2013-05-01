@@ -98,15 +98,13 @@ networks.
 
 \chapter*{Acknowledgements}
 I would like to thank the following people for all their help, support and
-influence during this project:
-\begin{itemize}
-\item Tim Chown -- Offered support as project supervisor.
-\item David Lamparter -- Responded to my queries about how Quagga works.
-\item Jari Arkko \& Acee Lindem -- Wrote the drafts that I was implementing.
-\item Markus Stenberg \& Benjamin Paterson --- Provided implementations against which
-      to interop test.
-\item Friends \& Family -- Proof read this document.
-\end{itemize}
+influence during this project. Firstly, Tim Chown who offered a huge amount of
+support as my project supervisor. Jari Arkko and Acee Lindem who wrote the
+drafts that made this project possible. I would also like to thank Markus
+Stenberg and Benjamin Paterson for providing implementations against which to
+run interoperability tests. David Lamparter, and all the other maintainers of
+the Quagga project, who responded to many of my queries about how Quagga works.
+And finally my friends and family who kindly proof read this document.
 
 \chapter{Introduction}
 My project's title is ``Implementing Zero Configuration OSPFv3''. During the
@@ -637,16 +635,18 @@ ambiguity in requirements levels, I have used the language recommended by BCP14.
 
 My implementation:
 \begin{enumerate}
-	\item \textbf{MUST} allow the routing daemon to run without manual configuration.
-	\item \textbf{MUST} resolve RID conflicts if they occur.
-	\item \textbf{MUST} efficiently distribute IPv6 Prefixes across the network.
-	\item \textbf{MUST} store assigned prefixes in non volatile storage.
-	\item \textbf{SHOULD} be interoperable with existing implementations of the drafts.
-	\item \textbf{SHOULD} generate a ULA if one is required.
-	\item \textbf{MAY} emit RAs for assigned prefixes.
-	\item \textbf{MAY} support source based routing.
-	\item \textbf{MAY} obtain aggregated prefixes through DHCP-PD. 
-	\item \textbf{SHOULD} be well tested, to ensure valid operation.
+      \item \textbf{MUST} allow the routing daemon\footnote{A daemon is a computer
+      program that runs as a background process, also known as a service.} to run
+      without manual configuration.
+      \item \textbf{MUST} resolve RID conflicts if they occur.
+      \item \textbf{MUST} efficiently distribute IPv6 Prefixes across the network.
+      \item \textbf{MUST} store assigned prefixes in non volatile storage.
+      \item \textbf{SHOULD} be interoperable with existing implementations of the drafts.
+      \item \textbf{SHOULD} generate a ULA if one is required.
+      \item \textbf{MAY} emit RAs for assigned prefixes.
+      \item \textbf{MAY} support source based routing.
+      \item \textbf{MAY} obtain aggregated prefixes through DHCP-PD. 
+      \item \textbf{SHOULD} be well tested, to ensure valid operation.
 \end{enumerate}
 
 \chapter{Design}
@@ -764,7 +764,7 @@ Conflicts are resolved automatically if they occur.
 Over the course of the project I produced and tested an augmented version of
 the Quagga routing daemon. My changes consisted of adding $\mysym1,900$ lines
 of C code to the \texttt{ospf6d} code base along with $\mysym400$ lines to
-\texttt{zebra} and \texttt{lib}. I also modified existing code. $\mysym600$
+\texttt{zebra} and \texttt{lib}. I also modified existing code. $\mysym800$
 lines of code were used for unit testing.
 
 \section{Core Algorithms}
@@ -940,6 +940,24 @@ Unix-like, then Quagga is likely to compile for it.  Quagga does not
 support Microsoft Windows.\footnote{Or WinDoze as the GNU coding standards would
 put it}.
 
+\begin{figure}
+\begin{center}
+	\includegraphics[width=0.8\linewidth]{../Diagrams/UML/quaggaZebra/quaggaZebra.png}
+	\caption{A ``Class'' diagram of the high level architecture of Quagga.}\label{fig:zebra}
+\end{center}
+\end{figure}
+Quagga provides a daemon, Zebra, that is used to manipulate the routing table
+and the kernel's network configuration. Routing protocol daemons (such as
+\texttt{ospf6d}) make use of Zebra by sending it
+TCP\nomenclature{TCP}{Transmission Control Protocol} messages. This
+architecture, shown in Figure~\ref{fig:zebra}, makes Quagga highly extensible,
+allowing new protocols to be added easily.
+
+In this project, most of my alterations were to \texttt{ospf6d}, the OSPF for
+IPv6 routing daemon implementation provided with quagga; a heavily simplified
+diagram of the general structure of this code is shown in
+Appendix~\ref{ospf6d}.
+
 \subsection{Style}
 At first I found some of the stylistic guidelines of the GNU coding standards
 unusual and difficult to read, the following contributed to this:
@@ -1060,12 +1078,12 @@ this functionality to the routing protocol implementations,
 Appendix~\ref{zClient} contains details of these messages. 
 
 \section{Endians}
-An ongoing issue in my project was the storage of integers.  \ x86
-architecture, found in modern desktop processors, is little endian.  This means
-a value represented as multiple bytes, is stored with the least significant
-(lowest in value) byte first. On the contrast when transmitting data using the
-IP protocol, network byte order is defined as big endian -- the most
-significant bytes are transmitted first. 
+Endians were an on going issue in my project. The\ x86 architecture, found in
+modern desktop processors, is little endian.  This means a value represented as
+multiple bytes, is stored with the least significant (lowest in value) byte
+first. On the contrast when transmitting data using the IP protocol, network
+byte order is defined as big endian -- the most significant bytes are
+transmitted first. 
 
 I had to be careful to convert to the correct endian; tiny mistakes lead
 to a long time debugging. Fortunately for all the standard sized data types,
@@ -1466,8 +1484,8 @@ zero configuration OSPFv3; Along the way I learned a lot about networks.
 
 \subsection{Ambiguities in the Drafts}
 There are a few areas of the drafts that I feel are slightly ambiguous or
-under-prescriptive. I plan on sending the following suggestions to the authors
-of the drafts.
+under-prescriptive. I have returned the following feedback to the authors of
+the drafts. 
 
 The following comments refer to the autoconfig draft
 \cite{draft-ietf-ospf-ospfv3-autoconfig-02}:

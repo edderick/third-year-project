@@ -7,31 +7,31 @@
   \hline
   7: &
   Application Layer \\
-  & (e.g. DNS, DHCP) \\
+  & (e.g.\ DNS, DHCP) \\
   \hline
   6: &
   Presentation Layer \\
-  & (e.g. telnet) \\ 
+  & (e.g.\ telnet) \\ 
   \hline
   5: &
   Session Layer \\
-  & (e.g. RPC) \\
+  & (e.g.\ RPC) \\
   \hline
   4: &
   Transport Layer \\
-  & (e.g. TCP, UDP) \\
+  & (e.g.\ TCP, UDP) \\
   \hline
   3: &
   Network Layer \\
-  & (e.g. IPv4, IPv6) \\
+  & (e.g.\ IPv4, IPv6) \\
   \hline  
   2: &
   Data Link Layer \\
-  & (e.g. MAC) \\ 
+  & (e.g.\ MAC) \\ 
   \hline  
   1: &
   Physical Layer \\
-  & (e.g. Ethernet, Wi-Fi) \\
+  & (e.g.\ Ethernet, Wi-Fi) \\
   \hline
 \end{tabular}
 \end{center}
@@ -99,7 +99,7 @@ that was generated automatically.
 GitHub offers various graphics that can be used to visualise the progress and
 patterned in the project. 
 
-\section{Github Commit Graph}
+\section*{Github Commit Graph}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubCommitGraph.png}
 \end{center}
@@ -109,7 +109,7 @@ The graph shows that I began working on my implementation in early February and
 worked steadily, peaking at the beginning of the Easter vacation. The second
 peak is when I began working on testing.
 
-\section{Github Punchcard}
+\section*{Github Punchcard}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubPunchCard.png}
 \end{center}
@@ -124,7 +124,7 @@ as was originaly believed, thanks to discovery of the briliant software package
 Netkit. I did however undertake testing on the Alix2d3s. If someone wished to
 repeat my experimentation, the following guides would be helpful. 
 
-\section{Ubuntu Installation Guide}
+\section*{Ubuntu Installation Guide}
 
  This guide\cite{germanGuide} offered a comprehensive list of steps that need to
  be taken to install Ubuntu Linux on a PC Engines alix2d3\cite{alix2d3}.  The article is
@@ -154,9 +154,9 @@ repeat my experimentation, the following guides would be helpful.
  alix2d3 is up and running it is possible to disconnect the serial cable and
  access it over \texttt{SSH} alone.
 
- \section{Quagga Installation Guide}
+ \section*{Quagga Installation Guide}
 
- \subsection{Normal Installation}
+ \subsection*{Normal Installation}
 This procedure turned out to be far more difficult that anticipated.
 
 First, ensure all the dependencies are present. The easiest
@@ -165,7 +165,7 @@ way I have found to do this is to use:
 \texttt{sudo apt-get build-dep quagga}
 
 This should fetch all the packages that Quagga depends on. These do not need to
-be built from source, since I do not modify them. libtool and libreadline need
+be built from source, since I do not modify them.\ libtool and libreadline need
 to be installed separately. 
 
 
@@ -200,7 +200,7 @@ ospf6d), or just create file containing ``password test''.
 
 You should now be able to run ospf6d. If you can't, try \texttt{ldconfig}.
 
-\subsection{Cross Compilation}
+\subsection*{Cross Compilation}
 \label{cross_compile}
 Since Alix2d3s are very slow, building Quagga can be incredibly slow. The make
 parts alone can take around 15 minutes. (XORP had an even slower compile time,
@@ -241,6 +241,16 @@ I added the commands:
 		$\rightarrow$ no ipv6 allocate-prefix X:X::X:X/M} \\
 		Used to remove a previously allocated aggregated prefix.
 \end{itemize}
+\pagebreak
+
+\begin{landscape}
+\chapter{Structure of ospf6d}
+\label{ospf6d}
+\begin{center}
+  \includegraphics[width=0.9\linewidth]{../Diagrams/UML/quaggaOSPF6D/ospf6d_simple.png}
+\end{center}
+
+\end{landscape}
 
 \chapter{Test Results}
 \label{testResults}
@@ -264,3 +274,29 @@ Total Aggregated Prefix count: 2
    Pending Thread
 Total Assigned Prefix count: 4 
 \end{lstlisting}
+
+\chapter{File Listings}
+As this project is based on an existing software project, it would be
+unreasonable to list all of the files contained in my submitted archive.
+Instead, the following is a list of the most notable files: Those that I have
+created, modified or made heavy use of throughout the project.
+
+\section*{Netkit Labs}
+The folder \path{netkit} contains a series of Netkit labs. I created these lab
+folders to contain the settings of Netkit Labs. 
+
+\section*{Quagga}
+The majority of the work that I have done is contained within
+\path{quagga_zOSPF/ospf6d/}. I made modifications to many of the file in this
+folder. \path{ospf6_auto.h} and \path{ospf6_auto.c} are my own additions. 
+
+I also made alterations to several files in \path{quagga_zOSPF/lib/}. 
+
+My unit testing code can be found in \path{quagga_zOSPF/tests/}, contained
+entirely within the file \path{ospf6d_autoconf_test.c}. When compiled, this
+generates the file \path{testospf6dautoconf}.
+
+\chapter{Original Project Brief}
+
+\input{../Proposal/proposal_appendix_edit.tex}
+
