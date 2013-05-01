@@ -1,0 +1,145 @@
+@startuml
+
+/' 
+   ## Note to self
+   ## <-- Implies that a pointer is being used 
+   ## o-- Imples that no pointer is used
+
+  ## C style class names are real structs out there in the wild	
+  ## Java style class names are inline structs 
+'/ 
+
+
+' ### OSPF6_TOP ###
+class ospf6 {
+  router_id
+}
+
+ospf6 "1" --* "*" ospf6_area : area_list
+
+' ### OSPF6_ROUTE ###
+class ospf6_route_table {
+}
+
+
+' ### OSPF6_AREA ###
+class ospf6_area {
+	uint area_id
+}
+
+ospf6_area "1" --* "*" ospf6_lsdb : lsdb
+ospf6_area "1" --* "*" ospf6_interface : if_list
+ospf6_area "1" --* "1" ospf6_route_table : route_table
+
+
+' ### OSPF6_INTERFACE
+class ospf6_interface {
+	ifindex
+	cost
+	linklocal_addr
+}
+
+ospf6_interface "1" --* "*" ospf6_neighbor : neighbor_list
+
+' ### OSPF6_LSDB ###
+class ospf6_lsdb {
+	count 
+}
+
+ospf6_lsdb "1" --* "*" ospf6_lsa : data
+
+
+' ### OSPF6_LSA (Link State Advertisment) ###
+
+ospf6_lsa <-- ospf6_lsa : "prev/next"
+
+ospf6_lsa_header "1" *-- "1" ospf6_lsa : header
+
+class ospf6_lsa_header {
+    age
+    type
+    id
+    adv_router '(Advertising)
+    seqnum
+    checksum
+    length
+}
+
+class ospf6_lsa {
+}
+
+' ### OSPF6_INTRA ###
+
+class ospf6_router_lsa {
+}
+
+ospf6_lsa <|-- ospf6_router_lsa 
+
+class ospf6_network_lsa {
+}
+
+ospf6_lsa <|-- ospf6_network_lsa
+
+class ospf6_link_lsa {
+}
+
+ospf6_lsa <|-- ospf6_link_lsa
+
+class ospf6_intra_prefix_lsa {
+}
+
+ospf6_lsa <|-- ospf6_intra_prefix_lsa
+
+
+' ### OSPF_MESSAGE ###
+
+class ospf6_header {
+	 version 
+	 type 
+	 length
+	 router_id
+	 area_id
+	 checksum
+	 instance_id
+	 reserved
+}
+
+class ospf6_hello {
+	uint interface_id
+}
+
+ospf6_header "1" *-- "1" ospf6_hello
+
+class ospf6_dbdesc {
+}
+
+ospf6_header "1" *-- "1" ospf6_dbdesc
+
+class ospf6_lsreq_entry {
+	uint id
+	uint adv_router
+}
+
+ospf6_header "1" *-- "1" ospf6_lsreq_entry
+
+class ospf6_lsupdate {
+	uint lsa_number
+}
+
+ospf6_header "1" *-- "1" ospf6_lsupdate
+
+' ### OSPF6_NEIGHBOR ###
+
+class ospf6_neighbor {
+	 state
+	 router_id
+	 ifindex
+}
+
+
+
+
+
+hide methods
+hide circle
+@enduml
