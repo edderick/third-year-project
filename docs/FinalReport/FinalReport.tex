@@ -23,20 +23,21 @@
 
 % Save a bit of space by giving all headings less room
 \titlespacing*{\chapter}{0pt}{0pt}{0pt}
-\titlespacing*{\section}{0pt}{0pt}{5pt}
-\titlespacing*{\subsection}{0pt}{0pt}{5pt}
-\titlespacing*{\subsubsection}{0pt}{0pt}{5pt}
-\titlespacing*{\paragraph}{0pt}{0pt}{5pt}
+\titlespacing*{\section}{0pt}{0pt}{4pt}
+\titlespacing*{\subsection}{0pt}{0pt}{4pt}
+\titlespacing*{\subsubsection}{0pt}{0pt}{4pt}
+\titlespacing*{\paragraph}{0pt}{0pt}{4pt}
+
+\usepackage{tocloft}
+
+\setlength\cftbeforechapskip{3pt}
+
 
 \widowpenalty=10000
 \clubpenalty=10000
 
 % Set margins to required
 \usepackage[top=2.4cm, bottom=2.4cm, left=2.95cm, right=2.95cm]{geometry} 
-
-% Sort out margins for todonotes
-\setlength{\marginparwidth}{3cm}
-\reversemarginpar
 
 \renewcommand*\ttdefault{cmtt}
 \usepackage[T1]{fontenc}
@@ -80,17 +81,17 @@
 
 \begin{abstract}
 As the complexity of home networks increases, it is inevitable that they will
-require splitting into multiple subnets. As the average home user is unable to
-configure a router, a minimal configuration solution is required. In this
-project I made enhancements to an existing implementation of the Open Shortest
-Path First for IPv6 (OSPFv3) routing protocol, Quagga. This augmented daemon
-requires no configuration to run, and handles the allocation of IPv6 prefixes
-to the subnets in the home network. The implementation is based mainly on two
-internet drafts published recently by the IETF\@\nomenclature{IETF}{Internet
-Engineering Task Force}, and exhibits a level of interoperability with other
-existing implementations. As an extension, a proof-of-concept was produced to
-show how source based routing could be used to overcome issues with multihomed
-networks. 
+require splitting into multiple subnets. As the average home user lacks the
+knowledge required to configure a router, a minimal configuration solution is
+required. In this project enhancements have been to an existing implementation
+of the Open Shortest Path First for IPv6 (OSPFv3) routing protocol, Quagga.
+This augmented daemon requires no configuration to run, and handles the
+allocation of IPv6 prefixes to the subnets in the home network. The
+implementation is based mainly on two highly topical internet drafts published
+recently by the IETF\@\nomenclature{IETF}{Internet Engineering Task Force}, and
+demonstrates interoperability with other existing implementations. As an
+extension, a proof-of-concept was produced to show how source based routing
+could be used to overcome issues with multihomed networks. 
 \end{abstract}
 
 \tableofcontents
@@ -98,13 +99,14 @@ networks.
 
 \chapter*{Acknowledgements}
 I would like to thank the following people for all their help, support and
-influence during this pr  ject. Firstly, Tim Chown who offered a huge amount of
+influence during this project. Firstly, Tim Chown who offered a huge amount of
 support as my project supervisor. Jari Arkko and Acee Lindem who wrote the
-drafts that made this project possible. I would also like to thank Markus
-Stenberg and Benjamin Paterson for providing implementations against which to
-run interoperability tests. David Lamparter, and all the other maintainers of
-the Quagga project, who responded to many of my queries about how Quagga works.
-And finally my friends and family who kindly proof read this document.
+internet drafts that made this project possible. I would also like to thank
+Markus Stenberg and Benjamin Paterson for providing implementations against
+which to run interoperability tests. David Lamparter, and all the other
+maintainers of the Quagga project, who responded to many of my queries about
+how Quagga works. And finally my friends and family who kindly proof read this
+document.
 
 \input{Body.tex}
 

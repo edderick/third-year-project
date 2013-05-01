@@ -37,15 +37,15 @@
 \end{center}
 
 The seven layer OSI model is a logical grouping of the types of protocols found
-in computer networks. Each layer is dependent only on the layer directly below
-it. 
+in computer networks. The protocols in each layer tend to dependend only on the
+protocols in the layer layer directly below them. 
 
 The TCP/IP model is a similar, but simpler model of networking.
 
 \chapter{Additional zClient-zServ Messages}
 \label{zClient}
 I extended the zClient-zServ protocol to expose some of the features,
-previously only available through the vtysh, to the routing protocol
+previously only available through \texttt{vtysh}, to the routing protocol
 implementations. 
 
 \begin{center}
@@ -60,8 +60,8 @@ corresponding message to turn these RAs off again.
 	\includegraphics[width=0.9\linewidth]{../Diagrams/Packets/ipv6_nd_prefix.png}
 \end{center}
 
-The next message adds a prefix prefix to the RAs. This is used to advertise a
-new assigned prefix. There is also a similar messages to remove the prefix.
+The next message adds a network prefix to the RAs. This is used to advertise a
+new assigned prefix. There is also a similar message to remove the prefix.
 
 
 \begin{center}
@@ -69,8 +69,9 @@ new assigned prefix. There is also a similar messages to remove the prefix.
 \end{center}
 
 The final message adds an IPv6 Address to a specified interface. In my
-implementation this was used to associate a prefix an interface for the routing
-table calculations. Again, there is also a message to remove the address.
+implementation this was used to associate a prefix with an interface for the
+routing table calculations. Again, there is also a message to remove the
+address.
 
 \chapter{Netkit}
 \begin{center}
@@ -90,16 +91,16 @@ n is the size of the memory to allocate in megabytes.
 \label{radvdump}
 This \texttt{radvdump} output shows the contents of the router advertisements
 made by one of my quagga instances. The prefix fc35:6225:4b8:6::/64 is a ULA
-that was generated automatically.
+that was generated automatically by my implementation.
 
 \lstinputlisting{../Issues/radvdump.md}
 
-\chapter{Github Stats}
+\chapter{GitHub Stats}
 \label{GithubStats}
 GitHub offers various graphics that can be used to visualise the progress and
 patterned in the project. 
 
-\section*{Github Commit Graph}
+\section*{GitHub Commit Graph}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubCommitGraph.png}
 \end{center}
@@ -109,7 +110,7 @@ The graph shows that I began working on my implementation in early February and
 worked steadily, peaking at the beginning of the Easter vacation. The second
 peak is when I began working on testing.
 
-\section*{Github Punchcard}
+\section*{GitHub Punchcard}
 \begin{center}
 	\includegraphics[width=\linewidth]{../Diagrams/Stats/GitHubPunchCard.png}
 \end{center}
@@ -157,46 +158,43 @@ repeat my experimentation, the following guides would be helpful.
  \section*{Quagga Installation Guide}
 
  \subsection*{Normal Installation}
-This procedure turned out to be far more difficult that anticipated.
-
-First, ensure all the dependencies are present. The easiest
-way I have found to do this is to use:
+This procedure turned out to be far more difficult that anticipated. Firstly,
+all the dependencies must be installed. The easiest way I have found to do this
+is to use:
 
 \texttt{sudo apt-get build-dep quagga}
 
 This should fetch all the packages that Quagga depends on. These do not need to
-be built from source, since I do not modify them.\ libtool and libreadline need
-to be installed separately. 
-
+be built from source, since I have not modified them.\ \texttt{libtool} and
+\texttt{libreadline} need to be installed separately. 
 
 Next it should be possible to run \texttt{\@./bootstrap}, this creates the
-configure script; run it:
+configure script; This can be run with the command:
 
 \begin{quote}
 \texttt{sudo \@./configure \\ --sysconfdir=/usr/local/quagga \\ --localstatedir=/usr/local/quagga}
 \end{quote}
 
-The configure script will prompt you to create a user called quagga. Do this by:
+The configure script will prompt you to create a user called quagga:
 
 \begin{quote}
-\texttt{sudo adduser quagga}
-
-\texttt{sudo mkdir /usr/local/quagga}
-
-\texttt{sudo chown quagga:quagga /usr/local/quagga}
+\texttt{sudo adduser quagga} \\
+\texttt{sudo mkdir /usr/local/quagga} \\
+\texttt{sudo chown quagga:quagga /usr/local/quagga} 
 \end{quote}
 
-It is now time to run \texttt{make}. See Appendix~\ref{cross_compile} for more
-information about this. I had issues with making zebra, I fixed them by
-manually editing the Makefile in \texttt{\@./zebra}, adding \texttt{-lcap} to
-\texttt{LIBS}\@. This issue no longer occurs with the latest release of quagga.
+It is now time to run \texttt{make}. See the next section for more information
+about compiling for the Alix2d3. I issues with making zebra which I fixed
+by manually editing the Makefile in \texttt{\@./zebra}, adding \texttt{-lcap}
+to \texttt{LIBS}\@. This issue no longer occurs with the latest release of
+Quagga.
 
-Next run \texttt{sudo make install}. This should install everything -- the daemons
-should have installed themselves to \texttt{/usr/local/sbin}.
+Running \texttt{sudo make install} should install everything -- the binaries for the daemons
+should be located in \texttt{/usr/local/sbin}.
 
-Finally a little bit of configuration is required. \texttt{cd
-/usr/local/quagga} Either make a real config file for the daemons (zebra and
-ospf6d), or just create file containing ``password test''.
+Finally a little bit of configuration is required. \path{/usr/local/quagga}
+contains the configuration files, either make a real config file for the
+daemons (zebra and ospf6d), or just create file containing ``password test''.
 
 You should now be able to run ospf6d. If you can't, try \texttt{ldconfig}.
 
@@ -215,8 +213,9 @@ Alix2d3s, the compiler must be set up correctly. The cflag \texttt{-m32
 \texttt{--with-clfags=`-m32 -march=i386i'} to \texttt{\@./configure}.
 
 I initially had problems with this compilation. I resolved the issues by going
-back to basics and trying to compile a simple helloworld program for the Alix.
-Turns out I was missing \texttt{gcc-multilib}. This can be installed with \texttt{apt}.
+back to basics and compiling a simple ``helloworld'' program for the
+Alix.  Turns out I was missing \texttt{gcc-multilib}. This can be installed
+with \texttt{apt}.
 
 \chapter{vtysh}
 \label{vtysh}
@@ -258,6 +257,7 @@ Of the twenty testcases that I produced, all of them now pass. The following is 
 example of the output of my unit testing code: 
 
 \begin{lstlisting}
+%\ldots%
 Testcase 5  %{\color{green} OK}%
 Toal interface count: 2 
  Aggregated Prefix: fc00::/48
@@ -273,6 +273,8 @@ Total Aggregated Prefix count: 2
   Assigned Prefix: fc00:1::/64
    Pending Thread
 Total Assigned Prefix count: 4 
+%\ldots%
+Total Failed Tests: 0
 \end{lstlisting}
 
 \chapter{File Listings}
