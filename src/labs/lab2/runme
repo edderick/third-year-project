@@ -1,0 +1,3 @@
+!# /bin/bash
+
+lstart -o-M128 -f -o--xterm=gnome

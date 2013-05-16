@@ -6,6 +6,6 @@ ip link set eth1 up
 # This line should now be redundant
 echo 1 >/proc/sys/net/ipv6/conf/all/forwarding
 
-/hosthome/src/quagga_zOSPF/zebra/zebra -d
-/hosthome/src/quagga_zOSPF/ospf6d/ospf6d -a &
+#/hosthome/src/quagga_zOSPF/zebra/zebra -d
+#/hosthome/src/quagga_zOSPF/ospf6d/ospf6d -a &
 #/usr/local/sbin/ospf6d -d
