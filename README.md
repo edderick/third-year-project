@@ -5,6 +5,6 @@ the third year of my undergraduate degree in Computer Science at the University
 of Southampton. 
 
 This documentation may be useful for understanding the implementation of
-Zeroconfig OSPF [1] that I produced during the project. 
+[Zeroconfig OSPF][1] that I produced during the project. 
 
 [1]: https://github.com/edderick/quagga_zOSPF
